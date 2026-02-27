@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>はづきノート - イベントサポート -</title>
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Decol:wght@400;700&family=Kiwi+Maru:wght@400;700&family=M+PLUS+Rounded+1c:wght@400;700;900&family=Noto+Sans+JP:wght@400;700;900&family=Shippori+Mincho:wght@400;700;800&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <style>
         /* === テーマ設定 (はづきれじ完全互換) === */
         :root { --grid-cols: 2; }
@@ -60,10 +61,39 @@
         .del-check-btn { background: transparent; color: #999; font-size: 1.2rem; padding: 0 5px; }
 
         /* --- 2. お品書きメーカー用 --- */
-        #oshi-preview-area { width: 100%; aspect-ratio: 3/4; background: #fff; border-radius: 12px; margin-bottom: 15px; border: 2px dashed rgba(128,128,128,0.3); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;}
+        #oshi-preview-area { width: 100%; aspect-ratio: 3/4; background: #fff; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; position: relative;}
         .oshi-template-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px;}
         .oshi-template-btn { padding: 10px; background: rgba(255,255,255,0.5); border: 2px solid transparent; border-radius: 12px; font-weight: bold; font-size: 0.8rem; color: var(--text-color);}
         .oshi-template-btn.active { border-color: var(--accent-color); background: rgba(255,255,255,0.9); color: var(--accent-color);}
+        
+        /* お品書きテンプレート：ピンク */
+        #oshi-template-pink { background: #fff0f5; padding: 20px; box-sizing: border-box; width: 100%; height: 100%; display: flex; flex-direction: column; }
+        #oshi-template-pink .oshi-title { text-align: center; color: #ff69b4; font-size: 1.8rem; font-weight: 900; margin-bottom: 10px; text-shadow: 1px 1px 0 #fff; border-bottom: 3px dashed #ffb6c1; padding-bottom: 10px; font-family: 'Kaisei Decol', serif;}
+        #oshi-template-pink .oshi-items { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; overflow-y: auto; flex-grow: 1; align-content: start; }
+        #oshi-template-pink .oshi-item { background: #fff; padding: 10px; border-radius: 16px; border: 2px solid #ffb6c1; box-shadow: 0 4px 10px rgba(255,105,180,0.1); text-align: center; display: flex; flex-direction: column; justify-content: space-between;}
+        #oshi-template-pink .oshi-item img { width: 100%; aspect-ratio: 1/1; object-fit: contain; border-radius: 12px; background: #fafafa; margin-bottom: 8px;}
+        #oshi-template-pink .oshi-item-name { font-size: 0.9rem; font-weight: 900; color: #5d4037; margin-bottom: 5px; line-height: 1.2; word-break: break-all;}
+        #oshi-template-pink .oshi-item-price { font-size: 1.2rem; font-weight: 900; color: #ff69b4; background: #fff0f5; padding: 4px; border-radius: 8px; display: inline-block; margin: 0 auto;}
+        
+        /* お品書きテンプレート：クリア */
+        #oshi-template-clear { background: #f0f4f8; padding: 20px; box-sizing: border-box; width: 100%; height: 100%; display: flex; flex-direction: column; }
+        #oshi-template-clear .oshi-title { text-align: center; color: #007aff; font-size: 1.8rem; font-weight: 900; margin-bottom: 15px; border-left: 6px solid #007aff; padding-left: 10px; text-align: left; background: linear-gradient(90deg, rgba(0,122,255,0.1) 0%, rgba(255,255,255,0) 100%); padding: 10px; font-family: 'Noto Sans JP', sans-serif;}
+        #oshi-template-clear .oshi-items { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; flex-grow: 1; }
+        #oshi-template-clear .oshi-item { background: #fff; padding: 10px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 15px;}
+        #oshi-template-clear .oshi-item img { width: 80px; height: 80px; object-fit: contain; border-radius: 8px; background: #f9f9f9;}
+        #oshi-template-clear .oshi-item-details { flex-grow: 1; text-align: left;}
+        #oshi-template-clear .oshi-item-name { font-size: 1rem; font-weight: 900; color: #333; margin-bottom: 5px;}
+        #oshi-template-clear .oshi-item-price { font-size: 1.2rem; font-weight: 900; color: #007aff; }
+
+        /* お品書きテンプレート：ロック */
+        #oshi-template-rock { background: #1a0b1c; padding: 20px; box-sizing: border-box; width: 100%; height: 100%; display: flex; flex-direction: column; border: 4px solid #b50043; }
+        #oshi-template-rock .oshi-title { text-align: center; color: #fff; font-size: 2rem; font-weight: 900; margin-bottom: 15px; text-shadow: 2px 2px 0 #b50043; letter-spacing: 2px; text-transform: uppercase; font-family: 'Kaisei Decol', serif;}
+        #oshi-template-rock .oshi-items { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; overflow-y: auto; flex-grow: 1; align-content: start; }
+        #oshi-template-rock .oshi-item { background: #28142d; padding: 10px; border: 2px solid #b50043; text-align: center; display: flex; flex-direction: column; justify-content: space-between; position: relative;}
+        #oshi-template-rock .oshi-item::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 1px dashed rgba(255,255,255,0.2); pointer-events: none;}
+        #oshi-template-rock .oshi-item img { width: 100%; aspect-ratio: 1/1; object-fit: contain; border-bottom: 2px solid #b50043; background: #111; margin-bottom: 8px;}
+        #oshi-template-rock .oshi-item-name { font-size: 0.9rem; font-weight: bold; color: #eaddf0; margin-bottom: 5px; line-height: 1.2;}
+        #oshi-template-rock .oshi-item-price { font-size: 1.3rem; font-weight: 900; color: #fff; background: #b50043; display: inline-block; margin: 0 auto; padding: 2px 10px; transform: skewX(-10deg);}
 
         /* --- 3. イベントデータベース用 --- */
         .event-card { padding: 15px; margin-bottom: 15px; position: relative; }
@@ -109,8 +139,13 @@
 
 <div id="tab-maker" class="tab-content">
     <div class="glass-card" style="padding: 20px;">
-        <p style="font-size: 0.85rem; font-weight: bold; opacity: 0.8; margin-top:0;">「はづきれじ」の商品データを使って、SNS告知用のお品書き画像を自動生成します。</p>
+        <p style="font-size: 0.85rem; font-weight: bold; opacity: 0.8; margin-top:0;">「はづきれじ」の商品データを読み込んで、SNS告知用のお品書き画像を自動生成します。</p>
         
+        <div style="display:flex; gap:10px; margin-bottom: 15px;">
+            <select id="regi-event-selector" class="form-input" style="flex-grow:1; margin-bottom:0;"></select>
+            <button class="primary-btn" style="width:auto; margin-bottom:0; padding:10px 15px;" onclick="loadRegiItems()">🔄 読込</button>
+        </div>
+
         <div class="section-title">🖼️ テンプレート選択</div>
         <div class="oshi-template-grid">
             <button class="oshi-template-btn active" onclick="setTemplate('pink', this)">ふわふわ<br>ピンク</button>
@@ -120,13 +155,9 @@
 
         <div class="section-title">プレビュー</div>
         <div id="oshi-preview-area">
-            <div style="text-align:center; color:#888; font-weight:bold;">
-                <span style="font-size:3rem;">🎨</span><br>
-                ここに自動生成された<br>お品書きが表示されます<br>（今後のアップデートで実装）
             </div>
-        </div>
 
-        <button class="primary-btn" onclick="alert('画像生成エンジンを現在開発中です！')">📸 画像として保存（ダウンロード）</button>
+        <button class="primary-btn" onclick="downloadOshinagaki()" style="margin-top: 15px;">📸 画像として保存（ダウンロード）</button>
     </div>
 </div>
 
@@ -166,25 +197,48 @@
     // 🚀 IndexedDB ＆ データ構造
     // ==========================================
     const DB_NAME = 'HazukiNoteDB';
-    const DB_VERSION = 1; 
+    const DB_VERSION = 3; 
     let db;
     
-    // アプリの初期データ構造
+    // はづきれじ連携用
+    const REGI_DB_NAME = 'HazukiRegiDB';
+    const REGI_DB_VERSION = 2;
+    let regiItemsCache = [];
+    
+    // イベント特化の初期データ
     let noteData = { 
         theme: 'cute',
         checklists: {
             schedule: [
-                { id: 1, text: "サークルカット提出", done: false },
-                { id: 2, text: "新刊 表紙入稿", done: false }
+                { id: 1, text: "サークルカット作成・提出", done: false },
+                { id: 2, text: "お品書き作成・SNS告知", done: false },
+                { id: 3, text: "新刊：ラフ作成", done: false },
+                { id: 4, text: "新刊：ペン入れ・着彩", done: false },
+                { id: 5, text: "新刊：表紙デザイン", done: false },
+                { id: 6, text: "新刊：印刷所へ入稿！", done: false },
+                { id: 7, text: "グッズ：アクリルキーホルダー発注", done: false },
+                { id: 8, text: "グッズ：ポスター印刷手配", done: false },
+                { id: 9, text: "搬入・宅配搬出の手配", done: false },
+                { id: 10, text: "展示用イラストの選定（FANTASIA向け）", done: false }
             ],
             belonging: [
-                { id: 3, text: "お釣り（100円玉×50、500円玉×20）", done: false },
-                { id: 4, text: "敷き布", done: false }
+                { id: 11, text: "サークルチケット（★絶対忘れない！）", done: false },
+                { id: 12, text: "はづきれじ用 iPad ＆ スマホ", done: false },
+                { id: 13, text: "モバイルバッテリー＆充電ケーブル", done: false },
+                { id: 14, text: "お釣り（100円×50、500円×20）", done: false },
+                { id: 15, text: "コイントレー", done: false },
+                { id: 16, text: "敷き布（可愛いふわふわの・防炎推奨）", done: false },
+                { id: 17, text: "ポスタースタンド＆クリップ", done: false },
+                { id: 18, text: "値札・POP・お品書きスタンド", done: false },
+                { id: 19, text: "筆記用具・ハサミ・カッター・マステ", done: false },
+                { id: 20, text: "名刺（配布用）", done: false },
+                { id: 21, text: "差し入れ・自分用のおやつ・飲み物", done: false },
+                { id: 22, text: "小さなゴミ袋", done: false }
             ]
         },
         events: [
-            { id: 1, title: "コミックマーケット", date: "2026年 夏", tags: "申込済, 直接参加", memo: "・参加費：振込完了\n・二次創作ガイドライン：問題なし確認済" },
-            { id: 2, title: "FANTASIA（仮）", date: "時期未定（勧誘DMあり）", tags: "検討中", memo: "・出展料無料とのことだが詳細不明\n・ハードロックなコンセプトらしい" }
+            { id: 1, title: "2026年冬コミックマーケット155", date: "2026年 冬", tags: "申込済, 直接参加", memo: "・冬コミ当選祈願！\n・新刊と新作アクキーを持っていきたい" },
+            { id: 2, title: "FANTASIA", date: "3月21日〜22日 (2日間)", tags: "申込済, 直接参加", memo: "・出展料無料だけど…？\n・なにやら怪しいけど参加\n・ロックなエフェクトのイラストを準備する" }
         ],
         oshiTemplate: 'pink'
     };
@@ -199,7 +253,10 @@
             };
             request.onsuccess = (event) => { 
                 db = event.target.result; 
-                loadDataFromDB().then(() => resolve()); 
+                loadDataFromDB().then(() => {
+                    initRegiDBConnection(); // はづきれじのDB接続を試みる
+                    resolve();
+                }); 
             };
         });
     }
@@ -246,10 +303,65 @@
         renderChecklist('belonging', 'item-list');
         renderEvents();
         
+        // お品書きテンプレートの初期化
+        document.querySelectorAll('.oshi-template-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if(btn.innerText.includes(noteData.oshiTemplate === 'pink' ? 'ピンク' : noteData.oshiTemplate === 'clear' ? 'クリア' : 'ロック')) {
+                btn.classList.add('active');
+            }
+        });
+        
         // タブの初期化
         const activeTab = document.querySelector('.tab.active');
         if(activeTab) switchTab('tab-checklist', activeTab);
     }
+
+    // ==========================================
+    // 🔗 はづきれじ データ連携
+    // ==========================================
+    function initRegiDBConnection() {
+        const request = indexedDB.open(REGI_DB_NAME, REGI_DB_VERSION);
+        request.onsuccess = (event) => {
+            const regiDb = event.target.result;
+            try {
+                const transaction = regiDb.transaction(['appData'], 'readonly');
+                const store = transaction.objectStore('appData');
+                const req = store.get('main');
+                req.onsuccess = () => {
+                    if (req.result && req.result.data && req.result.data.events) {
+                        const selector = document.getElementById('regi-event-selector');
+                        selector.innerHTML = '';
+                        req.result.data.events.forEach(ev => {
+                            selector.innerHTML += `<option value="${ev.id}">${ev.name}</option>`;
+                        });
+                        // 初期ロード
+                        window.hazukiRegiData = req.result.data;
+                        loadRegiItems();
+                    }
+                };
+            } catch(e) {
+                console.log("はづきれじのデータが見つかりません。");
+                document.getElementById('regi-event-selector').innerHTML = '<option value="">はづきれじデータなし</option>';
+            }
+        };
+        request.onerror = () => {
+             document.getElementById('regi-event-selector').innerHTML = '<option value="">はづきれじデータなし</option>';
+        }
+    }
+
+    function loadRegiItems() {
+        if(!window.hazukiRegiData) {
+            renderOshinagakiPreview([]); // データがない場合は空でレンダリング
+            return;
+        }
+        const eventId = document.getElementById('regi-event-selector').value;
+        const ev = window.hazukiRegiData.events.find(e => e.id == eventId);
+        if(ev && ev.items) {
+            regiItemsCache = ev.items;
+            renderOshinagakiPreview(regiItemsCache);
+        }
+    }
+
 
     window.onload = () => { initDB(); };
 
@@ -269,6 +381,11 @@
         
         document.getElementById(id).classList.add('active');
         window.scrollTo({top: 0, behavior: 'smooth'});
+        
+        // お品書きタブが開かれたらプレビューを描画
+        if(id === 'tab-maker') {
+            renderOshinagakiPreview(regiItemsCache);
+        }
     }
 
     // テーマ変更
@@ -315,7 +432,6 @@
         if (item) {
             item.done = isDone;
             saveData();
-            // 見た目の更新はCSSの:checkedと親の.doneクラスで行われるため、再レンダリングは省略
             const wrapper = document.getElementById(`check-${id}`).parentElement;
             if(isDone) wrapper.classList.add('done'); else wrapper.classList.remove('done');
         }
@@ -329,12 +445,72 @@
         }
     }
 
-    // --- お品書き機能 (モック) ---
+    // --- お品書きメーカー機能 ---
     function setTemplate(name, btnEl) {
         document.querySelectorAll('.oshi-template-btn').forEach(btn => btn.classList.remove('active'));
         btnEl.classList.add('active');
         noteData.oshiTemplate = name;
         saveData();
+        renderOshinagakiPreview(regiItemsCache);
+    }
+
+    function renderOshinagakiPreview(items) {
+        const area = document.getElementById('oshi-preview-area');
+        area.innerHTML = '';
+        
+        if(!items || items.length === 0) {
+            area.innerHTML = '<div style="text-align:center; color:#888; font-weight:bold; padding:20px;"><span style="font-size:3rem;">📦</span><br>はづきれじから<br>商品を読み込んでください</div>';
+            return;
+        }
+
+        const templateName = noteData.oshiTemplate || 'pink';
+        const wrapper = document.createElement('div');
+        wrapper.id = `oshi-template-${templateName}`;
+        
+        let itemsHTML = '';
+        items.forEach(item => {
+            itemsHTML += `
+                <div class="oshi-item">
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="oshi-item-details">
+                        <div class="oshi-item-name">${item.name}</div>
+                        <div class="oshi-item-price">¥${item.price.toLocaleString()}</div>
+                    </div>
+                </div>
+            `;
+        });
+
+        // テンプレートごとのタイトル（イベント名などを入れる想定）
+        let titleText = "おしながき";
+        const selectedEventStr = document.getElementById('regi-event-selector').options[document.getElementById('regi-event-selector').selectedIndex]?.text;
+        if(selectedEventStr) titleText = selectedEventStr;
+
+        wrapper.innerHTML = `
+            <div class="oshi-title">${titleText}</div>
+            <div class="oshi-items">${itemsHTML}</div>
+        `;
+        
+        area.appendChild(wrapper);
+    }
+
+    // 画像としてダウンロード (html2canvas使用)
+    function downloadOshinagaki() {
+        const area = document.getElementById('oshi-preview-area');
+        if(area.innerHTML.includes('商品を読み込んでください')) {
+            alert('商品を読み込んでから作成してください。');
+            return;
+        }
+        
+        html2canvas(area, {
+            scale: 2, // 高画質化
+            useCORS: true,
+            backgroundColor: null
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'oshinagaki.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
     }
 
     // --- イベントデータベース機能 ---
@@ -348,14 +524,10 @@
         }
 
         noteData.events.forEach(ev => {
-            // タグのパース（カンマ区切り）
             const tagsHTML = ev.tags.split(',').map(tag => {
                 if(!tag.trim()) return '';
-                // 簡易的に色をランダムっぽく割り当て（実運用では固定色が良い）
                 return `<span class="event-tag">${tag.trim()}</span>`;
             }).join('');
-
-            // メモの改行対応
             const memoHTML = ev.memo.replace(/\n/g, '<br>');
 
             container.innerHTML += `

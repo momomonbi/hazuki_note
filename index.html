@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>はづきノート - イベント＆日常サポート -</title>
+    <title>はづきのと - イベント＆日常サポート -</title>
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Decol:wght@400;700&family=Kiwi+Maru:wght@400;700&family=M+PLUS+Rounded+1c:wght@400;700;900&family=Noto+Sans+JP:wght@400;700;900&family=Shippori+Mincho:wght@400;700;800&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
@@ -61,6 +61,14 @@
         .check-item.done label { text-decoration: line-through; opacity: 0.5; }
         .del-check-btn { background: transparent; color: #999; font-size: 1.2rem; padding: 0 5px; }
 
+        /* --- カタログモーダル用 --- */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-content { background: var(--bg-color); width: 90%; max-width: 450px; max-height: 85vh; border-radius: 20px; padding: 20px; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.3); position: relative; }
+        .catalog-category { font-weight: 900; color: var(--accent-color); margin-top: 20px; margin-bottom: 10px; border-bottom: 2px dashed rgba(128,128,128,0.2); padding-bottom: 5px; font-size: 1.1rem; }
+        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 8px; }
+        .catalog-item-btn { background: rgba(255,255,255,0.7); border: 1px solid rgba(128,128,128,0.2); border-radius: 12px; padding: 10px 5px; font-size: 0.85rem; font-weight: bold; color: var(--text-color); transition: all 0.2s; }
+        .catalog-item-btn:active { transform: scale(0.95); }
+
         /* --- 2. お品書きメーカー用 --- */
         #oshi-preview-area { width: 100%; aspect-ratio: 3/4; background: #fff; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; position: relative;}
         .oshi-template-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px;}
@@ -109,8 +117,8 @@
 <div id="bg-color-layer"></div>
 
 <div class="app-header">
-    <h1>🌸 はづきノート</h1>
-    <button id="mode-toggle-btn" class="primary-btn" onclick="toggleAppMode()">🔄 モード切替</button>
+    <h1>🌸 はづきのと</h1>
+    <button id="mode-toggle-btn" class="primary-btn" onclick="toggleAppMode()" style="margin-bottom:0;">🔄 モード切替</button>
 </div>
 
 <div class="tabs" id="main-tabs">
@@ -135,7 +143,11 @@
             <span id="checklist-sub2-title">👜 当日の持ち物（ディスプレイ等）</span>
         </div>
         <div id="list-2"></div>
-        <button class="secondary-btn" id="checklist-add2-btn" onclick="addCheckItem(2)">＋ 持ち物を追加</button>
+        
+        <div style="display:flex; gap:10px; margin-top: 10px;">
+            <button class="primary-btn" style="margin-top:0; padding:12px; font-size:0.95rem; display:none; flex:1;" id="checklist-catalog-btn" onclick="openCatalogModal()">📖 カタログから選ぶ</button>
+            <button class="secondary-btn" style="margin-top:0; flex:1;" id="checklist-add2-btn" onclick="addCheckItem(2)">＋ 手入力で追加</button>
+        </div>
     </div>
 </div>
 
@@ -194,12 +206,23 @@
     </div>
 </div>
 
+<div id="catalog-modal" class="modal-overlay">
+    <div class="modal-content glass-card">
+        <h2 style="margin-top:0; color:var(--accent-color); font-size: 1.3rem;">🛒 買い物カタログ</h2>
+        <p style="font-size: 0.8rem; opacity: 0.8; margin-top: 0;">タップすると買い物リストに追加されます。</p>
+        
+        <div id="catalog-container"></div>
+        
+        <button class="secondary-btn" style="margin-top: 20px; padding: 15px;" onclick="closeCatalogModal()">閉じる</button>
+    </div>
+</div>
+
 <script>
     // ==========================================
     // 🚀 IndexedDB ＆ データ構造
     // ==========================================
     const DB_NAME = 'HazukiNoteDB';
-    const DB_VERSION = 4; // データ構造変更のためバージョンアップ
+    const DB_VERSION = 4; 
     let db;
     
     // はづきれじ連携用
@@ -207,12 +230,20 @@
     const REGI_DB_VERSION = 2;
     let regiItemsCache = [];
     
+    // 買い物カタログデータ
+    const shoppingCatalog = {
+        "🥕 野菜・果物": ["キャベツ", "レタス", "トマト", "玉ねぎ", "じゃがいも", "にんじん", "大根", "ねぎ", "きのこ類", "もやし", "りんご", "バナナ"],
+        "🥩 肉・魚": ["豚肉", "牛肉", "鶏肉", "ひき肉", "ウインナー", "ハム・ベーコン", "鮭", "サバ", "旬の魚", "ツナ缶"],
+        "🥚 卵・乳・日配": ["卵", "牛乳", "ヨーグルト", "チーズ", "バター・マーガリン", "納豆", "豆腐", "食パン", "うどん・麺類"],
+        "🧂 調味料・粉類": ["醤油", "塩", "砂糖", "味噌", "マヨネーズ", "ケチャップ", "料理酒・みりん", "だしの素", "カレールー", "小麦粉・片栗粉"],
+        "🧴 日用品・消耗品": ["トイレットペーパー", "ティッシュ", "キッチンペーパー", "ゴミ袋", "洗濯洗剤", "柔軟剤", "食器用洗剤", "お風呂洗剤", "シャンプー", "ボディソープ", "ラップ・ホイル", "電池"]
+    };
+
     // 新しいデータ構造 (モード対応)
     let noteData = { 
         theme: 'cute',
         appMode: 'event', // 'event' or 'daily'
         checklists: {
-            // イベント用
             event_schedule: [
                 { id: 1, text: "サークルカット作成・提出", done: false },
                 { id: 2, text: "お品書き作成・SNS告知", done: false },
@@ -225,16 +256,13 @@
                 { id: 13, text: "お釣り・コイントレー", done: false },
                 { id: 14, text: "敷き布・ポスタースタンド", done: false }
             ],
-            // 日常使い用
             daily_todo: [
                 { id: 21, text: "家賃の振り込み", done: false },
-                { id: 22, text: "新しいイラストのラフを進める", done: false },
-                { id: 23, text: "はづきれじのアップデート確認", done: false }
+                { id: 22, text: "新しいイラストのラフを進める", done: false }
             ],
             daily_shopping: [
                 { id: 31, text: "牛乳", done: false },
-                { id: 32, text: "卵", done: false },
-                { id: 33, text: "液タブの替え芯", done: false }
+                { id: 32, text: "卵", done: false }
             ]
         },
         events: [
@@ -304,7 +332,7 @@
         document.body.setAttribute('data-theme', noteData.theme || 'cute');
         document.getElementById('theme-selector').value = noteData.theme || 'cute';
         
-        applyModeUI(); // UIのモード切り替え・描画
+        applyModeUI(); 
         
         document.querySelectorAll('.oshi-template-btn').forEach(btn => {
             btn.classList.remove('active');
@@ -315,7 +343,6 @@
         
         const activeTab = document.querySelector('.tab.active');
         if(activeTab) {
-            // モード切替時に「お品書き」タブが隠れていたら強制的にチェックリストへ
             if(activeTab.id === 'tab-btn-maker' && noteData.appMode === 'daily') {
                 switchTab('tab-checklist', document.getElementById('tab-btn-checklist'));
             } else {
@@ -379,11 +406,9 @@
         saveData();
         applyModeUI();
         
-        // お品書きタブが開いた状態で日常モードになったら強制移動
         if(noteData.appMode === 'daily' && document.getElementById('tab-maker').classList.contains('active')) {
             switchTab('tab-checklist', document.getElementById('tab-btn-checklist'));
         } else {
-            // 現在のタブのハイライト位置を再計算
             const activeTab = document.querySelector('.tab.active');
             if(activeTab) switchTab(activeTab.getAttribute('onclick').match(/'([^']+)'/)[1], activeTab);
         }
@@ -392,28 +417,25 @@
     function applyModeUI() {
         const isDaily = noteData.appMode === 'daily';
         
-        // ヘッダーボタン
         const toggleBtn = document.getElementById('mode-toggle-btn');
-        toggleBtn.innerText = isDaily ? '🌸 日常モード中 (切替)' : '🎪 イベントモード中 (切替)';
+        toggleBtn.innerText = isDaily ? '🌸 日常中 (切替)' : '🎪 イベント中 (切替)';
         toggleBtn.style.background = isDaily ? '#4CAF50' : 'var(--accent-color)';
         toggleBtn.style.color = '#fff';
         
-        // タブの表示・非表示と名称変更
         document.getElementById('tab-btn-maker').style.display = isDaily ? 'none' : 'block';
         document.getElementById('tab-btn-checklist').innerText = isDaily ? '✅ やる事・買物' : '✅ 準備・持物';
         document.getElementById('tab-btn-database').innerText = isDaily ? '📓 日記・メモ' : '📚 イベント管理';
 
-        // チェックリスト内のテキスト変更
         document.getElementById('checklist-main-title').innerText = isDaily ? '📝 今日のタスクと買い物' : '📝 次のイベントに向けて';
         document.getElementById('checklist-sub1-title').innerText = isDaily ? '☑️ やること (ToDo)' : '📅 進行・入稿スケジュール';
         document.getElementById('checklist-add1-btn').innerText = isDaily ? '＋ やることを追加' : '＋ タスクを追加';
         document.getElementById('checklist-sub2-title').innerText = isDaily ? '🛒 買い物リスト' : '👜 当日の持ち物（ディスプレイ等）';
-        document.getElementById('checklist-add2-btn').innerText = isDaily ? '＋ 買うものを追加' : '＋ 持ち物を追加';
+        
+        document.getElementById('checklist-add2-btn').innerText = isDaily ? '＋ 手入力で追加' : '＋ 持ち物を追加';
+        document.getElementById('checklist-catalog-btn').style.display = isDaily ? 'block' : 'none';
 
-        // データベース内のテキスト変更
         document.getElementById('db-add-btn').innerText = isDaily ? '＋ 新しい日記・メモを書く' : '＋ 新しいイベント情報を登録';
         
-        // 中身の再描画
         renderChecklist(1, 'list-1');
         renderChecklist(2, 'list-2');
         renderDbItems();
@@ -496,6 +518,56 @@
             saveData();
             renderChecklist(listNum, `list-${listNum}`);
         }
+    }
+
+    // --- カタログモーダル機能 ---
+    function openCatalogModal() {
+        const container = document.getElementById('catalog-container');
+        container.innerHTML = '';
+        
+        for (const [category, items] of Object.entries(shoppingCatalog)) {
+            const catDiv = document.createElement('div');
+            catDiv.className = 'catalog-category';
+            catDiv.innerText = category;
+            
+            const gridDiv = document.createElement('div');
+            gridDiv.className = 'catalog-grid';
+            
+            items.forEach(item => {
+                const btn = document.createElement('button');
+                btn.className = 'catalog-item-btn';
+                btn.innerText = item;
+                btn.onclick = () => addCatalogItem(btn, item);
+                gridDiv.appendChild(btn);
+            });
+            
+            container.appendChild(catDiv);
+            container.appendChild(gridDiv);
+        }
+        document.getElementById('catalog-modal').style.display = 'flex';
+    }
+
+    function closeCatalogModal() {
+        document.getElementById('catalog-modal').style.display = 'none';
+    }
+
+    function addCatalogItem(btn, itemName) {
+        const listKey = 'daily_shopping';
+        if(!noteData.checklists[listKey]) noteData.checklists[listKey] = [];
+        noteData.checklists[listKey].push({ id: Date.now() + Math.random(), text: itemName, done: false });
+        saveData();
+        renderChecklist(2, 'list-2');
+        
+        // 視覚的なフィードバック
+        const originalText = btn.innerText;
+        btn.innerText = "追加✅";
+        btn.style.background = "var(--accent-color)";
+        btn.style.color = "white";
+        setTimeout(() => {
+            btn.innerText = originalText;
+            btn.style.background = "rgba(255,255,255,0.7)";
+            btn.style.color = "var(--text-color)";
+        }, 800);
     }
 
     // --- お品書きメーカー機能 ---

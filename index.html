@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>はづきのと - イベント＆日常サポート -</title>
+    <title>はづきのと - 日常＆イベントサポート -</title>
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Decol:wght@400;700&family=Kiwi+Maru:wght@400;700&family=M+PLUS+Rounded+1c:wght@400;700;900&family=Noto+Sans+JP:wght@400;700;900&family=Shippori+Mincho:wght@400;700;800&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
 
     <style>
@@ -22,10 +22,11 @@
         [data-theme="retro"] { --bg-color: #f5deb3; --header-bg: rgba(139, 69, 19, 0.85); --tab-bg: rgba(255,255,255,0.4); --accent-color: #d2691e; --tab-active-bg: #d2691e; --tab-active-color: #fff; --card-bg: rgba(255, 248, 220, 0.65); --text-color: #5c3a21; --btn-primary: #a0522d; --app-font: 'M PLUS Rounded 1c', sans-serif; }
         [data-theme="vivid"] { --bg-color: #111; --header-bg: rgba(30, 30, 30, 0.95); --tab-bg: rgba(50, 50, 50, 0.6); --accent-color: #ff00ff; --tab-active-bg: #ff00ff; --tab-active-color: #fff; --card-bg: rgba(40, 40, 40, 0.8); --text-color: #fff; --btn-primary: #cc00cc; --app-font: 'Noto Sans JP', sans-serif; }
 
-        /* === アニメーション定義 === */
+        /* === 豪華なアニメーション定義 === */
         @keyframes popIn { 0% { opacity: 0; transform: scale(0.9) translateY(10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
-        @keyframes slideInRight { 0% { opacity: 0; transform: translateX(-30px); } 100% { opacity: 1; transform: translateX(0); } }
-        @keyframes fadeOutDown { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(20px); } }
+        @keyframes slideInRight { 0% { opacity: 0; transform: translateX(-40px); } 100% { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeOutDown { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(30px); } }
+        @keyframes bounceIn { 0% { transform: scale(0.8); opacity: 0; } 60% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); } }
         @keyframes tada { 
             0% { transform: scale(1); } 
             10%, 20% { transform: scale(0.9) rotate(-3deg); } 
@@ -49,7 +50,7 @@
         #mode-toggle-btn { padding: 10px 14px; font-size: 0.9rem; font-weight: 900; border-radius: 14px; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
         .tabs { position: sticky; top: 5px; display: flex; background-color: var(--tab-bg); z-index: 1000; box-shadow: 0 8px 32px rgba(0,0,0,0.08); margin: 0 15px 15px 15px; border-radius: 24px; padding: 6px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.2); }
-        .tab { flex: 1; text-align: center; padding: 12px 0; color: var(--text-color); opacity: 0.6; font-weight: 900; font-size: 0.9rem; white-space: nowrap; border-radius: 18px; cursor: pointer; position: relative; z-index: 2; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .tab { flex: 1; text-align: center; padding: 12px 0; color: var(--text-color); opacity: 0.6; font-weight: 900; font-size: 0.95rem; white-space: nowrap; border-radius: 18px; cursor: pointer; position: relative; z-index: 2; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .tab.active { opacity: 1; color: var(--tab-active-color); transform: scale(1.05); }
         .tab-highlight { position: absolute; top: 6px; bottom: 6px; left: 6px; width: 0; background: var(--tab-active-bg); border-radius: 18px; z-index: 1; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.4s; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
         
@@ -64,10 +65,12 @@
         .form-input { width: 100%; padding: 15px; box-sizing: border-box; border: 1px solid rgba(128,128,128,0.2); border-radius: 16px; font-size: 1rem; color: #333; background: rgba(255,255,255,0.9); font-weight: 700; margin-bottom: 10px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);}
 
         /* --- チェックリスト用 --- */
-        .check-item { display: flex; align-items: center; padding: 14px 10px; border-bottom: 1px dashed rgba(128,128,128,0.2); gap: 12px; animation: slideInRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; transition: all 0.3s ease;}
-        .check-item.removing { animation: fadeOutDown 0.3s forwards; }
+        #checklist-container { display: flex; flex-direction: column; }
+        
+        .check-item { display: flex; align-items: center; padding: 14px 10px; border-bottom: 1px dashed rgba(128,128,128,0.2); gap: 12px; animation: slideInRight 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; transition: all 0.3s ease; opacity: 0;}
+        .check-item.removing { animation: fadeOutDown 0.3s forwards !important; }
         .check-item input[type="checkbox"] { width: 26px; height: 26px; accent-color: var(--accent-color); cursor: pointer; flex-shrink: 0; transition: transform 0.2s;}
-        .check-item input[type="checkbox"]:active { transform: scale(0.8); }
+        .check-item input[type="checkbox"]:active { transform: scale(0.7); }
         .check-item label { flex-grow: 1; font-weight: 700; font-size: 1.05rem; cursor: pointer; transition: all 0.3s; line-height: 1.4; word-break: break-all;}
         
         .check-item.done label { text-decoration: line-through; opacity: 0.4; }
@@ -76,26 +79,29 @@
         .del-check-btn { background: rgba(244,67,54,0.1); color: #f44336; font-size: 1.1rem; padding: 4px 10px; border-radius: 8px; font-weight: bold;}
 
         /* --- データベース用 --- */
-        .event-card { padding: 18px; margin-bottom: 15px; position: relative; }
+        .event-card { padding: 18px; margin-bottom: 15px; position: relative; animation: bounceIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .event-card-title { font-size: 1.3rem; font-weight: 900; margin-bottom: 6px; }
         .event-card-date { font-size: 0.9rem; color: var(--accent-color); font-weight: 900; margin-bottom: 12px; display: flex; align-items: center; gap: 5px;}
         .event-tags { margin-bottom: 12px; }
         .event-tag { display: inline-block; padding: 6px 10px; border-radius: 10px; font-size: 0.8rem; font-weight: 900; background: rgba(128,128,128,0.1); margin-right: 6px; margin-bottom: 6px;}
 
         /* --- 買い物モーダル (主婦向けカタログ) --- */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: flex-end; animation: fadeIn 0.3s;}
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: flex-end; animation: fadeIn 0.3s;}
         @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
-        .modal-content { background: var(--bg-color); width: 100%; max-height: 85vh; border-top-left-radius: 30px; border-top-right-radius: 30px; padding: 25px 20px; box-sizing: border-box; overflow-y: auto; animation: slideUpModal 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 -10px 40px rgba(0,0,0,0.2);}
+        .modal-content { background: var(--bg-color); width: 100%; max-height: 85vh; border-top-left-radius: 30px; border-top-right-radius: 30px; padding: 25px 20px; box-sizing: border-box; overflow-y: auto; animation: slideUpModal 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 -10px 40px rgba(0,0,0,0.2);}
         @keyframes slideUpModal { from{transform: translateY(100%);} to{transform: translateY(0);} }
         
         .catalog-category { margin-bottom: 25px; }
-        .catalog-category-title { font-size: 1.1rem; font-weight: 900; color: var(--text-color); margin-bottom: 12px; border-left: 5px solid var(--accent-color); padding-left: 10px;}
-        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
-        
-        .catalog-btn { background: var(--card-bg); border: 2px solid rgba(128,128,128,0.2); border-radius: 12px; padding: 12px 5px; font-size: 0.9rem; font-weight: 900; color: var(--text-color); text-align: center; transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 2px 8px rgba(0,0,0,0.05);}
-        .catalog-btn.selected { background: var(--accent-color); color: white; border-color: var(--accent-color); transform: scale(0.95); box-shadow: inset 0 3px 6px rgba(0,0,0,0.2); animation: popIn 0.3s; }
+        .catalog-category-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(128,128,128,0.2); padding-bottom: 8px; margin-bottom: 12px;}
+        .catalog-category-title { font-size: 1.15rem; font-weight: 900; color: var(--text-color); margin: 0; border-left: 5px solid var(--accent-color); padding-left: 10px;}
+        .add-custom-item-btn { padding: 6px 12px; font-size: 0.85rem; font-weight: bold; border-radius: 10px; background: rgba(128,128,128,0.1); color: var(--accent-color); border: 2px dashed var(--accent-color); transition: all 0.2s; }
+        .add-custom-item-btn:active { background: var(--accent-color); color: white; }
 
-        .modal-footer { position: sticky; bottom: -20px; background: linear-gradient(to bottom, transparent, var(--bg-color) 20%); padding: 20px 0; display: flex; gap: 10px; margin-top: 10px;}
+        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); gap: 10px; }
+        .catalog-btn { background: var(--card-bg); border: 2px solid rgba(128,128,128,0.2); border-radius: 12px; padding: 14px 6px; font-size: 0.95rem; font-weight: 900; color: var(--text-color); text-align: center; transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 4px 10px rgba(0,0,0,0.05);}
+        .catalog-btn.selected { background: var(--accent-color); color: white; border-color: var(--accent-color); transform: scale(0.95); box-shadow: inset 0 3px 6px rgba(0,0,0,0.2); animation: bounceIn 0.3s; }
+
+        .modal-footer { position: sticky; bottom: -25px; background: linear-gradient(to bottom, transparent, var(--bg-color) 20%, var(--bg-color) 100%); padding: 30px 0 25px 0; display: flex; gap: 10px;}
     </style>
 </head>
 <body data-theme="cute">
@@ -109,33 +115,40 @@
 
 <div class="tabs" id="main-tabs">
     <div class="tab-highlight" id="tab-highlight"></div>
-    <div class="tab active" onclick="switchTab('tab-checklist', this)" id="tab-btn-checklist">✅ 準備・持物</div>
-    <div class="tab" onclick="switchTab('tab-database', this)" id="tab-btn-database">📚 イベント管理</div>
+    <div class="tab active" onclick="switchTab('tab-checklist', this)" id="tab-btn-checklist">✅ やる事・買物</div>
+    <div class="tab" onclick="switchTab('tab-database', this)" id="tab-btn-database">📓 日記・メモ</div>
     <div class="tab" onclick="switchTab('tab-settings', this)">⚙️ 設定</div>
 </div>
 
 <div id="tab-checklist" class="tab-content active">
     <div class="glass-card" style="padding: 20px;">
         <h2 id="checklist-main-title" style="margin-top:0; font-size: 1.3rem; font-weight: 900; display: flex; align-items: center; gap: 8px;">
-            <span style="font-size: 1.6rem;">📝</span> 次のイベントに向けて
+            <span style="font-size: 1.6rem;">☀️</span> 今日のタスクと買い物
         </h2>
         
-        <div class="section-title">
-            <span id="checklist-sub1-title">📅 進行・入稿スケジュール</span>
-        </div>
-        <div id="list-1"></div>
-        <button class="secondary-btn" id="checklist-add1-btn" onclick="addCheckItem(1)">＋ タスクを追加</button>
+        <div id="checklist-container">
+            <div id="section-todo" style="order: 2;">
+                <div class="section-title">
+                    <span id="checklist-sub1-title">☑️ やること (ToDo)</span>
+                </div>
+                <div id="list-1"></div>
+                <button class="secondary-btn" id="checklist-add1-btn" onclick="addCheckItem(1)">＋ やることを追加</button>
+            </div>
 
-        <div class="section-title" style="margin-top: 35px;">
-            <span id="checklist-sub2-title">👜 当日の持ち物（ディスプレイ等）</span>
+            <div id="section-shopping" style="order: 1; margin-bottom: 25px;">
+                <div class="section-title" style="margin-top: 20px;">
+                    <span id="checklist-sub2-title">🛒 買い物リスト</span>
+                </div>
+                <div id="list-2"></div>
+                
+                <div id="shopping-buttons-area"></div>
+            </div>
         </div>
-        <div id="list-2"></div>
-        <button class="secondary-btn" id="checklist-add2-btn" onclick="addCheckItem(2)">＋ 持ち物を追加</button>
     </div>
 </div>
 
 <div id="tab-database" class="tab-content">
-    <button class="primary-btn" id="db-add-btn" style="margin-bottom: 20px; font-size: 1.2rem;" onclick="addDbItem()">＋ 新しいイベント情報を登録</button>
+    <button class="primary-btn" id="db-add-btn" style="margin-bottom: 20px; font-size: 1.2rem;" onclick="addDbItem()">＋ 新しい日記・メモを書く</button>
     <div id="db-container"></div>
 </div>
 
@@ -161,19 +174,19 @@
 
     <div class="glass-card" style="padding: 20px; border: 3px dashed rgba(244,67,54,0.4);">
         <h2 style="margin-top:0; font-size: 1.2rem; color:#f44336; font-weight: 900;">⚠️ 危険領域</h2>
-        <button onclick="hardResetApp()" style="background:rgba(244,67,54,0.1); color:#f44336; padding:15px; width:100%; font-weight:900; border-radius:16px; font-size:1.1rem;">データを完全にリセットする</button>
+        <button onclick="hardResetApp()" style="background:rgba(244,67,54,0.1); color:#f44336; padding:15px; width:100%; font-weight:900; border-radius:16px; font-size:1.1rem;">⚠️ データを完全にリセットする</button>
     </div>
 </div>
 
 <div class="modal-overlay" id="shopping-modal">
     <div class="modal-content">
-        <h2 style="margin-top: 0; font-size: 1.5rem; font-weight: 900; color: var(--accent-color); text-align: center; border-bottom: 2px solid rgba(128,128,128,0.2); padding-bottom: 10px;">🛒 買い物カタログ</h2>
-        <p style="text-align: center; font-size: 0.9rem; font-weight: bold; opacity: 0.7;">ポンポン押して複数選べます！</p>
+        <h2 style="margin-top: 0; font-size: 1.5rem; font-weight: 900; color: var(--accent-color); text-align: center;">🛒 買い物カタログ</h2>
+        <p style="text-align: center; font-size: 0.95rem; font-weight: bold; opacity: 0.7; margin-bottom: 25px;">ポンポン押して一気に選べます！</p>
         
         <div id="catalog-container"></div>
 
         <div class="modal-footer">
-            <button class="secondary-btn" style="flex: 1; margin: 0; background: rgba(128,128,128,0.2);" onclick="closeShoppingModal()">キャンセル</button>
+            <button class="secondary-btn" style="flex: 1; margin: 0; background: rgba(128,128,128,0.2);" onclick="closeShoppingModal()">閉じる</button>
             <button class="primary-btn" style="flex: 2; margin: 0;" onclick="commitShoppingModal()">✨ 選んだものを追加</button>
         </div>
     </div>
@@ -183,12 +196,12 @@
     // ==========================================
     // 🚀 IndexedDB ＆ データ構造
     // ==========================================
-    const DB_NAME = 'HazukiNotoDB'; // アプリ名変更に合わせてDB名も変更
-    const DB_VERSION = 5; 
+    const DB_NAME = 'HazukiNotoDB'; 
+    const DB_VERSION = 6; 
     let db;
     
-    // 主婦向け 膨大な買い物カタログ
-    const shoppingCatalog = {
+    // 主婦向け 膨大な買い物カタログ（デフォルト設定用）
+    const defaultCatalog = {
         "🍅 野菜・果物": ["セロリ", "キャベツ", "レタス", "トマト", "ミニトマト", "きゅうり", "玉ねぎ", "じゃがいも", "にんじん", "大根", "白菜", "ネギ", "きのこ類（えのき・しめじ）", "もやし", "りんご", "バナナ", "季節のフルーツ"],
         "🥩 肉・魚": ["豚肉（こま切れ）", "豚肉（バラ）", "牛肉", "鶏もも肉", "鶏むね肉", "ひき肉（合挽き）", "鮭（切り身）", "サバ", "旬の魚", "ウインナー", "ベーコン", "ハム"],
         "🥚 乳製品・日配品": ["牛乳", "ヨーグルト", "卵", "バター", "チーズ（とろける）", "豆腐", "納豆", "こんにゃく", "ちくわ", "食パン"],
@@ -196,11 +209,13 @@
         "🍜 食品・飲料": ["お米", "パスタ", "うどん（ゆで）", "ラーメン", "お茶（ペットボトル）", "水", "コーヒー", "ジュース", "おやつ・スナック", "チョコ", "アイス"],
         "🧻 日用品・消耗品": ["トイレットペーパー", "ティッシュ", "洗剤（衣類用）", "柔軟剤", "食器用洗剤", "お風呂用洗剤", "トイレ用洗剤", "シャンプー", "コンディショナー", "ボディソープ", "ゴミ袋", "ラップ", "アルミホイル", "キッチンペーパー"]
     };
+    
     let selectedShoppingItems = new Set();
 
     let noteData = { 
         theme: 'cute',
-        appMode: 'event', // 'event' or 'daily'
+        appMode: 'daily', // デフォルトを日常に変更！
+        shoppingCatalog: JSON.parse(JSON.stringify(defaultCatalog)),
         checklists: {
             event_schedule: [
                 { id: 1, text: "サークルカット作成・提出", done: false },
@@ -281,12 +296,14 @@
     }
 
     function finalizeLoad() {
-        if(!noteData.appMode) noteData.appMode = 'event';
+        if(!noteData.appMode) noteData.appMode = 'daily';
+        if(!noteData.shoppingCatalog) noteData.shoppingCatalog = JSON.parse(JSON.stringify(defaultCatalog));
         
         document.body.setAttribute('data-theme', noteData.theme || 'cute');
         document.getElementById('theme-selector').value = noteData.theme || 'cute';
         
         applyModeUI(); 
+        buildShoppingCatalog();
         
         const activeTab = document.querySelector('.tab.active');
         if(activeTab) {
@@ -294,7 +311,7 @@
         }
     }
 
-    window.onload = () => { initDB(); buildShoppingCatalog(); };
+    window.onload = () => { initDB(); };
 
     // ==========================================
     // UI制御 & ロジック
@@ -313,34 +330,46 @@
         const toggleBtn = document.getElementById('mode-toggle-btn');
         toggleBtn.innerText = isDaily ? '🌸 日常中 (切替)' : '🎪 イベント中 (切替)';
         toggleBtn.style.background = isDaily ? '#4CAF50' : 'var(--accent-color)';
-        toggleBtn.style.transform = 'scale(0.9)';
-        setTimeout(() => toggleBtn.style.transform = 'scale(1)', 150);
+        
+        // アニメーション
+        toggleBtn.style.transform = 'scale(0.85)';
+        setTimeout(() => toggleBtn.style.transform = 'scale(1)', 200);
         
         // タブ名
         document.getElementById('tab-btn-checklist').innerText = isDaily ? '✅ やる事・買物' : '✅ 準備・持物';
         document.getElementById('tab-btn-database').innerText = isDaily ? '📓 日記・メモ' : '📚 イベント管理';
+
+        // 表示順序の切り替え (Flex order)
+        document.getElementById('section-todo').style.order = isDaily ? 2 : 1;
+        document.getElementById('section-shopping').style.order = isDaily ? 1 : 2;
 
         // チェックリストテキスト
         document.getElementById('checklist-main-title').innerHTML = isDaily ? '<span style="font-size: 1.6rem;">☀️</span> 今日のタスクと買い物' : '<span style="font-size: 1.6rem;">📝</span> 次のイベントに向けて';
         document.getElementById('checklist-sub1-title').innerText = isDaily ? '☑️ やること (ToDo)' : '📅 進行・入稿スケジュール';
         document.getElementById('checklist-add1-btn').innerText = isDaily ? '＋ やることを追加' : '＋ タスクを追加';
         document.getElementById('checklist-sub2-title').innerText = isDaily ? '🛒 買い物リスト' : '👜 当日の持ち物（ディスプレイ等）';
-        document.getElementById('checklist-add2-btn').innerText = isDaily ? '＋ カタログから選ぶ' : '＋ 持ち物を追加';
+        
+        // ボタンエリアの切り替え (日常時は2つのボタン、イベント時は1つ)
+        const shoppingBtns = document.getElementById('shopping-buttons-area');
+        if(isDaily) {
+            shoppingBtns.innerHTML = `
+                <div style="display:flex; gap:10px; margin-top:15px; animation: popIn 0.4s;">
+                    <button class="primary-btn" style="flex:2; margin:0;" onclick="openShoppingModal()">🛒 カタログから選ぶ</button>
+                    <button class="secondary-btn" style="flex:1; margin:0; border: 2px dashed rgba(128,128,128,0.4); background: transparent;" onclick="addCheckItem(2)">✏️ 手動追加</button>
+                </div>
+            `;
+        } else {
+            shoppingBtns.innerHTML = `
+                <button class="secondary-btn" style="margin-top:15px; animation: popIn 0.4s;" onclick="addCheckItem(2)">＋ 持ち物を追加</button>
+            `;
+        }
 
         // データベーステキスト
         document.getElementById('db-add-btn').innerText = isDaily ? '＋ 新しい日記・メモを書く' : '＋ 新しいイベント情報を登録';
         
-        // 描画（アニメーション付き）
-        const list1 = document.getElementById('list-1');
-        const list2 = document.getElementById('list-2');
-        list1.style.opacity = 0; list2.style.opacity = 0;
-        
-        setTimeout(() => {
-            renderChecklist(1, 'list-1');
-            renderChecklist(2, 'list-2');
-            list1.style.opacity = 1; list2.style.opacity = 1;
-        }, 150);
-        
+        // 描画
+        renderChecklist(1, 'list-1');
+        renderChecklist(2, 'list-2');
         renderDbItems();
     }
 
@@ -376,7 +405,7 @@
         const list = noteData.checklists[listKey] || [];
         
         if (list.length === 0) {
-            container.innerHTML = '<p style="color:#888; font-size:0.95rem; text-align:center; font-weight:bold; padding:20px 0;">スッキリ！項目はありません ✨</p>';
+            container.innerHTML = '<p style="color:#888; font-size:0.95rem; text-align:center; font-weight:bold; padding:20px 0; animation: popIn 0.5s;">スッキリ！項目はありません ✨</p>';
             return;
         }
 
@@ -384,8 +413,7 @@
             const div = document.createElement('div');
             div.className = `check-item ${item.done ? 'done' : ''}`;
             div.id = `item-row-${item.id}`;
-            // 少しずつ遅延させてスライドイン
-            div.style.animationDelay = `${index * 0.05}s`;
+            div.style.animationDelay = `${index * 0.04}s`; // 順にスライドイン
             
             div.innerHTML = `
                 <input type="checkbox" id="check-${item.id}" ${item.done ? 'checked' : ''} onchange="toggleCheck('${listKey}', ${item.id}, this.checked)">
@@ -398,13 +426,6 @@
 
     function addCheckItem(listNum) {
         const listKey = getChecklistKey(listNum);
-        
-        // 日常モードの「買い物リスト(listNum=2)」はカタログモーダルを開く
-        if(listKey === 'daily_shopping') {
-            openShoppingModal();
-            return;
-        }
-
         const text = prompt('新しい項目を入力してください:');
         if (text && text.trim()) {
             if(!noteData.checklists[listKey]) noteData.checklists[listKey] = [];
@@ -423,10 +444,11 @@
             
             if(isDone) {
                 wrapper.classList.add('done');
-                // 完了時のTada（ポンッ！）アニメーション
+                // アニメーションのリセットと再適用
                 wrapper.classList.remove('anim-tada');
-                void wrapper.offsetWidth; // リフロー強制
+                void wrapper.offsetWidth; 
                 wrapper.classList.add('anim-tada');
+                if(navigator.vibrate) navigator.vibrate([30, 50, 30]); // ポンッという感触
             } else {
                 wrapper.classList.remove('done');
                 wrapper.classList.remove('anim-tada');
@@ -436,29 +458,39 @@
 
     function deleteCheckItem(listKey, id, listNum) {
         const row = document.getElementById(`item-row-${id}`);
-        // 削除時はフェードアウトさせてから消す
         row.classList.add('removing');
         
         setTimeout(() => {
             noteData.checklists[listKey] = noteData.checklists[listKey].filter(i => i.id !== id);
             saveData();
             renderChecklist(listNum, `list-${listNum}`);
-        }, 300); // アニメーション時間と合わせる
+        }, 300); // fadeOutDownの完了を待つ
     }
 
-    // --- 🛒 買い物カタログ機能 ---
+    // --- 🛒 カスタマイズ可能 買い物カタログ機能 ---
     function buildShoppingCatalog() {
         const container = document.getElementById('catalog-container');
         container.innerHTML = '';
         
-        for(const [category, items] of Object.entries(shoppingCatalog)) {
+        for(const [category, items] of Object.entries(noteData.shoppingCatalog)) {
             const catDiv = document.createElement('div');
             catDiv.className = 'catalog-category';
             
-            const title = document.createElement('div');
+            const header = document.createElement('div');
+            header.className = 'catalog-category-header';
+            
+            const title = document.createElement('h3');
             title.className = 'catalog-category-title';
             title.innerText = category;
-            catDiv.appendChild(title);
+            
+            const addBtn = document.createElement('button');
+            addBtn.className = 'add-custom-item-btn';
+            addBtn.innerText = '＋ 追加';
+            addBtn.onclick = () => addCustomCatalogItem(category);
+
+            header.appendChild(title);
+            header.appendChild(addBtn);
+            catDiv.appendChild(header);
             
             const grid = document.createElement('div');
             grid.className = 'catalog-grid';
@@ -466,6 +498,7 @@
             items.forEach(itemText => {
                 const btn = document.createElement('button');
                 btn.className = 'catalog-btn';
+                if (selectedShoppingItems.has(itemText)) btn.classList.add('selected');
                 btn.innerText = itemText;
                 btn.onclick = () => toggleCatalogItem(itemText, btn);
                 grid.appendChild(btn);
@@ -476,6 +509,20 @@
         }
     }
 
+    function addCustomCatalogItem(category) {
+        const newItem = prompt(`「${category}」に追加する商品名を入力してください:`);
+        if(newItem && newItem.trim()) {
+            const cleanName = newItem.trim();
+            if(!noteData.shoppingCatalog[category].includes(cleanName)) {
+                noteData.shoppingCatalog[category].push(cleanName);
+                saveData();
+                buildShoppingCatalog();
+            } else {
+                alert('⚠️ すでに登録されています！');
+            }
+        }
+    }
+
     function toggleCatalogItem(itemText, btnEl) {
         if(selectedShoppingItems.has(itemText)) {
             selectedShoppingItems.delete(itemText);
@@ -483,14 +530,17 @@
         } else {
             selectedShoppingItems.add(itemText);
             btnEl.classList.add('selected');
+            // 追加時のぷにゅっとしたアニメーションを再トリガー
+            btnEl.style.animation = 'none';
+            void btnEl.offsetWidth;
+            btnEl.style.animation = 'bounceIn 0.3s forwards';
         }
-        // タップした瞬間のバイブレーション（スマホ向け）
         if(navigator.vibrate) navigator.vibrate(20);
     }
 
     function openShoppingModal() {
         selectedShoppingItems.clear();
-        document.querySelectorAll('.catalog-btn').forEach(btn => btn.classList.remove('selected'));
+        buildShoppingCatalog(); // 選択状態をリセットして描画
         document.getElementById('shopping-modal').style.display = 'flex';
     }
 
@@ -511,7 +561,7 @@
         });
         
         saveData();
-        renderChecklist(2, 'list-2'); // 買い物はlist-2
+        renderChecklist(2, 'list-2'); 
         closeShoppingModal();
     }
 
@@ -526,29 +576,31 @@
         const items = getDbArray();
         
         if (items.length === 0) {
-            container.innerHTML = `<p style="color:#888; font-size:1.1rem; text-align:center; font-weight:bold; padding:30px;">${noteData.appMode === 'daily' ? '📓 日記・メモはありません' : '📚 イベントが登録されていません'}</p>`;
+            container.innerHTML = `<p style="color:#888; font-size:1.1rem; text-align:center; font-weight:bold; padding:30px; animation: popIn 0.5s;">${noteData.appMode === 'daily' ? '📓 日記・メモはありません' : '📚 イベントが登録されていません'}</p>`;
             return;
         }
 
-        items.forEach(item => {
+        items.forEach((item, index) => {
             const tagsHTML = (item.tags || '').split(',').map(tag => {
                 if(!tag.trim()) return '';
                 return `<span class="event-tag">${tag.trim()}</span>`;
             }).join('');
             const memoHTML = (item.memo || '').replace(/\n/g, '<br>');
 
-            container.innerHTML += `
-                <div class="glass-card event-card">
-                    <div class="event-card-date">📅 ${item.date}</div>
-                    <div class="event-card-title">${item.title}</div>
-                    <div class="event-tags">${tagsHTML}</div>
-                    <p style="font-size: 0.9rem; margin-top: 10px; line-height: 1.6; font-weight:700;">${memoHTML}</p>
-                    <div style="display:flex; gap:10px; margin-top:20px;">
-                        <button class="secondary-btn" style="margin-top:0;" onclick="editDbItem(${item.id})">✏️ 編集</button>
-                        <button class="danger-btn" onclick="deleteDbItem(${item.id})">削除</button>
-                    </div>
+            const div = document.createElement('div');
+            div.className = 'glass-card event-card';
+            div.style.animationDelay = `${index * 0.1}s`;
+            div.innerHTML = `
+                <div class="event-card-date">📅 ${item.date}</div>
+                <div class="event-card-title">${item.title}</div>
+                <div class="event-tags">${tagsHTML}</div>
+                <p style="font-size: 0.9rem; margin-top: 10px; line-height: 1.6; font-weight:700;">${memoHTML}</p>
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <button class="secondary-btn" style="margin-top:0;" onclick="editDbItem(${item.id})">✏️ 編集</button>
+                    <button class="danger-btn" onclick="deleteDbItem(${item.id})">削除</button>
                 </div>
             `;
+            container.appendChild(div);
         });
     }
 

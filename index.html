@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>はづきノート - イベントサポート -</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kaisei+Decol:wght@400;700&family=Kiwi+Maru:wght@400;700&family=M+PLUS+Rounded+1c:wght@400;700;900&family=Noto+Sans+JP:wght@400;700;900&family=Shippori+Mincho:wght@400;700;800&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === はづきれじのテーマ設定を完全継承 === */
+        :root { --grid-cols: 2; }
+        [data-theme="default"], body { --bg-color: #f0f4f8; --header-bg: rgba(255, 255, 255, 0.85); --tab-bg: rgba(255,255,255,0.5); --accent-color: #007aff; --tab-active-bg: #007aff; --tab-active-color: #fff; --card-bg: rgba(255, 255, 255, 0.5); --text-color: #333; --btn-primary: #007aff; --app-font: 'Zen Maru Gothic', sans-serif; }
+        [data-theme="cute"] { --bg-color: #fff0f5; --header-bg: rgba(255, 182, 193, 0.85); --tab-bg: rgba(255,255,255,0.4); --accent-color: #ff69b4; --tab-active-bg: #ff69b4; --tab-active-color: #fff; --card-bg: rgba(255, 255, 255, 0.5); --text-color: #5d4037; --btn-primary: #ff69b4; --app-font: 'Zen Maru Gothic', sans-serif;  }
+        /* ... (他のテーマも同様に追加可能ですが、長くなるため割愛。必要であれば追加します) ... */
+
+        /* === 基本スタイル === */
+        body { font-family: var(--app-font); margin: 0; padding: 0; background-color: transparent; color: var(--text-color); padding-bottom: 80px; touch-action: manipulation; }
+        #bg-color-layer { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -2; background-color: var(--bg-color); transition: background-color 0.4s; }
+        
+        /* はづきれじ特有のすりガラス効果 */
+        .glass-card { background: var(--card-bg); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; }
+        
+        button { touch-action: manipulation; font-family: inherit; cursor: pointer; border: none; border-radius: 14px; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s; }
+        button:active { transform: scale(0.92); }
+        input, select, textarea { font-family: inherit; }
+
+        /* === ヘッダー === */
+        .app-header { background-color: var(--header-bg); padding: 15px; text-align: center; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); z-index: 101; position: relative; margin-bottom: 10px; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
+        .app-header h1 { margin: 0; font-size: 1.2rem; font-weight: 900; color: var(--accent-color); }
+
+        /* === タブナビゲーション === */
+        .tabs { position: sticky; top: 5px; display: flex; background-color: var(--tab-bg); z-index: 1000; box-shadow: 0 8px 32px rgba(0,0,0,0.08); margin: 0 15px 15px 15px; border-radius: 24px; padding: 6px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.2); }
+        .tab { flex: 1; text-align: center; padding: 12px 0; color: var(--text-color); opacity: 0.6; font-weight: 900; font-size: 0.85rem; white-space: nowrap; border-radius: 18px; cursor: pointer; position: relative; z-index: 2; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .tab.active { opacity: 1; color: var(--tab-active-color); transform: scale(1.03); }
+        .tab-highlight { position: absolute; top: 6px; bottom: 6px; left: 6px; width: 0; background: var(--tab-active-bg); border-radius: 18px; z-index: 1; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        
+        .tab-content { display: none; padding: 0 15px; animation: slideUpFade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        .tab-content.active { display: block; }
+        @keyframes slideUpFade { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+
+        /* === 汎用UIパーツ === */
+        .section-title { font-size: 1.1rem; border-bottom: 2px solid rgba(128,128,128,0.2); padding-bottom: 8px; margin-top: 20px; color: var(--accent-color); display: flex; align-items: center; gap: 8px;}
+        .primary-btn { background-color: var(--btn-primary); color: white; padding: 15px; font-size: 1.1rem; font-weight: 900; width: 100%; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 15px;}
+        .form-input { width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid rgba(128,128,128,0.2); border-radius: 12px; font-size: 1rem; color: #333; background: rgba(255,255,255,0.9); font-weight: 700; margin-bottom: 10px;}
+
+        /* --- 1. チェックリスト用スタイル --- */
+        .check-item { display: flex; align-items: center; padding: 12px; border-bottom: 1px dashed rgba(128,128,128,0.2); gap: 10px; }
+        .check-item input[type="checkbox"] { width: 24px; height: 24px; accent-color: var(--accent-color); cursor: pointer; }
+        .check-item label { flex-grow: 1; font-weight: 700; cursor: pointer; transition: opacity 0.2s; }
+        .check-item.done label { text-decoration: line-through; opacity: 0.5; }
+
+        /* --- 2. お品書きメーカー用スタイル --- */
+        #oshi-preview-area { width: 100%; aspect-ratio: 3/4; background: #fff; border-radius: 12px; margin-bottom: 15px; border: 2px dashed rgba(128,128,128,0.3); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;}
+        .oshi-template-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px;}
+        .oshi-template-btn { padding: 10px; background: rgba(255,255,255,0.5); border: 2px solid transparent; border-radius: 12px; font-weight: bold; font-size: 0.8rem;}
+        .oshi-template-btn.active { border-color: var(--accent-color); background: rgba(255,255,255,0.9);}
+
+        /* --- 3. イベントデータベース用スタイル --- */
+        .event-card { padding: 15px; margin-bottom: 15px; position: relative; }
+        .event-card-title { font-size: 1.2rem; font-weight: 900; margin-bottom: 5px; }
+        .event-card-date { font-size: 0.85rem; color: var(--accent-color); font-weight: bold; margin-bottom: 10px; }
+        .event-tag { display: inline-block; padding: 4px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; background: rgba(128,128,128,0.1); margin-right: 5px;}
+    </style>
+</head>
+<body data-theme="cute"> <div id="bg-color-layer"></div>
+
+<div class="app-header">
+    <h1>🌸 はづきノート</h1>
+</div>
+
+<div class="tabs" id="main-tabs">
+    <div class="tab-highlight" id="tab-highlight"></div>
+    <div class="tab active" onclick="switchTab('tab-checklist', this)">✅ 準備・持物</div>
+    <div class="tab" onclick="switchTab('tab-maker', this)">🎨 お品書き</div>
+    <div class="tab" onclick="switchTab('tab-database', this)">📚 イベント管理</div>
+</div>
+
+<div id="tab-checklist" class="tab-content active">
+    <div class="glass-card" style="padding: 20px;">
+        <h2 style="margin-top:0; font-size: 1.2rem;">📝 次のイベント: <span style="color:var(--accent-color);">コミックマーケット</span></h2>
+        
+        <div class="section-title">📅 進行・入稿スケジュール</div>
+        <div id="progress-list">
+            <div class="check-item"><input type="checkbox" id="p1"><label for="p1">サークルカット提出 (〆 3/15)</label></div>
+            <div class="check-item"><input type="checkbox" id="p2"><label for="p2">新刊 表紙入稿 (〆 4/10)</label></div>
+            <div class="check-item"><input type="checkbox" id="p3"><label for="p3">新刊 本文入稿 (〆 4/15)</label></div>
+            <div class="check-item"><input type="checkbox" id="p4"><label for="p4">アクキー発注 (〆 4/20)</label></div>
+        </div>
+        <button class="primary-btn" style="background: rgba(128,128,128,0.1); color: var(--text-color); margin-top: 10px; padding: 10px; font-size:0.9rem;">＋ タスクを追加</button>
+
+        <div class="section-title">👜 当日の持ち物（ディスプレイ等）</div>
+        <div id="item-list">
+            <div class="check-item"><input type="checkbox" id="i1"><label for="i1">お釣り（100円玉×50、500円玉×20）</label></div>
+            <div class="check-item"><input type="checkbox" id="i2"><label for="i2">敷き布（ふわふわピンクのやつ）</label></div>
+            <div class="check-item"><input type="checkbox" id="i3"><label for="i3">ポスタースタンド・ポスター</label></div>
+            <div class="check-item"><input type="checkbox" id="i4"><label for="i4">はづきれじ用 iPad ＆ スマホ</label></div>
+            <div class="check-item"><input type="checkbox" id="i5"><label for="i5">モバイルバッテリー</label></div>
+            <div class="check-item"><input type="checkbox" id="i6"><label for="i6">差し入れ用のお菓子</label></div>
+        </div>
+        <button class="primary-btn" style="background: rgba(128,128,128,0.1); color: var(--text-color); margin-top: 10px; padding: 10px; font-size:0.9rem;">＋ 持ち物を追加</button>
+    </div>
+</div>
+
+<div id="tab-maker" class="tab-content">
+    <div class="glass-card" style="padding: 20px;">
+        <p style="font-size: 0.85rem; font-weight: bold; opacity: 0.8; margin-top:0;">「はづきれじ」の商品データを使って、SNS告知用のお品書き画像を自動生成します。</p>
+        
+        <div class="section-title">🖼️ テンプレート選択</div>
+        <div class="oshi-template-grid">
+            <button class="oshi-template-btn active">ふわふわ<br>ピンク</button>
+            <button class="oshi-template-btn">シンプル<br>クリア</button>
+            <button class="oshi-template-btn">ロック<br>テイスト</button>
+        </div>
+
+        <div class="section-title">プレビュー</div>
+        <div id="oshi-preview-area">
+            <div style="text-align:center; color:#888;">
+                ここに自動生成された<br>お品書きが表示されます<br>（開発中）
+            </div>
+        </div>
+
+        <button class="primary-btn">📸 画像として保存（ダウンロード）</button>
+    </div>
+</div>
+
+<div id="tab-database" class="tab-content">
+    <button class="primary-btn" style="margin-bottom: 20px;">＋ 新しいイベント情報を登録</button>
+
+    <div class="glass-card event-card">
+        <div class="event-card-date">2026年 5月開催予定</div>
+        <div class="event-card-title">コミックマーケット</div>
+        <div>
+            <span class="event-tag" style="background: #e1f5fe; color: #0288d1;">申込済</span>
+            <span class="event-tag" style="background: #fce4ec; color: #c2185b;">直接参加</span>
+        </div>
+        <p style="font-size: 0.85rem; margin-top: 10px;">
+            ・参加費：振込完了<br>
+            ・二次創作ガイドライン：問題なし確認済<br>
+            ・メモ：角スペース取れたらディスプレイ変える
+        </p>
+        <button style="width:100%; padding: 8px; margin-top:10px; border-radius:8px; font-weight:bold; background: rgba(128,128,128,0.1);">詳細を編集</button>
+    </div>
+
+    <div class="glass-card event-card">
+        <div class="event-card-date">時期未定（勧誘DMあり）</div>
+        <div class="event-card-title">FANTASIA（仮）</div>
+        <div>
+            <span class="event-tag" style="background: #fff3e0; color: #e65100;">検討中</span>
+            <span class="event-tag" style="background: #f3e5f5; color: #7b1fa2;">展示会商法？</span>
+        </div>
+        <p style="font-size: 0.85rem; margin-top: 10px;">
+            ・出展料無料とのことだが詳細不明<br>
+            ・ハードロックなコンセプトらしい<br>
+            ・有名絵師参加？要裏取り
+        </p>
+        <button style="width:100%; padding: 8px; margin-top:10px; border-radius:8px; font-weight:bold; background: rgba(128,128,128,0.1);">詳細を編集</button>
+    </div>
+</div>
+
+<script>
+    // タブ切り替えロジック（はづきれじと同じ）
+    function switchTab(id, tabElement) {
+        document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+
+        tabElement.classList.add('active');
+        const highlight = document.getElementById('tab-highlight');
+        highlight.style.width = tabElement.offsetWidth + 'px';
+        highlight.style.transform = `translateX(${tabElement.offsetLeft - 6}px)`;
+        
+        document.getElementById(id).classList.add('active');
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    // チェックボックスの取り消し線連動ロジック
+    document.querySelectorAll('.check-item input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if(this.checked) {
+                this.parentElement.classList.add('done');
+            } else {
+                this.parentElement.classList.remove('done');
+            }
+        });
+    });
+
+    // 初期化：最初のタブのハイライト位置を設定
+    window.onload = () => {
+        const activeTab = document.querySelector('.tab.active');
+        if(activeTab) switchTab('tab-checklist', activeTab);
+    };
+</script>
+
+</body>
+</html>

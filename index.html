@@ -216,7 +216,7 @@
     
     <div class="glass-card" style="padding: 20px; margin-bottom: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h2 style="margin:0; font-size: 1.2rem; color:var(--accent-color); font-weight: 900;">💬 AIアシスタント</h2>
+            <h2 style="margin:0; font-size: 1.2rem; color:var(--accent-color); font-weight: 900;">💬 AIアシアシスタント</h2>
             <button onclick="clearAiChat()" style="background: rgba(244,67,54,0.1); color: #f44336; padding: 6px 12px; border-radius: 10px; font-weight: 900; font-size: 0.85rem;">🗑️ ログ消去</button>
         </div>
         <div class="chat-container" id="ai-chat-box"></div>
@@ -658,7 +658,7 @@
             div.id = `item-row-${item.id}`;
             div.style.animationDelay = `${index * 0.03}s`; 
             
-            const isSelectedForDelete = bulkDeleteSelection.has(item.id);
+            const isSelectedForDelete = bulkDeleteSelection.has(String(item.id));
             
             let searchBtnHTML = '';
             if(listKey === 'daily_shopping' && !isDeleteMode) {
@@ -669,17 +669,17 @@
 
             if (isDeleteMode) {
                 div.innerHTML = `
-                    <input type="checkbox" ${isSelectedForDelete ? 'checked' : ''} onchange="toggleBulkSelect(${item.id}, this.checked)">
+                    <input type="checkbox" ${isSelectedForDelete ? 'checked' : ''} onchange="toggleBulkSelect('${item.id}', this.checked)">
                     <label onclick="document.getElementById('check-del-${item.id}').click()">${item.text}</label>
                 `;
                 div.querySelector('input').id = `check-del-${item.id}`;
             } else {
                 div.innerHTML = `
-                    <input type="checkbox" id="check-${item.id}" ${item.done ? 'checked' : ''} onchange="toggleCheck('${listKey}', ${item.id}, this.checked)">
+                    <input type="checkbox" id="check-${item.id}" ${item.done ? 'checked' : ''} onchange="toggleCheck('${listKey}', '${item.id}', this.checked)">
                     <label for="check-${item.id}">${item.text}</label>
                     <div class="item-actions">
                         ${searchBtnHTML}
-                        <button class="del-check-btn" onclick="deleteCheckItem('${listKey}', ${item.id}, ${listNum})">消去</button>
+                        <button class="del-check-btn" onclick="deleteCheckItem('${listKey}', '${item.id}', ${listNum})">消去</button>
                     </div>
                 `;
             }
@@ -1415,7 +1415,6 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         const dataArray = getDbArray();
 
         if (id) {
-            // ここがバグの原因でした。文字列同士で安全に比較するように修正しています。
             const item = dataArray.find(e => String(e.id) === String(id));
             if (item) {
                 item.title = title;
@@ -1516,13 +1515,6 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         el.style.height = 'auto';
         el.style.height = (el.scrollHeight) + 'px';
     }
-    
-    function handleChatEnter(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendAiChat();
-        }
-    }
 
     function renderAiChatHistory() {
         const box = document.getElementById('ai-chat-box');
@@ -1530,12 +1522,13 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         box.innerHTML = '<div class="chat-msg chat-ai">こんにちは！何でも相談してくださいね。スケジュールの登録も手伝いますよ！</div>';
         noteData.aiChatHistory.forEach(msg => {
             const isUser = msg.role === 'user';
-            const safeText = msg.content.replace(/</g, "<").replace(/>/g, ">");
+            const safeText = msg.content.replace(/</g, "&lt;").replace(/>/g, "&gt;");
             
             if (isUser) {
                 box.innerHTML += `<div class="chat-msg chat-user">${safeText}</div>`;
             } else {
-                const escapedForArg = msg.content.replace(/'/g, "\\'").replace(/"/g, """).replace(/\n/g, "\\n");
+                // 💡 文法エラーの原因となっていたダブルクォーテーションのエスケープを安全な形(&quot;)に修正
+                const escapedForArg = msg.content.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "\\n");
                 box.innerHTML += `
                     <div class="chat-msg chat-ai">
                         <div style="margin-bottom: 8px;">${safeText.replace(/\n/g, '<br>')}</div>
@@ -1557,6 +1550,8 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
     }
 
     function saveChatToMemo(text) {
+        // 安全にデコードして保存
+        const decodedText = text.replace(/&quot;/g, '"');
         const d = new Date();
         const todayStr = `${d.getFullYear()}/${('0'+(d.getMonth()+1)).slice(-2)}/${('0'+d.getDate()).slice(-2)}`;
         noteData.dailyNotes.unshift({
@@ -1565,7 +1560,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
             date: todayStr,
             destination: '',
             tags: 'AIメモ',
-            memo: text
+            memo: decodedText
         });
         saveData();
         renderDbItems();
@@ -1581,7 +1576,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         saveData();
         renderAiChatHistory();
         inputEl.value = '';
-        autoResizeChat(inputEl); // 高さを戻す
+        autoResizeChat(inputEl);
 
         const box = document.getElementById('ai-chat-box');
         const loadingId = "loading-" + Date.now();
@@ -1658,7 +1653,6 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
                 scheduleInput.value = action.data.text;
                 card.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 
-                // 強調アニメーション
                 card.style.animation = 'none';
                 setTimeout(() => { card.style.animation = 'jellyPop 0.8s'; }, 50);
                 
@@ -1686,7 +1680,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
 
         const btn = document.getElementById('btn-ai-schedule');
         const originalText = btn.innerText;
-        btn.innerText = "⏳ 賢く整理中...";
+        btn.innerText = "⏳ 超要約・賢く整理中...";
         btn.disabled = true;
 
         const prompt = `以下のテキストからスケジュール情報を抽出し、JSON形式で出力してください。
@@ -1701,7 +1695,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
 3. 既存のデータ（例: 耳鼻科）に関する「追加情報」だと判断できる場合は、新規登録ではなく "updates" 配列に入れ、対象のIDと追加すべきメモテキストを指示してください。
 4. 全く新しい予定は "new_items" 配列に入れてください。
 5. 【重要】 "destination" (場所) には、住所だけでなく「施設名（例：東京ビッグサイト、〇〇病院）」もそのまま入力してください。Googleマップで検索できる名称であれば何でも構いません。
-6. 【超重要】 入力テキストが膨大な長文（サイト全体のコピー等）の場合、挨拶や無関係な文章を完全に削ぎ落とし、"memo" の内容は「当日の行動に必要な要点・時間・持ち物・注意事項など」を箇条書き等で極限まで要約して短く詰めてください。
+6. 【超重要・要約ルール】 入力テキストが膨大な長文（サイト全体のコピー等）の場合、挨拶や無関係な文章を完全に削ぎ落とし、"memo" の内容は「当日の行動に必要な要点・時間・持ち物・注意事項など」を箇条書き等で極限まで要約して短く詰めてください。
 
 【出力フォーマット】
 {
@@ -1716,7 +1710,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
       "date": "2026/03/21 〜 2026/03/22",
       "destination": "場所や施設名",
       "tags": "関連タグ",
-      "memo": "詳細な内容や持ち物"
+      "memo": "・13:00集合\\n・持ち物: チケット"
     }
   ]
 }
@@ -1725,7 +1719,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
 ${text}`;
 
         const messages = [
-            { role: "system", content: "あなたは情報を整理し、既存データとのマージを行うアシスタントです。" },
+            { role: "system", content: "あなたは情報を極限まで要約し、既存データとのマージを行う優秀なアシスタントです。" },
             { role: "user", content: prompt }
         ];
 

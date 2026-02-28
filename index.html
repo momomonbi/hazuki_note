@@ -130,12 +130,15 @@
 
         .modal-footer { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--bg-color); padding: 15px 20px 45px 20px; box-sizing: border-box; display: flex; gap: 10px; border-top: 1px solid rgba(128,128,128,0.1); z-index: 2010;}
 
-        /* === 🔢 超特化型 電卓モーダル用（スリム化・はみ出し防止） === */
-        .calc-btn { background: #fff; border: 2px solid rgba(128,128,128,0.2); border-radius: 12px; font-size: 1.4rem; font-weight: 900; padding: 10px 0; color: #333; box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; touch-action: manipulation;}
+        /* === 🔢 超特化型 電卓モーダル用 === */
+        .calc-btn { background: #fff; border: 2px solid rgba(128,128,128,0.2); border-radius: 12px; font-size: 1.5rem; font-weight: 900; padding: 12px 0; color: #333; box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; touch-action: manipulation;}
         .calc-btn:active { transform: scale(0.9); box-shadow: none; }
         .calc-btn.op-btn { background: #e3f2fd; color: #007aff; border-color: rgba(0,122,255,0.2); }
         .calc-btn.clear-btn { background: #ffebee; color: #f44336; border-color: rgba(244,67,54,0.2); }
         .calc-btn.eq-btn { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+        
+        .unit-chip { background: #fff; border: 2px solid rgba(128,128,128,0.3); border-radius: 8px; font-size: 0.95rem; font-weight: 900; padding: 8px 10px; color: #555; transition: all 0.2s;}
+        .unit-chip.active { background: var(--accent-color); color: white; border-color: var(--accent-color); transform: scale(1.05); box-shadow: 0 2px 8px rgba(0,122,255,0.3);}
         
         /* 単位チップを少し小さく */
         .unit-chip { background: #fff; border: 2px solid rgba(128,128,128,0.3); border-radius: 8px; font-size: 0.9rem; font-weight: 900; padding: 6px 10px; color: #555; transition: all 0.2s;}
@@ -252,44 +255,46 @@
 </div>
 
 <div class="modal-overlay" id="calc-modal" style="z-index: 3000;">
-    <div class="modal-content" style="max-width: 400px; height: auto; max-height: 96vh; border-radius: 24px; padding: 15px; overflow-y: auto;">
+    <div class="modal-content" style="max-width: 420px; height: auto; max-height: 98vh; border-radius: 24px; padding: 18px; overflow-y: auto;">
         
-        <div style="margin-bottom: 6px; font-size: 0.9rem; font-weight: 900; color: var(--accent-color); display: flex; align-items: center; gap: 4px;">
+        <div style="margin-bottom: 8px; font-size: 0.9rem; font-weight: 900; color: var(--accent-color); display: flex; align-items: center; gap: 4px;">
             <span>🛒 選択中：</span><span id="calc-item-name">商品名</span>
         </div>
         
-        <div style="background: #f8f9fa; border-radius: 12px; padding: 8px 15px; text-align: right; color: #333; margin-bottom: 10px; display: flex; justify-content: flex-end; align-items: baseline; gap: 8px; border: 2px solid rgba(128,128,128,0.2); box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);">
-            <span id="calc-display-value" style="font-size: 2.2rem; font-weight: 900; line-height: 1; letter-spacing: -1px;">1</span>
+        <div style="background: #f8f9fa; border-radius: 12px; padding: 10px 15px; text-align: right; color: #333; margin-bottom: 12px; display: flex; justify-content: flex-end; align-items: baseline; gap: 8px; border: 2px solid rgba(128,128,128,0.2); box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);">
+            <span id="calc-display-value" style="font-size: 2.5rem; font-weight: 900; line-height: 1; letter-spacing: -1px;">1</span>
             <span id="calc-display-unit" style="font-size: 1.1rem; color: var(--accent-color); font-weight: 900;">個</span>
         </div>
 
-        <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; justify-content: center;" id="calc-unit-container">
+        <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 15px; justify-content: center;" id="calc-unit-container">
             </div>
 
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px;">
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 15px;">
+            <button class="calc-btn clear-btn" onclick="calcClear()">C</button>
+            <button class="calc-btn op-btn" onclick="calcOp('×')">×</button>
+            <button class="calc-btn op-btn" onclick="calcOp('-')">－</button>
+            <button class="calc-btn op-btn" onclick="calcOp('+')">＋</button>
+
             <button class="calc-btn" onclick="calcInput('7')">7</button>
             <button class="calc-btn" onclick="calcInput('8')">8</button>
             <button class="calc-btn" onclick="calcInput('9')">9</button>
-            <button class="calc-btn op-btn" onclick="calcOp('+')">＋</button>
+            <button class="calc-btn eq-btn" style="grid-row: span 3;" onclick="calcEq()">＝</button>
 
             <button class="calc-btn" onclick="calcInput('4')">4</button>
             <button class="calc-btn" onclick="calcInput('5')">5</button>
             <button class="calc-btn" onclick="calcInput('6')">6</button>
-            <button class="calc-btn op-btn" onclick="calcOp('-')">－</button>
 
             <button class="calc-btn" onclick="calcInput('1')">1</button>
             <button class="calc-btn" onclick="calcInput('2')">2</button>
             <button class="calc-btn" onclick="calcInput('3')">3</button>
-            <button class="calc-btn clear-btn" onclick="calcClear()">C</button>
 
             <button class="calc-btn" style="grid-column: span 2;" onclick="calcInput('0')">0</button>
-            <button class="calc-btn" onclick="calcInput('00')">00</button>
-            <button class="calc-btn eq-btn" onclick="calcEq()">＝</button>
-        </div>
+            <button class="calc-btn" onclick="calcInput('.')">.</button>
+            </div>
 
         <div style="display: flex; gap: 8px;">
-            <button class="secondary-btn" style="flex: 1; margin: 0; padding: 12px; font-size: 1rem; border-radius: 12px;" onclick="closeCalcModal()">やめる</button>
-            <button class="primary-btn" style="flex: 2; margin: 0; padding: 12px; font-size: 1.1rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,122,255,0.3);" onclick="commitCalcModal()">決定</button>
+            <button class="secondary-btn" style="flex: 1; margin: 0; padding: 14px; font-size: 1.1rem; border-radius: 12px;" onclick="closeCalcModal()">やめる</button>
+            <button class="primary-btn" style="flex: 2; margin: 0; padding: 14px; font-size: 1.2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,122,255,0.3);" onclick="commitCalcModal()">決定</button>
         </div>
     </div>
 </div>
@@ -842,30 +847,30 @@ function openShoppingModal() {
     }
 
     // ==========================================
-    // 🔢 超特化型 電卓機能 (個数・単位)
+    // 🔢 超特化型 電卓機能 (個数・単位・小数・乗算対応)
     // ==========================================
-    let calcState = { itemText: "", value: 0, prevValue: 0, op: null, unit: "個", isNewInput: true };
+    let calcState = { itemText: "", value: "0", prevValue: "0", op: null, unit: "個", isNewInput: true };
     const allUnits = ["個", "パック", "g", "ml", "ℓ", "本", "玉", "袋", "箱", "枚", "束", "なし"];
 
     function parseUnitString(str) {
-        if(str === 'なし') return { num: 0, unit: 'なし' };
-        const m = str.match(/^([0-9]+)(.*)$/);
-        if(m) return { num: parseInt(m[1], 10), unit: m[2] };
-        return { num: 1, unit: str }; // 数字がない場合は1とする
+        if(str === 'なし') return { num: "0", unit: 'なし' };
+        // 小数点を含む数字と単位を分離
+        const m = str.match(/^([0-9.]+)(.*)$/);
+        if(m) return { num: m[1], unit: m[2] };
+        return { num: "1", unit: str }; 
     }
 
     function openCalcModal(itemText) {
         calcState.itemText = itemText;
         
-        // 現在の単位を取得
         let currentStr = selectedShoppingItems.has(itemText) ? selectedShoppingItems.get(itemText) : guessDefaultUnit(itemText);
         let parsed = parseUnitString(currentStr);
         
         calcState.value = parsed.num;
         calcState.unit = parsed.unit;
-        calcState.prevValue = 0;
+        calcState.prevValue = "0";
         calcState.op = null;
-        calcState.isNewInput = true; // 最初に数字を押したら上書き
+        calcState.isNewInput = true; 
         
         document.getElementById('calc-item-name').innerText = itemText;
         updateCalcDisplay();
@@ -875,7 +880,11 @@ function openShoppingModal() {
     }
 
     function updateCalcDisplay() {
-        document.getElementById('calc-display-value').innerText = calcState.value === 0 && calcState.unit === 'なし' ? '' : calcState.value;
+        // 数値が0で単位が「なし」の場合は空文字にする
+        let displayVal = calcState.value;
+        if(displayVal === "0" && calcState.unit === 'なし') displayVal = '';
+        
+        document.getElementById('calc-display-value').innerText = displayVal;
         document.getElementById('calc-display-unit').innerText = calcState.unit === 'なし' ? '' : calcState.unit;
     }
 
@@ -888,22 +897,24 @@ function openShoppingModal() {
             btn.innerText = u;
             btn.onclick = () => {
                 calcState.unit = u;
-                if(u === 'なし') calcState.value = 0;
+                if(u === 'なし') calcState.value = "0";
                 renderCalcUnits(); updateCalcDisplay();
             };
             container.appendChild(btn);
         });
     }
 
-    function calcInput(numStr) {
+    function calcInput(charStr) {
         if(calcState.unit === 'なし') { calcState.unit = '個'; renderCalcUnits(); }
         
         if (calcState.isNewInput) {
-            calcState.value = parseInt(numStr, 10);
+            // 小数点から始めた場合は "0." にする
+            calcState.value = charStr === '.' ? "0." : charStr;
             calcState.isNewInput = false;
         } else {
-            const newValStr = calcState.value.toString() + numStr;
-            calcState.value = parseInt(newValStr, 10) || 0;
+            // 既に小数点が入力されている場合は、二重入力を防ぐ
+            if (charStr === '.' && calcState.value.includes('.')) return;
+            calcState.value += charStr;
         }
         updateCalcDisplay();
     }
@@ -917,32 +928,42 @@ function openShoppingModal() {
 
     function calcEq() {
         if (!calcState.op) return;
-        if (calcState.op === '+') calcState.value = calcState.prevValue + calcState.value;
-        else if (calcState.op === '-') calcState.value = Math.max(0, calcState.prevValue - calcState.value);
+        
+        let prev = parseFloat(calcState.prevValue);
+        let curr = parseFloat(calcState.value);
+        if(isNaN(prev)) prev = 0;
+        if(isNaN(curr)) curr = 0;
+        
+        let result = 0;
+        if (calcState.op === '+') result = prev + curr;
+        else if (calcState.op === '-') result = Math.max(0, prev - curr);
+        else if (calcState.op === '×') result = prev * curr;
+        
+        // 浮動小数点の誤差を修正し、文字列に戻す（小数点以下2桁まで残す）
+        calcState.value = parseFloat(result.toFixed(2)).toString();
+        
         calcState.op = null;
         calcState.isNewInput = true;
         updateCalcDisplay();
     }
 
     function calcClear() {
-        calcState.value = 0; calcState.prevValue = 0; calcState.op = null; calcState.isNewInput = true;
+        calcState.value = "0"; calcState.prevValue = "0"; calcState.op = null; calcState.isNewInput = true;
         updateCalcDisplay();
     }
 
     function closeCalcModal() { document.getElementById('calc-modal').style.display = 'none'; }
 
     function commitCalcModal() {
-        calcEq(); // もし計算途中なら確定させる
+        calcEq(); 
         let finalStr = calcState.unit === 'なし' ? 'なし' : `${calcState.value}${calcState.unit}`;
         selectedShoppingItems.set(calcState.itemText, finalStr);
         
-        // カタログのボタン表示を更新
         const card = document.querySelector(`.catalog-item-card[data-item-name="${calcState.itemText}"]`);
         if(card) {
             const unitBtn = card.querySelector('.catalog-unit-btn');
             if(unitBtn) unitBtn.innerText = finalStr;
             
-            // まだ選択されていなければ選択状態にする
             if(!card.classList.contains('selected')) {
                 card.classList.add('selected');
             }

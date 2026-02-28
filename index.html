@@ -23,10 +23,11 @@
         [data-theme="retro"] { --bg-color: #f5deb3; --header-bg: rgba(139, 69, 19, 0.85); --tab-bg: rgba(255,255,255,0.4); --accent-color: #d2691e; --tab-active-bg: #d2691e; --tab-active-color: #fff; --card-bg: rgba(255, 248, 220, 0.65); --text-color: #5c3a21; --btn-primary: #a0522d; --app-font: 'M PLUS Rounded 1c', sans-serif; }
         [data-theme="vivid"] { --bg-color: #111; --header-bg: rgba(30, 30, 30, 0.95); --tab-bg: rgba(50, 50, 50, 0.6); --accent-color: #ff00ff; --tab-active-bg: #ff00ff; --tab-active-color: #fff; --card-bg: rgba(40, 40, 40, 0.8); --text-color: #fff; --btn-primary: #cc00cc; --app-font: 'Noto Sans JP', sans-serif; }
 
-        /* === ぬるぬるアニメーション === */
-        @keyframes popIn { 0% { opacity: 0; transform: scale(0.7) translateY(40px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
-        @keyframes bounceInRight { 0% { opacity: 0; transform: translateX(-80px); } 60% { opacity: 1; transform: translateX(15px); } 100% { transform: translateX(0); } }
+        /* === アニメーション === */
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.8) translateY(30px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+        @keyframes bounceInRight { 0% { opacity: 0; transform: translateX(-60px); } 60% { opacity: 1; transform: translateX(10px); } 100% { transform: translateX(0); } }
         @keyframes fadeOutDown { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(40px) scale(0.9); } }
+        
         @keyframes jellyPop { 
             0% { transform: scale(1, 1); } 
             30% { transform: scale(1.25, 0.75); } 
@@ -36,14 +37,21 @@
             75% { transform: scale(1.05, 0.95); } 
             100% { transform: scale(1, 1); } 
         }
+        @keyframes tada { 
+            0% { transform: scale(1); } 
+            10%, 20% { transform: scale(0.8) rotate(-10deg); } 
+            30%, 50%, 70%, 90% { transform: scale(1.3) rotate(10deg); } 
+            40%, 60%, 80% { transform: scale(1.3) rotate(-10deg); } 
+            100% { transform: scale(1) rotate(0); } 
+        }
 
         /* === 基本スタイル === */
         body { font-family: var(--app-font); margin: 0; padding: 0; background-color: transparent; color: var(--text-color); padding-bottom: 100px; touch-action: manipulation; }
         #bg-color-layer { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -2; background-color: var(--bg-color); transition: background-color 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
-        .glass-card { background: var(--card-bg); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; animation: popIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .glass-card { background: var(--card-bg); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
         
-        button { touch-action: manipulation; font-family: inherit; cursor: pointer; border: none; border-radius: 14px; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
-        button:active { transform: scale(0.8) !important; box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important; }
+        button { touch-action: manipulation; font-family: inherit; cursor: pointer; border: none; border-radius: 14px; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
+        button:active { transform: scale(0.85); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         input, select, textarea { font-family: inherit; }
 
         /* === ヘッダー & タブ === */
@@ -52,12 +60,12 @@
         #mode-toggle-btn { padding: 12px 14px; font-size: 0.9rem; font-weight: 900; border-radius: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
         .tabs { position: sticky; top: 5px; display: flex; background-color: var(--tab-bg); z-index: 1000; box-shadow: 0 8px 32px rgba(0,0,0,0.08); margin: 0 15px 15px 15px; border-radius: 24px; padding: 6px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.2); }
-        .tab { flex: 1; text-align: center; padding: 12px 0; color: var(--text-color); opacity: 0.6; font-weight: 900; font-size: 0.9rem; white-space: nowrap; border-radius: 18px; cursor: pointer; position: relative; z-index: 2; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
-        .tab.active { opacity: 1; color: var(--tab-active-color); transform: scale(1.08); }
-        .tab-highlight { position: absolute; top: 6px; bottom: 6px; left: 6px; width: 0; background: var(--tab-active-bg); border-radius: 18px; z-index: 1; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.6s; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        .tab { flex: 1; text-align: center; padding: 12px 0; color: var(--text-color); opacity: 0.6; font-weight: 900; font-size: 0.9rem; white-space: nowrap; border-radius: 18px; cursor: pointer; position: relative; z-index: 2; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        .tab.active { opacity: 1; color: var(--tab-active-color); transform: scale(1.05); }
+        .tab-highlight { position: absolute; top: 6px; bottom: 6px; left: 6px; width: 0; background: var(--tab-active-bg); border-radius: 18px; z-index: 1; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.4s; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
         
         .tab-content { display: none; padding: 0 15px; }
-        .tab-content.active { display: block; animation: popIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .tab-content.active { display: block; animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
 
         /* === 汎用UIパーツ === */
         .section-title { font-size: 1.15rem; border-bottom: 3px dashed rgba(128,128,128,0.2); padding-bottom: 8px; margin-top: 20px; margin-bottom: 8px; color: var(--accent-color); display: flex; align-items: center; justify-content: space-between; gap: 8px; font-weight: 900;}
@@ -67,22 +75,23 @@
         .form-input { width: 100%; padding: 15px; box-sizing: border-box; border: 1px solid rgba(128,128,128,0.2); border-radius: 16px; font-size: 1rem; color: #333; background: rgba(255,255,255,0.9); font-weight: 700; margin-bottom: 10px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);}
 
         /* --- チェックリスト用 --- */
-        .check-item { display: flex; align-items: center; padding: 8px 10px; border-bottom: 1px dashed rgba(128,128,128,0.2); gap: 10px; animation: bounceInRight 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); background: transparent; border-radius: 10px;}
-        .check-item.removing { animation: fadeOutDown 0.5s forwards; }
+        .check-item { display: flex; align-items: center; padding: 8px 10px; border-bottom: 1px dashed rgba(128,128,128,0.2); gap: 10px; animation: bounceInRight 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); background: transparent; border-radius: 10px;}
+        .check-item.removing { animation: fadeOutDown 0.4s forwards; }
         .check-item.delete-mode { background: rgba(244,67,54,0.05); border: 1px solid rgba(244,67,54,0.2); margin-bottom: 4px; border-bottom: none;}
         
-        .check-item input[type="checkbox"] { width: 24px; height: 24px; accent-color: var(--accent-color); cursor: pointer; flex-shrink: 0; transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);}
+        .check-item input[type="checkbox"] { width: 24px; height: 24px; accent-color: var(--accent-color); cursor: pointer; flex-shrink: 0; transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);}
         .check-item.delete-mode input[type="checkbox"] { accent-color: #f44336; transform: scale(1.3); }
-        .check-item input[type="checkbox"]:active { transform: scale(0.5); }
-        .check-item label { flex-grow: 1; font-weight: 700; font-size: 1.05rem; cursor: pointer; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); line-height: 1.3; word-break: break-all;}
+        .check-item input[type="checkbox"]:active { transform: scale(0.6); }
+        .check-item label { flex-grow: 1; font-weight: 700; font-size: 1.05rem; cursor: pointer; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); line-height: 1.3; word-break: break-all;}
         
         .check-item.done label { text-decoration: line-through; opacity: 0.3; transform: scale(0.98); }
-        .check-item.anim-jelly label { animation: jellyPop 0.8s cubic-bezier(0.25, 1, 0.5, 1); color: var(--accent-color); font-weight: 900;}
+        .check-item.anim-jelly label { animation: jellyPop 0.6s cubic-bezier(0.25, 1, 0.5, 1); color: var(--accent-color); font-weight: 900;}
         
         .item-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0;}
         .search-btn { background: rgba(0, 122, 255, 0.1); color: #007aff; font-size: 0.8rem; padding: 6px 8px; border-radius: 8px; font-weight: 900; white-space: nowrap; border: 1px solid rgba(0, 122, 255, 0.2);}
         .del-check-btn { background: rgba(244,67,54,0.1); color: #f44336; font-size: 0.85rem; padding: 6px 10px; border-radius: 8px; font-weight: 900;}
 
+        /* AI検索ボタン */
         .ai-calc-btn { background: linear-gradient(135deg, #FFC107, #FF9800); color: white; padding: 15px; border-radius: 16px; font-weight: 900; font-size: 1.1rem; width: 100%; box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 15px;}
 
         /* --- データベース用 --- */
@@ -92,71 +101,56 @@
         .event-tags { margin-bottom: 12px; }
         .event-tag { display: inline-block; padding: 6px 10px; border-radius: 10px; font-size: 0.8rem; font-weight: 900; background: rgba(128,128,128,0.1); margin-right: 6px; margin-bottom: 6px;}
 
-        /* --- モーダル共通 --- */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: flex-end; animation: fadeIn 0.5s cubic-bezier(0.25, 1, 0.5, 1);}
+        /* --- モーダル共通・買い物カタログ --- */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: flex-end; animation: fadeIn 0.4s cubic-bezier(0.25, 1, 0.5, 1);}
         @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
         
-        /* 買い物カタログ モーダル */
-        #shopping-modal .modal-content { 
-            background: var(--bg-color); 
-            width: 100%; height: 90vh; 
-            border-top-left-radius: 30px; border-top-right-radius: 30px; 
-            padding: 0; /* flex制御のため内部でpadding設定 */
-            box-sizing: border-box; 
-            animation: slideUpModal 0.7s cubic-bezier(0.34, 1.56, 0.64, 1); 
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.2); 
-            display: flex; flex-direction: column; overflow: hidden; /* ★重要: ヘッダー固定用 */
-        }
+        /* 🔥 カタログの親コンテナ。スクロールは隠す。子要素でスクロールさせる */
+        .modal-content { background: var(--bg-color); width: 100%; height: 90vh; border-top-left-radius: 30px; border-top-right-radius: 30px; padding: 0; box-sizing: border-box; overflow: hidden; animation: slideUpModal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 -10px 40px rgba(0,0,0,0.2); position: relative; display: flex; flex-direction: column;}
         @keyframes slideUpModal { from{transform: translateY(100%);} to{transform: translateY(0);} }
         
+        /* 🔥 上部固定（Sticky）エリア */
         .modal-sticky-header { flex-shrink: 0; background: var(--bg-color); padding: 25px 20px 10px 20px; z-index: 2005; border-bottom: 2px solid rgba(128,128,128,0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.05);}
-        .modal-scroll-area { padding: 15px 20px 100px 20px; flex-grow: 1; overflow-y: auto; }
+        /* 🔥 スクロールエリア */
+        .modal-scroll-area { flex-grow: 1; padding: 15px 20px 100px 20px; overflow-y: auto; }
 
-        details { margin-bottom: 15px; background: var(--card-bg); border-radius: 16px; border: 1px solid rgba(128,128,128,0.15); box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);}
+        details { margin-bottom: 15px; background: var(--card-bg); border-radius: 16px; border: 1px solid rgba(128,128,128,0.15); box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);}
         summary { font-size: 1.1rem; font-weight: 900; color: var(--text-color); padding: 15px; cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; background: rgba(128,128,128,0.05);}
         summary::-webkit-details-marker { display: none; }
-        summary::after { content: '▼'; font-size: 0.8rem; color: var(--accent-color); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        summary::after { content: '▼'; font-size: 0.8rem; color: var(--accent-color); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
         details[open] summary::after { transform: rotate(180deg); }
         .catalog-content { padding: 15px; }
 
-        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
+        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
         
-        .catalog-item-card { background: #fff; border: 2px solid rgba(128,128,128,0.2); border-radius: 12px; padding: 12px 8px; display: flex; flex-direction: column; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: center; justify-content: center; position: relative;}
+        .catalog-item-card { background: #fff; border: 2px solid rgba(128,128,128,0.2); border-radius: 12px; padding: 10px 8px; display: flex; flex-direction: column; gap: 8px; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: stretch; justify-content: center;}
         
-        .catalog-item-btn { background: transparent; border: none; font-size: 1rem; font-weight: 900; color: var(--text-color); text-align: center; width: 100%; pointer-events: none;}
-        .catalog-unit-badge { background: rgba(255,255,255,0.3); color: white; font-size: 0.8rem; font-weight: bold; text-align: center; border-radius: 8px; padding: 3px 8px; margin-top: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
+        /* 単位ボタン (電卓起動用) */
+        .catalog-unit-select { padding: 8px; border-radius: 8px; border: 1px solid rgba(128,128,128,0.3); background: rgba(128,128,128,0.05); font-size: 0.85rem; font-weight: 900; width: 100%; box-sizing: border-box; color: var(--accent-color); cursor: pointer; transition: background 0.2s;}
 
+        .catalog-item-btn { background: transparent; border: none; font-size: 0.95rem; font-weight: 900; color: var(--text-color); text-align: center; width: 100%; padding: 4px; border-radius: 8px;}
+        
         .catalog-item-card.selected { background: var(--accent-color); border-color: var(--accent-color); transform: scale(0.95); box-shadow: inset 0 3px 6px rgba(0,0,0,0.2); animation: jellyPop 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
         .catalog-item-card.selected .catalog-item-btn { color: white; }
+        .catalog-item-card.selected .catalog-unit-select { background: rgba(255,255,255,0.2); color: white; border-color: transparent;}
         
-        .catalog-item-card.delete-selected { background: #f44336; border-color: #f44336; transform: scale(0.9) rotate(-3deg); animation: jellyPop 0.6s; }
+        .catalog-item-card.delete-selected { background: #f44336; border-color: #f44336; transform: scale(0.9) rotate(-3deg); animation: tada 0.5s; }
         .catalog-item-card.delete-selected .catalog-item-btn { color: white; }
         
         .sortable-ghost { opacity: 0.4; transform: scale(0.95); border: 2px dashed var(--accent-color); background: rgba(128,128,128,0.1); }
-        .sortable-drag { cursor: grabbing !important; }
 
-        .modal-footer { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--bg-color); padding: 15px 20px 25px 20px; box-sizing: border-box; display: flex; gap: 10px; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); z-index: 2010;}
+        .modal-footer { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-color); padding: 15px 20px 25px 20px; box-sizing: border-box; display: flex; gap: 10px; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); z-index: 2010;}
 
-        /* --- スーパー特化計算機 (電卓UI) --- */
-        #calc-modal .modal-content { height: auto; max-height: 85vh; padding: 25px 20px; border-radius: 30px 30px 0 0; overflow-y: visible;}
-        .calc-display-wrap { background: #fff; border: 3px solid var(--accent-color); border-radius: 16px; padding: 15px 20px; font-size: 2rem; font-weight: 900; text-align: right; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: inset 0 4px 10px rgba(0,0,0,0.05);}
-        .calc-target-name { font-size: 1.1rem; color: #888; max-width: 45%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left;}
-        .calc-input-area { display: flex; align-items: baseline; gap: 5px; }
-        .calc-num { color: #333; }
-        .calc-unit { color: var(--accent-color); font-size: 1.3rem; margin-left: 5px;}
+        /* --- 計算機 (電卓) モーダル用 --- */
+        .calc-btn { border: none; border-radius: 12px; font-size: 1.5rem; font-weight: 900; padding: 15px 0; background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.05); color: #333;}
+        .calc-btn:active { transform: scale(0.85); background: #f0f0f0; }
+        .calc-btn.fn { background: rgba(128,128,128,0.1); color: var(--accent-color); font-size: 1.3rem;}
+        .calc-btn.submit { background: var(--accent-color); color: #fff; box-shadow: 0 4px 15px rgba(0,122,255,0.3);}
+        .calc-unit-badge { padding: 10px 18px; background: rgba(128,128,128,0.1); border-radius: 20px; font-weight: 900; white-space: nowrap; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;}
+        .calc-unit-badge.active { background: rgba(0,122,255,0.1); border-color: var(--accent-color); color: var(--accent-color); transform: scale(1.05);}
 
-        .calc-keyboard { display: grid; grid-template-columns: 1fr 1.5fr; gap: 15px; margin-bottom: 20px;}
-        .calc-units-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-content: start; }
-        .calc-unit-btn { background: rgba(128,128,128,0.1); border: none; border-radius: 12px; padding: 12px 5px; font-weight: 900; font-size: 0.95rem; color: var(--text-color); transition: all 0.2s;}
-        .calc-unit-btn.active { background: var(--accent-color); color: white; transform: scale(0.95); box-shadow: 0 4px 10px rgba(0,122,255,0.2);}
-        
-        .calc-num-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-        .calc-num-btn { background: #fff; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 8px rgba(0,0,0,0.05); border-radius: 14px; font-size: 1.6rem; font-weight: 900; padding: 15px 0; color: #333; transition: transform 0.1s, background 0.1s;}
-        .calc-num-btn:active { background: #eee; transform: scale(0.9); }
-        .calc-num-btn.ctrl { background: rgba(244,67,54,0.1); color: #f44336; border-color: transparent;}
-
-        /* 固定アクションバー (一括削除時) */
-        #bulk-delete-bar { position: fixed; bottom: -100px; left: 0; width: 100%; background: rgba(244,67,54,0.95); backdrop-filter: blur(10px); padding: 20px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; transition: bottom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1005; box-shadow: 0 -5px 20px rgba(244,67,54,0.3);}
+        /* 一括削除用アクションバー */
+        #bulk-delete-bar { position: fixed; bottom: -100px; left: 0; width: 100%; background: rgba(244,67,54,0.95); backdrop-filter: blur(10px); padding: 20px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; transition: bottom 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1005; box-shadow: 0 -5px 20px rgba(244,67,54,0.3);}
         #bulk-delete-bar.active { bottom: 0; }
     </style>
 </head>
@@ -241,11 +235,11 @@
 <div class="modal-overlay" id="shopping-modal">
     <div class="modal-content">
         <div class="modal-sticky-header">
-            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 5px;">
                 <h2 style="margin: 0; font-size: 1.4rem; font-weight: 900; color: var(--accent-color);">🛒 買い物カタログ</h2>
                 <button id="catalog-edit-btn" onclick="toggleCatalogEditMode()" style="background: rgba(128,128,128,0.15); font-weight: 900; padding: 8px 12px; border-radius: 12px; transition: all 0.3s;">✏️ 編集する</button>
             </div>
-            <p id="catalog-desc" style="text-align: center; font-size: 0.9rem; font-weight: bold; opacity: 0.7; margin: 5px 0 0 0; transition: color 0.3s;">タップして数量を入力できます！</p>
+            <p id="catalog-desc" style="text-align: center; font-size: 0.9rem; font-weight: bold; opacity: 0.7; margin: 8px 0 0 0; transition: color 0.3s;">ポンポン押して複数選べます！</p>
         </div>
         
         <div class="modal-scroll-area" id="catalog-container"></div>
@@ -261,47 +255,47 @@
     </div>
 </div>
 
-<div class="modal-overlay" id="calc-modal" style="z-index: 2100;">
-    <div class="modal-content">
-        <div class="calc-display-wrap">
-            <div class="calc-target-name" id="calc-target-name">商品名</div>
-            <div class="calc-input-area">
-                <span class="calc-num" id="calc-num-display"></span>
-                <span class="calc-unit" id="calc-unit-display"></span>
+<div class="modal-overlay" id="calc-modal" style="z-index: 2500; align-items: center;">
+    <div class="modal-content" style="height: auto; max-height: 90vh; padding: 20px; max-width: 400px; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h3 style="margin:0; color:var(--accent-color); font-size:1.2rem; font-weight:900;">🔢 数量・単位を入力</h3>
+            <button onclick="closeCalculator()" style="background:transparent; border:none; font-size:1.8rem; color:#888; font-weight:bold; padding:0 10px;">×</button>
+        </div>
+        
+        <div style="background:#fff; border:2px solid rgba(0,0,0,0.1); border-radius:16px; padding:15px; margin-bottom:15px; box-shadow:inset 0 3px 6px rgba(0,0,0,0.05);">
+            <div id="calc-formula" style="color:#888; font-size:0.9rem; text-align:right; min-height:1.2em; font-weight:bold; letter-spacing:1px;"></div>
+            <div style="display:flex; justify-content:flex-end; align-items:baseline; gap:5px;">
+                <div id="calc-val" style="font-size:2.8rem; font-weight:900; color:#333; letter-spacing:-1px;"></div>
+                <div id="calc-unit-disp" style="font-size:1.4rem; font-weight:900; color:var(--accent-color);">個</div>
             </div>
         </div>
-        <div class="calc-keyboard">
-            <div class="calc-units-grid">
-                <button class="calc-unit-btn" onclick="setCalcUnit('個')">個</button>
-                <button class="calc-unit-btn" onclick="setCalcUnit('パック')">パック</button>
-                <button class="calc-unit-btn" onclick="setCalcUnit('g')">g</button>
-                <button class="calc-unit-btn" onclick="setCalcUnit('本')">本</button>
-                <button class="calc-unit-btn" onclick="setCalcUnit('枚')">枚</button>
-                <button class="calc-unit-btn" onclick="setCalcUnit('玉')">玉</button>
-                <button class="calc-unit-btn" onclick="setCalcUnit('袋')">袋</button>
-                <button class="calc-unit-btn" onclick="setCalcUnit('ℓ')">ℓ</button>
-                <button class="calc-unit-btn" onclick="setCalcUnit('ml')">ml</button>
-                <button class="calc-unit-btn" onclick="setCalcUnit('箱')">箱</button>
-                <button class="calc-unit-btn" onclick="setCalcUnit('')" style="grid-column: span 2;">単位なし</button>
-            </div>
-            <div class="calc-num-grid">
-                <button class="calc-num-btn" onclick="addCalcNum('7')">7</button>
-                <button class="calc-num-btn" onclick="addCalcNum('8')">8</button>
-                <button class="calc-num-btn" onclick="addCalcNum('9')">9</button>
-                <button class="calc-num-btn" onclick="addCalcNum('4')">4</button>
-                <button class="calc-num-btn" onclick="addCalcNum('5')">5</button>
-                <button class="calc-num-btn" onclick="addCalcNum('6')">6</button>
-                <button class="calc-num-btn" onclick="addCalcNum('1')">1</button>
-                <button class="calc-num-btn" onclick="addCalcNum('2')">2</button>
-                <button class="calc-num-btn" onclick="addCalcNum('3')">3</button>
-                <button class="calc-num-btn" onclick="addCalcNum('0')">0</button>
-                <button class="calc-num-btn" onclick="addCalcNum('00')">00</button>
-                <button class="calc-num-btn ctrl" onclick="clearCalcNum()">C</button>
-            </div>
-        </div>
-        <div style="display:flex; gap:10px; margin-top: 5px;">
-            <button class="secondary-btn" style="flex: 1; padding: 18px;" onclick="closeCalcModal()">キャンセル</button>
-            <button class="primary-btn" style="flex: 2; margin-bottom: 0; padding: 18px;" onclick="commitCalc()">決定</button>
+
+        <div id="calc-units-container" style="display:flex; gap:8px; overflow-x:auto; margin-bottom:20px; padding-bottom:10px; scrollbar-width:none;"></div>
+
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px;">
+            <button class="calc-btn fn" onclick="pressCalcKey('C')">C</button>
+            <button class="calc-btn fn" onclick="pressCalcKey('÷')">÷</button>
+            <button class="calc-btn fn" onclick="pressCalcKey('×')">×</button>
+            <button class="calc-btn fn" onclick="pressCalcKey('BS')">⌫</button>
+            
+            <button class="calc-btn num" onclick="pressCalcKey('7')">7</button>
+            <button class="calc-btn num" onclick="pressCalcKey('8')">8</button>
+            <button class="calc-btn num" onclick="pressCalcKey('9')">9</button>
+            <button class="calc-btn fn" onclick="pressCalcKey('-')">-</button>
+            
+            <button class="calc-btn num" onclick="pressCalcKey('4')">4</button>
+            <button class="calc-btn num" onclick="pressCalcKey('5')">5</button>
+            <button class="calc-btn num" onclick="pressCalcKey('6')">6</button>
+            <button class="calc-btn fn" onclick="pressCalcKey('+')">+</button>
+            
+            <button class="calc-btn num" onclick="pressCalcKey('1')">1</button>
+            <button class="calc-btn num" onclick="pressCalcKey('2')">2</button>
+            <button class="calc-btn num" onclick="pressCalcKey('3')">3</button>
+            <button class="calc-btn submit" style="grid-row:span 2;" onclick="commitCalc()">決定</button>
+            
+            <button class="calc-btn num" onclick="pressCalcKey('0')">0</button>
+            <button class="calc-btn num" onclick="pressCalcKey('00')">00</button>
+            <button class="calc-btn num" onclick="pressCalcKey('.')">.</button>
         </div>
     </div>
 </div>
@@ -332,18 +326,17 @@
         "🧻 日用品・消耗品": ["トイレットペーパー", "ティッシュ", "キッチンペーパー", "洗剤（衣類用）", "柔軟剤", "漂白剤", "食器用洗剤", "スポンジ", "お風呂用洗剤", "トイレ用洗剤", "シャンプー", "コンディショナー", "ボディソープ", "洗顔料", "歯磨き粉", "歯ブラシ", "ゴミ袋（大）", "ゴミ袋（小）", "ラップ", "アルミホイル", "クッキングシート", "フリーザーバッグ", "電池"]
     };
 
+    // 計算機で選べる単位リスト
+    const calcUnitList = ["個", "パック", "g", "kg", "本", "玉", "袋", "箱", "ℓ", "ml", "枚", "なし"];
+
     let noteData = { 
         theme: 'cute',
         appMode: 'daily',
         shoppingCatalog: null,
         checklists: {
-            event_schedule: [],
-            event_belonging: [],
-            daily_todo: [],
-            daily_shopping: []
+            event_schedule: [], event_belonging: [], daily_todo: [], daily_shopping: []
         },
-        events: [],
-        dailyNotes: []
+        events: [], dailyNotes: []
     };
 
     function initDB() {
@@ -432,8 +425,8 @@
         const toggleBtn = document.getElementById('mode-toggle-btn');
         toggleBtn.innerText = isDaily ? '🌸 日常中 (切替)' : '🎪 イベント中 (切替)';
         toggleBtn.style.background = isDaily ? '#4CAF50' : 'var(--accent-color)';
-        toggleBtn.style.transform = 'scale(0.7)';
-        setTimeout(() => toggleBtn.style.transform = 'scale(1)', 300);
+        toggleBtn.style.transform = 'scale(0.8)';
+        setTimeout(() => toggleBtn.style.transform = 'scale(1)', 200);
         
         document.getElementById('tab-btn-checklist').innerText = isDaily ? '✅ 買物・やる事' : '✅ 準備・持物';
         document.getElementById('tab-btn-database').innerText = isDaily ? '📓 日記・メモ' : '📚 イベント管理';
@@ -462,7 +455,7 @@
             renderChecklist(1, 'list-1');
             renderChecklist(2, 'list-2');
             list1.style.opacity = 1; list2.style.opacity = 1;
-        }, 200);
+        }, 150);
         
         renderDbItems();
         if(isDeleteMode) toggleDeleteMode();
@@ -509,7 +502,7 @@
             const div = document.createElement('div');
             div.className = `check-item ${item.done ? 'done' : ''} ${isDeleteMode ? 'delete-mode' : ''}`;
             div.id = `item-row-${item.id}`;
-            div.style.animationDelay = `${index * 0.04}s`; 
+            div.style.animationDelay = `${index * 0.03}s`; 
             
             const isSelectedForDelete = bulkDeleteSelection.has(item.id);
             
@@ -586,7 +579,7 @@
             noteData.checklists[listKey] = noteData.checklists[listKey].filter(i => i.id !== id);
             saveData();
             renderChecklist(listNum, `list-${listNum}`);
-        }, 500); 
+        }, 400); 
     }
 
     // --- 一括削除（選択消去）モード ---
@@ -643,22 +636,21 @@
                 noteData.checklists[keys.bottom] = (noteData.checklists[keys.bottom] || []).filter(i => !bulkDeleteSelection.has(i.id));
                 saveData();
                 toggleDeleteMode();
-            }, 500);
+            }, 400);
         }
     }
 
-    // --- 🌟 AIで相場を計算（Google検索AIモード） ---
+    // --- 🌟 AIで相場を計算（Google検索 AIモード） ---
     function openAIEstimate() {
         const list = noteData.checklists['daily_shopping'] || [];
-        const activeItems = list.filter(i => !i.done).map(i => i.text);
+        const activeItems = list.filter(i => !i.done).map(i => i.text); 
 
         if (activeItems.length === 0) {
             alert('買い物リストにアイテムがありません。');
             return;
         }
 
-        const promptText = `
-以下の買い物リストの現在（日本のスーパー）の一般的な相場価格を調べ、概算を計算してください。
+        const promptText = `以下の買い物リストの現在（日本のスーパー）の一般的な相場価格を調べ、概算を計算してください。
 
 【買い物リスト】
 ${activeItems.map(i => '・' + i).join('\n')}
@@ -666,13 +658,12 @@ ${activeItems.map(i => '・' + i).join('\n')}
 【出力形式の指定】
 1. 見やすい表形式で出力してください（列：商品名、想定単価、備考）。
 2. 指定した単位がない場合は、一般的な販売単位（1パック、100gなど）を想定して記載してください。
-3. 最後に「合計の概算金額（税込）」を分かりやすく提示してください。
-        `.trim();
+3. 最後に「合計の概算金額（税込）」を分かりやすく提示してください。`.trim();
 
         const query = encodeURIComponent(promptText);
         
         navigator.clipboard.writeText(promptText).then(() => {
-            if(confirm('AIへの指示（プロンプト）をコピーしました！\n\nOKを押すとGoogle検索が開きます。\n検索窓に貼り付けておくので、そのまま検索（エンター）してください！')) {
+            if(confirm('AIへの指示（プロンプト）をコピーしました！\n\nOKを押すとGoogle検索が開きます。\n検索窓に貼り付けておくので、送信するとAIが綺麗な表で概算を計算してくれます！')) {
                 window.open(`https://www.google.com/search?q=${query}`, '_blank');
             }
         }).catch(err => {
@@ -680,8 +671,145 @@ ${activeItems.map(i => '・' + i).join('\n')}
         });
     }
 
+    // --- 🧮 単位・数量 計算機機能 ---
+    let calcState = {
+        targetItem: null,
+        valStr: "", // 最初は空白
+        unit: "個",
+        formula: "",
+        isNewInput: true
+    };
+
+    function guessDefaultUnit(itemName) {
+        if(itemName.includes('肉') || itemName.includes('バラ') || itemName.includes('レバー')) return 'g';
+        if(itemName.includes('牛乳') || itemName.includes('ジュース')) return '本';
+        if(itemName.includes('卵')) return 'パック';
+        if(itemName.includes('キャベツ') || itemName.includes('白菜') || itemName.includes('大根')) return '玉';
+        if(itemName.includes('洗剤') || itemName.includes('シャンプー')) return '個';
+        return '個';
+    }
+
+    function renderCalcUnits() {
+        const container = document.getElementById('calc-units-container');
+        container.innerHTML = '';
+        calcUnitList.forEach(u => {
+            const btn = document.createElement('button');
+            btn.className = `calc-unit-badge ${u === calcState.unit ? 'active' : ''}`;
+            btn.innerText = u;
+            btn.onclick = () => {
+                calcState.unit = u;
+                renderCalcUnits();
+                updateCalcDisplay();
+            };
+            container.appendChild(btn);
+        });
+    }
+
+    function updateCalcDisplay() {
+        document.getElementById('calc-formula').innerText = calcState.formula;
+        // 未入力時はプレースホルダー的に空白を見せる
+        document.getElementById('calc-val').innerText = calcState.valStr === "" ? "　" : calcState.valStr;
+        document.getElementById('calc-unit-disp').innerText = calcState.unit === "なし" ? "" : calcState.unit;
+    }
+
+    function pressCalcKey(key) {
+        if (['+', '-', '×', '÷'].includes(key)) {
+            if(calcState.valStr === "") calcState.valStr = "0";
+            calcState.formula += calcState.valStr + " " + key + " ";
+            calcState.valStr = "";
+            calcState.isNewInput = false;
+        } else if (key === '=') {
+            if(calcState.valStr !== "") calcState.formula += calcState.valStr;
+            let evalStr = calcState.formula.replace(/×/g, '*').replace(/÷/g, '/');
+            try {
+                let res = new Function('return ' + evalStr)();
+                calcState.valStr = String(Math.round(res * 100) / 100); 
+                calcState.formula = "";
+                calcState.isNewInput = true;
+            } catch(e) {
+                calcState.valStr = "Error";
+                calcState.isNewInput = true;
+            }
+        } else if (key === 'C') {
+            calcState.valStr = "";
+            calcState.formula = "";
+        } else if (key === 'BS') {
+            if(calcState.valStr.length > 0) calcState.valStr = calcState.valStr.slice(0, -1);
+        } else {
+            // 数字入力
+            if (calcState.isNewInput) {
+                calcState.valStr = key;
+                calcState.isNewInput = false;
+            } else {
+                if(calcState.valStr === "0" && key !== ".") calcState.valStr = key;
+                else calcState.valStr += key;
+            }
+        }
+        updateCalcDisplay();
+    }
+
+    function openCalculator(itemText) {
+        calcState.targetItem = itemText;
+        
+        let currentStr = selectedShoppingItems.has(itemText) ? selectedShoppingItems.get(itemText) : "1" + guessDefaultUnit(itemText);
+        const match = currentStr.match(/^([0-9.]+)?(.*)$/);
+        
+        let u = match[2] || "個";
+        if(u === "なし(指定しない)" || u === "指定なし") u = "なし";
+        
+        calcState.unit = u;
+        calcState.valStr = ""; // 「最初は空白」の要望に対応
+        calcState.formula = "";
+        calcState.isNewInput = true;
+        
+        renderCalcUnits();
+        updateCalcDisplay();
+        
+        document.getElementById('calc-modal').style.display = 'flex';
+    }
+
+    function closeCalculator() {
+        document.getElementById('calc-modal').style.display = 'none';
+    }
+
+    function commitCalc() {
+        if(calcState.formula !== "") pressCalcKey('='); // 途中で決定されたら計算
+        
+        let finalVal = calcState.valStr;
+        let finalStr = "";
+        
+        if(finalVal === "" || finalVal === "0" || finalVal === "Error") {
+            // 数字が空の場合
+            if(calcState.unit === "なし") finalStr = "指定なし";
+            else finalStr = "1" + calcState.unit; // 何もないと変なのでデフォルトで1とする
+        } else {
+            if(calcState.unit === "なし") finalStr = finalVal;
+            else finalStr = finalVal + calcState.unit;
+        }
+
+        // Mapを更新して画面上のボタンの表示を変える
+        selectedShoppingItems.set(calcState.targetItem, finalStr);
+        
+        const cards = document.querySelectorAll('.catalog-item-card');
+        cards.forEach(card => {
+            if(card.dataset.itemName === calcState.targetItem) {
+                const btn = card.querySelector('.catalog-unit-select');
+                if(btn) btn.innerText = finalStr;
+                
+                if(!card.classList.contains('selected')) {
+                    card.classList.add('selected');
+                    card.style.animation = 'none';
+                    void card.offsetWidth;
+                    card.style.animation = 'jellyPop 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+                }
+            }
+        });
+
+        closeCalculator();
+    }
+
     // --- 🛒 買い物カタログ機能 ---
-    let selectedShoppingItems = new Map(); 
+    let selectedShoppingItems = new Map();
     let isCatalogEditMode = false;
     let catalogDeleteSelection = new Set();
     let sortableInstances = []; 
@@ -727,25 +855,24 @@ ${activeItems.map(i => '・' + i).join('\n')}
                 btn.className = 'catalog-item-btn'; 
                 btn.innerText = itemText;
                 
-                const badge = document.createElement('div');
-                badge.className = 'catalog-unit-badge';
-                badge.style.display = 'none';
-
                 if(isCatalogEditMode) {
                     if(catalogDeleteSelection.has(itemText)) card.classList.add('delete-selected');
                     card.onclick = () => toggleCatalogDeleteSelect(itemText, card);
                     card.appendChild(btn);
                 } else {
-                    if(selectedShoppingItems.has(itemText)) {
-                        card.classList.add('selected');
-                        badge.innerText = selectedShoppingItems.get(itemText);
-                        badge.style.display = 'block';
-                    }
+                    if(selectedShoppingItems.has(itemText)) card.classList.add('selected');
                     
-                    card.onclick = () => handleCatalogCardClick(itemText, card, badge);
-                    
+                    btn.onclick = (e) => { e.stopPropagation(); toggleCatalogItem(itemText, card); };
+                    card.onclick = () => toggleCatalogItem(itemText, card);
                     card.appendChild(btn);
-                    card.appendChild(badge);
+                    
+                    // 電卓を呼び出す単位ボタン
+                    const currentStr = selectedShoppingItems.has(itemText) ? selectedShoppingItems.get(itemText) : "1" + guessDefaultUnit(itemText);
+                    const unitBtn = document.createElement('button');
+                    unitBtn.className = 'catalog-unit-select ignore-drag';
+                    unitBtn.innerText = currentStr;
+                    unitBtn.onclick = (e) => { e.stopPropagation(); openCalculator(itemText); };
+                    card.appendChild(unitBtn);
                 }
                 
                 grid.appendChild(card);
@@ -778,7 +905,8 @@ ${activeItems.map(i => '・' + i).join('\n')}
                     animation: 400, 
                     easing: "cubic-bezier(0.25, 1, 0.5, 1)",
                     disabled: !isCatalogEditMode, 
-                    filter: '.ignore-drag', 
+                    filter: '.ignore-drag, button', 
+                    preventOnFilter: false, 
                     draggable: '.catalog-item-card:not(.ignore-drag)',
                     ghostClass: 'sortable-ghost',
                     delay: 150, 
@@ -795,15 +923,22 @@ ${activeItems.map(i => '・' + i).join('\n')}
         }
     }
 
-    function handleCatalogCardClick(itemText, card, badge) {
+    function toggleCatalogItem(itemText, cardEl) {
         if(selectedShoppingItems.has(itemText)) {
             selectedShoppingItems.delete(itemText);
-            card.classList.remove('selected');
-            badge.style.display = 'none';
-            if(navigator.vibrate) navigator.vibrate(10);
+            cardEl.classList.remove('selected');
         } else {
-            openCalcModal(itemText, card, badge);
+            // 未選択時はデフォルトの単位を採用
+            const unitBtn = cardEl.querySelector('.catalog-unit-select');
+            const unitStr = unitBtn ? unitBtn.innerText : "1" + guessDefaultUnit(itemText);
+            
+            selectedShoppingItems.set(itemText, unitStr);
+            cardEl.classList.add('selected');
+            cardEl.style.animation = 'none';
+            void cardEl.offsetWidth;
+            cardEl.style.animation = 'jellyPop 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
         }
+        if(navigator.vibrate) navigator.vibrate(20);
     }
 
     function toggleCatalogDeleteSelect(itemText, cardEl) {
@@ -824,7 +959,7 @@ ${activeItems.map(i => '・' + i).join('\n')}
         document.getElementById('catalog-edit-footer').style.display = isCatalogEditMode ? 'flex' : 'none';
         
         document.getElementById('catalog-edit-btn').innerText = isCatalogEditMode ? "戻る" : "✏️ 編集する";
-        document.getElementById('catalog-desc').innerText = isCatalogEditMode ? "消したい項目をタップ、または長押しで並び替えできます。" : "タップして数量を入力できます！";
+        document.getElementById('catalog-desc').innerText = isCatalogEditMode ? "消したい項目をタップ、または長押しで並び替えできます。" : "ポンポン押して複数選べます！";
         document.getElementById('catalog-desc').style.color = isCatalogEditMode ? "#f44336" : "inherit";
         
         buildShoppingCatalog();
@@ -861,7 +996,7 @@ ${activeItems.map(i => '・' + i).join('\n')}
         document.getElementById('catalog-normal-footer').style.display = 'flex';
         document.getElementById('catalog-edit-footer').style.display = 'none';
         document.getElementById('catalog-edit-btn').innerText = "✏️ 編集する";
-        document.getElementById('catalog-desc').innerText = "タップして数量を入力できます！";
+        document.getElementById('catalog-desc').innerText = "ポンポン押して複数選べます！";
         document.getElementById('catalog-desc').style.color = "inherit";
         
         buildShoppingCatalog(); 
@@ -881,7 +1016,7 @@ ${activeItems.map(i => '・' + i).join('\n')}
         if(!noteData.checklists['daily_shopping']) noteData.checklists['daily_shopping'] = [];
         
         selectedShoppingItems.forEach((unitStr, text) => {
-            const finalString = unitStr ? `${text} (${unitStr})` : text;
+            const finalString = unitStr === '指定なし' ? text : `${text} (${unitStr})`;
             noteData.checklists['daily_shopping'].push({ id: Date.now() + Math.random(), text: finalString, done: false });
         });
         
@@ -892,91 +1027,6 @@ ${activeItems.map(i => '・' + i).join('\n')}
         else renderChecklist(2, 'list-2');
         
         closeShoppingModal();
-    }
-
-    // --- 🔢 スーパー特化計算機 (電卓UI) ---
-    let currentCalcItemText = "";
-    let currentCalcCard = null;
-    let currentCalcBadge = null;
-    let calcNumValue = "";
-    let calcUnitValue = "";
-
-    function guessDefaultCalc(itemName) {
-        let num = "1"; let unit = "個";
-        if(itemName.includes('肉') || itemName.includes('バラ') || itemName.includes('レバー')) { num = "300"; unit = "g"; }
-        else if(itemName.includes('牛乳') || itemName.includes('ジュース')) { num = "1"; unit = "本"; }
-        else if(itemName.includes('卵')) { num = "1"; unit = "パック"; }
-        else if(itemName.includes('大根')) { num = "1"; unit = "本"; }
-        else if(itemName.includes('キャベツ') || itemName.includes('白菜') || itemName.includes('レタス')) { num = "1"; unit = "玉"; }
-        else if(itemName.includes('洗剤') || itemName.includes('シャンプー')) { num = "1"; unit = "個"; }
-        return { num, unit };
-    }
-
-    function openCalcModal(itemText, card, badge) {
-        currentCalcItemText = itemText;
-        currentCalcCard = card;
-        currentCalcBadge = badge;
-        
-        const def = guessDefaultCalc(itemText);
-        calcNumValue = def.num;
-        calcUnitValue = def.unit;
-        
-        updateCalcDisplay();
-        document.getElementById('calc-modal').style.display = 'flex';
-    }
-
-    function updateCalcDisplay() {
-        document.getElementById('calc-target-name').innerText = currentCalcItemText;
-        document.getElementById('calc-num-display').innerText = calcNumValue;
-        document.getElementById('calc-unit-display').innerText = calcUnitValue;
-        
-        document.querySelectorAll('.calc-unit-btn').forEach(btn => {
-            if(btn.innerText === calcUnitValue || (btn.innerText === '単位なし' && calcUnitValue === '')) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
-        });
-    }
-
-    function addCalcNum(val) {
-        calcNumValue += val;
-        updateCalcDisplay();
-    }
-
-    function clearCalcNum() {
-        calcNumValue = "";
-        updateCalcDisplay();
-    }
-
-    function setCalcUnit(unit) {
-        calcUnitValue = unit;
-        updateCalcDisplay();
-    }
-
-    function closeCalcModal() {
-        document.getElementById('calc-modal').style.display = 'none';
-    }
-
-    function commitCalc() {
-        const finalVal = calcNumValue ? `${calcNumValue}${calcUnitValue}` : calcUnitValue;
-        
-        selectedShoppingItems.set(currentCalcItemText, finalVal);
-        
-        currentCalcCard.classList.add('selected');
-        currentCalcCard.style.animation = 'none';
-        void currentCalcCard.offsetWidth;
-        currentCalcCard.style.animation = 'jellyPop 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
-        
-        if (finalVal) {
-            currentCalcBadge.innerText = finalVal;
-            currentCalcBadge.style.display = 'block';
-        } else {
-            currentCalcBadge.style.display = 'none';
-        }
-        
-        if(navigator.vibrate) navigator.vibrate(20);
-        closeCalcModal();
     }
 
     // --- データベース (イベント/日常 共通) ---

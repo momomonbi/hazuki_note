@@ -97,7 +97,7 @@
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: flex-end; animation: fadeIn 0.4s;}
         @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
         
-        .modal-content { background: var(--bg-color); width: 100%; max-width: 600px; height: 98%; max-height: 98dvh; border-top-left-radius: 30px; border-top-right-radius: 30px; padding: 0; box-sizing: border-box; overflow: hidden; animation: slideUpModal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 -10px 40px rgba(0,0,0,0.2); position: relative; display: flex; flex-direction: column;}
+        .modal-content { background: var(--bg-color); width: 100%; max-width: 600px; height: 100%; max-height: 100dvh; border-top-left-radius: 30px; border-top-right-radius: 30px; padding: 0; box-sizing: border-box; overflow: hidden; animation: slideUpModal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 -10px 40px rgba(0,0,0,0.2); position: relative; display: flex; flex-direction: column;}
         @keyframes slideUpModal { from{transform: translateY(100%);} to{transform: translateY(0);} }
         
         /* 固定上部エリア */
@@ -266,7 +266,7 @@
 </div>
 
 <div class="modal-overlay" id="calc-modal" style="z-index: 3000;">
-    <div class="modal-content" style="max-width: 420px; height: auto; max-height: 98%; border-radius: 24px; padding: 18px; overflow-y: auto;">
+    <div class="modal-content" style="max-width: 420px; height: auto; max-height: 100%; border-radius: 24px; padding: 18px; overflow-y: auto;">
         
         <div style="margin-bottom: 6px; font-size: 0.9rem; font-weight: 900; color: var(--accent-color); display: flex; align-items: center; gap: 4px;">
             <span>🛒 選択中：</span><span id="calc-item-name">商品名</span>

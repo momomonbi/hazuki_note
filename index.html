@@ -83,7 +83,7 @@
         .search-btn { background: rgba(0, 122, 255, 0.1); color: #007aff; font-size: 0.8rem; padding: 6px 8px; border-radius: 8px; font-weight: 900; white-space: nowrap; border: 1px solid rgba(0, 122, 255, 0.2);}
         .del-check-btn { background: rgba(244,67,54,0.1); color: #f44336; font-size: 0.85rem; padding: 6px 10px; border-radius: 8px; font-weight: 900;}
 
-        /* AI関連 */
+        /* AI関連ボタン */
         .ai-calc-btn { background: linear-gradient(135deg, #FFC107, #FF9800); color: white; padding: 15px; border-radius: 16px; font-weight: 900; font-size: 1.1rem; width: 100%; box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 15px;}
         .ai-magic-btn { background: linear-gradient(135deg, #9C27B0, #E040FB); color: white; padding: 15px; border-radius: 16px; font-weight: 900; font-size: 1.1rem; width: 100%; box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px;}
 
@@ -96,49 +96,68 @@
         /* --- データベース用 --- */
         .event-card { padding: 18px; margin-bottom: 15px; position: relative; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
         .event-card:active { transform: scale(0.98); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .event-card-title { font-size: 1.3rem; font-weight: 900; margin-bottom: 6px; }
+        .event-card-title { font-size: 1.3rem; font-weight: 900; margin-bottom: 6px; padding-right: 30px; }
         .event-card-date { font-size: 0.9rem; color: var(--accent-color); font-weight: 900; margin-bottom: 12px; display: flex; align-items: center; gap: 5px;}
         .event-tags { margin-bottom: 12px; }
         .event-tag { display: inline-block; padding: 6px 10px; border-radius: 10px; font-size: 0.8rem; font-weight: 900; background: rgba(128,128,128,0.1); margin-right: 6px; margin-bottom: 6px;}
+        /* ゴミ箱アイコン */
         .delete-icon-btn { position: absolute; top: 15px; right: 15px; background: transparent; border: none; font-size: 1.4rem; cursor: pointer; padding: 5px; border-radius: 50%; transition: background 0.2s; z-index: 10; }
         .delete-icon-btn:active { background: rgba(244,67,54,0.1); transform: scale(0.9); }
 
-        /* === 既存のCSS省略せず維持 === */
+        /* === 買い物カタログ & DB編集モーダル === */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: flex-end; animation: fadeIn 0.4s;}
         @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+        
         .modal-content { background: var(--bg-color); width: 100%; max-width: 600px; height: 100%; max-height: 100dvh; border-top-left-radius: 30px; border-top-right-radius: 30px; padding: 0; box-sizing: border-box; overflow: hidden; animation: slideUpModal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 -10px 40px rgba(0,0,0,0.2); position: relative; display: flex; flex-direction: column;}
         @keyframes slideUpModal { from{transform: translateY(100%);} to{transform: translateY(0);} }
+        
+        /* 固定上部エリア */
         .modal-sticky-header { flex-shrink: 0; background: var(--bg-color); padding: 25px 20px 10px 20px; z-index: 2005; border-bottom: 2px solid rgba(128,128,128,0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.05);}
+        /* スクロールエリア */
         .modal-scroll-area { flex-grow: 1; overflow-y: auto; padding: 15px 20px 140px 20px; }
+
         details { margin-bottom: 15px; background: var(--card-bg); border-radius: 16px; border: 1px solid rgba(128,128,128,0.15); box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; transition: all 0.3s;}
         summary { font-size: 1.1rem; font-weight: 900; color: var(--text-color); padding: 15px; cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; background: rgba(128,128,128,0.05);}
         summary::-webkit-details-marker { display: none; }
         summary::after { content: '▼'; font-size: 0.8rem; color: var(--accent-color); transition: transform 0.4s; }
         details[open] summary::after { transform: rotate(180deg); }
         .catalog-content { padding: 15px; }
+
+        /* カタログのグリッドを可変にする */
         .catalog-grid { display: grid; grid-template-columns: repeat(var(--catalog-cols, 2), 1fr); gap: 8px; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
+        
         .catalog-item-card { background: #fff; border: 2px solid rgba(128,128,128,0.2); border-radius: 12px; padding: 10px 8px; display: flex; flex-direction: column; gap: 8px; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: stretch; justify-content: center;}
+        
         .catalog-unit-btn { padding: 8px; border-radius: 8px; border: 1px solid rgba(128,128,128,0.3); background: rgba(128,128,128,0.05); font-size: 0.85rem; font-weight: 900; width: 100%; box-sizing: border-box; text-align: center; color: var(--text-color);}
         .catalog-item-btn { background: transparent; border: none; font-size: 0.95rem; font-weight: 900; color: var(--text-color); text-align: center; width: 100%; padding: 4px; border-radius: 8px;}
+        
         .catalog-item-card.selected { background: var(--accent-color); border-color: var(--accent-color); transform: scale(0.95); box-shadow: inset 0 3px 6px rgba(0,0,0,0.2); animation: jellyPop 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
         .catalog-item-card.selected .catalog-item-btn { color: white; }
         .catalog-item-card.selected .catalog-unit-btn { background: rgba(255,255,255,0.2); color: white; border-color: transparent;}
+        
         .catalog-item-card.delete-selected { background: #f44336; border-color: #f44336; transform: scale(0.9) rotate(-3deg); animation: jellyPop 0.6s; }
         .catalog-item-card.delete-selected .catalog-item-btn { color: white; }
+        
         .sortable-ghost { opacity: 0.4; transform: scale(0.95); border: 2px dashed var(--accent-color); background: rgba(128,128,128,0.1); }
         .sortable-drag { cursor: grabbing !important; }
+
+        /* カテゴリー削除ボタン用のスタイル */
         .category-header { display: flex; align-items: center; justify-content: space-between; width: 100%; pointer-events: auto; }
         .del-cat-btn { background: rgba(244,67,54,0.15); color: #f44336; border: none; border-radius: 8px; padding: 6px 10px; font-size: 0.8rem; font-weight: 900; margin-left: 10px; z-index: 10; }
+
         .modal-footer { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--bg-color); padding: 15px 20px 45px 20px; box-sizing: border-box; display: flex; gap: 10px; border-top: 1px solid rgba(128,128,128,0.1); z-index: 2010;}
+
+        /* === 🔢 超特化型 電卓モーダル用 === */
         .calc-btn { background: #fff; border: 2px solid rgba(128,128,128,0.2); border-radius: 12px; font-size: 1.4rem; font-weight: 900; padding: 10px 0; color: #333; box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; touch-action: manipulation;}
         .calc-btn:active { transform: scale(0.9); box-shadow: none; }
         .calc-btn.op-btn { background: #e3f2fd; color: #007aff; border-color: rgba(0,122,255,0.2); }
         .calc-btn.clear-btn { background: #ffebee; color: #f44336; border-color: rgba(244,67,54,0.2); }
         .calc-btn.eq-btn { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+        
         .unit-chip { background: #fff; border: 2px solid rgba(128,128,128,0.3); border-radius: 8px; font-size: 0.9rem; font-weight: 900; padding: 6px 10px; color: #555; transition: all 0.2s;}
         .unit-chip.active { background: var(--accent-color); color: white; border-color: var(--accent-color); transform: scale(1.05); box-shadow: 0 2px 8px rgba(0,122,255,0.3);}
-        
-        /* 共通一括削除バー */
+
+        /* 固定アクションバー (一括削除時) */
         #bulk-delete-bar, #db-bulk-delete-bar { position: fixed; bottom: -100px; left: 0; width: 100%; background: rgba(244,67,54,0.95); backdrop-filter: blur(10px); padding: 20px; padding-bottom: 40px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; transition: bottom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1005; box-shadow: 0 -5px 20px rgba(244,67,54,0.3);}
         #bulk-delete-bar.active, #db-bulk-delete-bar.active { bottom: 0; }
     </style>
@@ -154,8 +173,8 @@
 
 <div class="tabs" id="main-tabs">
     <div class="tab-highlight" id="tab-highlight"></div>
-    <div class="tab active" onclick="switchTab('tab-checklist', this)" id="tab-btn-checklist">✅ 買物やる事</div>
-    <div class="tab" onclick="switchTab('tab-database', this)" id="tab-btn-database">📓 日記メモ</div>
+    <div class="tab active" onclick="switchTab('tab-checklist', this)" id="tab-btn-checklist">✅ 買物・やる事</div>
+    <div class="tab" onclick="switchTab('tab-database', this)" id="tab-btn-database">📓 日記・メモ</div>
     <div class="tab" onclick="switchTab('tab-ai', this)">🤖 AI</div>
     <div class="tab" onclick="switchTab('tab-settings', this)">⚙️ 設定</div>
 </div>
@@ -276,6 +295,7 @@
         <div class="modal-sticky-header">
             <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; gap: 10px;">
                 <h2 style="margin: 0; font-size: 1.4rem; font-weight: 900; color: var(--accent-color); white-space: nowrap;">🛒 カタログ</h2>
+                
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <select id="catalog-cols-select" onchange="changeCatalogColumns(this.value)" style="padding: 8px; border-radius: 10px; border: 1px solid rgba(128,128,128,0.2); font-weight: 900; font-size: 0.85rem; background: rgba(128,128,128,0.1); color: var(--text-color);">
                         <option value="1">1列</option>
@@ -289,7 +309,9 @@
             </div>
             <p id="catalog-desc" style="text-align: center; font-size: 0.85rem; font-weight: bold; opacity: 0.7; margin: 5px 0 0 0; transition: color 0.3s;">ポンポン押して複数選べます！</p>
         </div>
+        
         <div class="modal-scroll-area" id="catalog-container"></div>
+
         <div class="modal-footer" id="catalog-normal-footer">
             <button class="secondary-btn" style="flex: 1; margin: 0; background: rgba(128,128,128,0.2);" onclick="closeShoppingModal()">やめる</button>
             <button class="primary-btn" style="flex: 2; margin: 0;" onclick="commitShoppingModal()">✨ 選んだものを追加</button>
@@ -306,32 +328,42 @@
 
 <div class="modal-overlay" id="calc-modal" style="z-index: 3000;">
     <div class="modal-content" style="max-width: 420px; height: auto; max-height: 100%; border-radius: 24px; padding: 18px; overflow-y: auto;">
+        
         <div style="margin-bottom: 6px; font-size: 0.9rem; font-weight: 900; color: var(--accent-color); display: flex; align-items: center; gap: 4px;">
             <span>🛒 選択中：</span><span id="calc-item-name">商品名</span>
         </div>
+        
         <div style="background: #f8f9fa; border-radius: 12px; padding: 8px 15px; text-align: right; color: #333; margin-bottom: 10px; display: flex; justify-content: flex-end; align-items: baseline; gap: 8px; border: 2px solid rgba(128,128,128,0.2); box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);">
             <span id="calc-display-value" style="font-size: 2.2rem; font-weight: 900; line-height: 1; letter-spacing: -1px;">1</span>
             <span id="calc-display-unit" style="font-size: 1.1rem; color: var(--accent-color); font-weight: 900;">個</span>
         </div>
-        <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; justify-content: center;" id="calc-unit-container"></div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; justify-content: center;" id="calc-unit-container">
+        </div>
+
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 15px;">
             <button class="calc-btn clear-btn" onclick="calcClear()">C</button>
             <button class="calc-btn op-btn" onclick="calcOp('×')">×</button>
             <button class="calc-btn op-btn" onclick="calcOp('-')">－</button>
             <button class="calc-btn op-btn" onclick="calcOp('+')">＋</button>
+
             <button class="calc-btn" onclick="calcInput('7')">7</button>
             <button class="calc-btn" onclick="calcInput('8')">8</button>
             <button class="calc-btn" onclick="calcInput('9')">9</button>
             <button class="calc-btn eq-btn" style="grid-row: span 3;" onclick="calcEq()">＝</button>
+
             <button class="calc-btn" onclick="calcInput('4')">4</button>
             <button class="calc-btn" onclick="calcInput('5')">5</button>
             <button class="calc-btn" onclick="calcInput('6')">6</button>
+
             <button class="calc-btn" onclick="calcInput('1')">1</button>
             <button class="calc-btn" onclick="calcInput('2')">2</button>
             <button class="calc-btn" onclick="calcInput('3')">3</button>
+
             <button class="calc-btn" style="grid-column: span 2;" onclick="calcInput('0')">0</button>
             <button class="calc-btn" onclick="calcInput('.')">.</button>
         </div>
+
         <div style="display: flex; gap: 8px;">
             <button class="secondary-btn" style="flex: 1; margin: 0; padding: 14px; font-size: 1.1rem; border-radius: 12px;" onclick="closeCalcModal()">やめる</button>
             <button class="primary-btn" style="flex: 2; margin: 0; padding: 14px; font-size: 1.2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,122,255,0.3);" onclick="commitCalcModal()">決定</button>
@@ -343,10 +375,13 @@
     <div class="modal-content" style="max-width: 500px; height: auto; max-height: 90vh; border-radius: 24px; padding: 25px 20px; overflow-y: auto;">
         <h2 id="db-modal-title" style="margin-top:0; color:var(--accent-color); font-weight: 900; margin-bottom: 20px;">項目を編集</h2>
         <input type="hidden" id="db-edit-id">
+        
         <label style="font-weight:900; font-size:0.95rem; color: var(--text-color);">📝 タイトル / イベント名</label>
         <input type="text" id="db-edit-title" class="form-input" placeholder="タイトルを入力">
+        
         <label style="font-weight:900; font-size:0.95rem; color: var(--text-color);">📅 日付 (自由に書けます)</label>
         <input type="text" id="db-edit-date" class="form-input" style="margin-bottom:8px;" placeholder="例: 2026年3月21日(土)〜22日(日)">
+        
         <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px; background: rgba(128,128,128,0.05); padding: 10px; border-radius: 12px; border: 1px dashed rgba(128,128,128,0.2);">
             <div style="position: relative; overflow: hidden; flex: 1;">
                 <button type="button" class="secondary-btn" style="margin:0; padding: 8px 5px; font-size: 0.85rem; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">📅 開始日</button>
@@ -359,12 +394,16 @@
             </div>
             <button type="button" onclick="clearDateRange()" style="background:transparent; border:none; font-size:1.2rem; cursor:pointer; padding:5px; transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.8)'" onmouseup="this.style.transform='scale(1)'" title="クリア">🔄</button>
         </div>
+        
         <label style="font-weight:900; font-size:0.95rem; color: var(--text-color);">📍 予定先の住所 (ルート検索用)</label>
         <input type="text" id="db-edit-destination" class="form-input" placeholder="例：東京ビッグサイト、〇〇デパート">
+        
         <label style="font-weight:900; font-size:0.95rem; color: var(--text-color);">🏷️ タグ (スペースかカンマで区切る・任意)</label>
         <input type="text" id="db-edit-tags" class="form-input" placeholder="例：買い物 ランチ">
+        
         <label style="font-weight:900; font-size:0.95rem; color: var(--text-color);">✏️ メモ</label>
         <textarea id="db-edit-memo" class="form-input" rows="5" placeholder="メモを入力"></textarea>
+        
         <div style="display: flex; gap: 10px; margin-top: 15px;">
             <button class="secondary-btn" style="flex: 1; margin: 0;" onclick="closeDbEditModal()">キャンセル</button>
             <button class="primary-btn" style="flex: 2; margin: 0;" onclick="saveDbItem()">保存</button>
@@ -372,7 +411,7 @@
     </div>
 </div>
 
-<div id="bulk-delete-bar" class="bulk-delete-bar">
+<div id="bulk-delete-bar">
     <span style="color: white; font-weight: 900; font-size: 1.1rem;" id="bulk-delete-text">0件 選択中</span>
     <div style="display: flex; gap: 8px;">
         <button onclick="toggleSelectAllBulk()" id="bulk-select-all-btn" style="background: rgba(255,255,255,0.2); color: white; padding: 10px 12px; font-weight: bold; border-radius: 10px; font-size: 0.9rem; white-space: nowrap;">全選択</button>
@@ -381,7 +420,7 @@
     </div>
 </div>
 
-<div id="db-bulk-delete-bar" class="bulk-delete-bar">
+<div id="db-bulk-delete-bar">
     <span style="color: white; font-weight: 900; font-size: 1.1rem;" id="db-bulk-delete-text">0件 選択中</span>
     <div style="display: flex; gap: 8px;">
         <button onclick="toggleSelectAllDbBulk()" id="db-bulk-select-all-btn" style="background: rgba(255,255,255,0.2); color: white; padding: 10px 12px; font-weight: bold; border-radius: 10px; font-size: 0.9rem; white-space: nowrap;">全選択</button>
@@ -389,7 +428,6 @@
         <button onclick="executeDbBulkDelete()" style="background: white; color: #f44336; padding: 10px 15px; font-weight: 900; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); font-size: 0.95rem; white-space: nowrap;">一気に消す！</button>
     </div>
 </div>
-
 
 <script>
     // ==========================================
@@ -401,9 +439,10 @@
     // 🚀 IndexedDB ＆ データ構造
     // ==========================================
     const DB_NAME = 'HazukiNotoDB';
-    const DB_VERSION = 15; 
+    const DB_VERSION = 15; // バージョンアップ
     let db;
     
+    // 主婦向け 超・膨大なデフォルト買い物カタログ
     const defaultCatalog = {
         "🍅 野菜・果物": ["キャベツ", "レタス", "トマト", "ミニトマト", "きゅうり", "玉ねぎ", "じゃがいも", "にんじん", "大根", "白菜", "ネギ", "きのこ類", "もやし", "ほうれん草", "小松菜", "ニラ", "ピーマン", "ブロッコリー", "セロリ", "アボカド", "にんにく", "しょうが", "りんご", "バナナ", "みかん", "季節のフルーツ"],
         "🥩 肉・お魚": ["豚こま切れ", "豚バラ", "豚ロース", "牛バラ", "牛肉（その他）", "鶏もも肉", "鶏むね肉", "手羽元・手羽先", "レバー", "合い挽き肉", "豚ひき肉", "鶏ひき肉", "鮭（切り身）", "サバ", "ブリ", "タラ", "旬の魚", "お刺身", "しらす", "ウインナー", "ベーコン", "ハム"],
@@ -426,7 +465,7 @@
         checklists: { event_schedule: [], event_belonging: [], daily_todo: [], daily_shopping: [] },
         events: [],
         dailyNotes: [],
-        aiChatHistory: [] 
+        aiChatHistory: []
     };
 
     function initDB() {
@@ -486,24 +525,31 @@
         
         if (!noteData.events || noteData.events.length === 0) {
             noteData.events = [
-                { id: Date.now() + 1, title: 'FANTASIA 2026春', date: '2026/03/21 〜 2026/03/22', tags: 'グッズ イラスト 漫画 小説 ゲーム 音楽', destination: '東京流通センター（TRC）第一展示場 Bホール 東京都大田区平和島6-1-1', memo: '入口のスタッフに電子チケットをお見せください。' }
+                { id: Date.now() + 1, title: 'FANTASIA 2026春', date: '2026/03/21 〜 2026/03/22', tags: 'グッズ イラスト 漫画 小説 ゲーム 音楽', destination: '東京流通センター（TRC）第一展示場 Bホール 東京都大田区平和島6-1-1', memo: '入口のスタッフに電子チケットFANTASIA2026春をお見せください。スタッフがチケットをもぎり、リストバンドをお渡しいたします。\n再入場する際は、入口にてリストバンドのご提示をお願いいたします。' },
+                { id: Date.now() + 2, title: 'M3-2026春', date: '2026/04/26', tags: '音楽', destination: '東京流通センター(TRC)第一・第二展示場 東京都大田区平和島6-1-1', memo: '自主制作音系作品の展示即売会' },
+                { id: Date.now() + 3, title: 'デザインフェスタ vol.63', date: '2026/05/23 〜 2026/05/24', tags: 'アート パフォーマンス', destination: '東京ビッグサイト 西＆南ホール全館', memo: 'オリジナル作品なら審査なしで参加可能。プロ・アマ問わず、イラストやアート作品、パフォーマンスまでジャンル自由。ブースサイズにより費用は異なり、Sブース1日で1万円台～。' },
+                { id: Date.now() + 4, title: 'コミックマーケット108 (C108)', date: '2026/08/15 〜 2026/08/16', tags: '同人誌 グッズ コスプレ', destination: '東京ビッグサイト（東京国際展示場）', memo: 'オールジャンル即売会で、オリジナル・二次創作問わず参加可。サークル参加申込を行い、抽選に当選すると出店できる。出店料は1スペース約8,000円（机半分・椅子2脚付き）。\n日本最大級の同人イベントで数十万人が来場する。頒布物のジャンル制限が少なく、イラスト集・オリジナル漫画・グッズなど自由に販売可能。' }
             ];
             saveData();
         }
 
         document.body.setAttribute('data-theme', noteData.theme || 'cute');
         document.getElementById('theme-selector').value = noteData.theme || 'cute';
+        
         document.documentElement.style.setProperty('--catalog-cols', noteData.catalogColumns);
         document.getElementById('catalog-cols-select').value = noteData.catalogColumns;
+
         document.getElementById('user-location-input').value = noteData.userLocation;
         document.getElementById('api-key-input').value = noteData.apiKey;
         
         applyModeUI(); 
         buildShoppingCatalog();
-        renderAiChatHistory(); 
+        renderAiChatHistory();
         
         const activeTab = document.querySelector('.tab.active');
-        if(activeTab) { switchTab(activeTab.getAttribute('onclick').match(/'([^']+)'/)[1], activeTab); }
+        if(activeTab) {
+            switchTab(activeTab.getAttribute('onclick').match(/'([^']+)'/)[1], activeTab);
+        }
     }
 
     window.onload = () => { initDB(); };
@@ -533,9 +579,12 @@
         
         document.getElementById('tab-btn-checklist').innerText = isDaily ? '✅ 買物やる事' : '✅ 準備持物';
         document.getElementById('tab-btn-database').innerText = isDaily ? '📓 日記メモ' : '📚 イベント管理';
+
         document.getElementById('checklist-main-title').innerHTML = isDaily ? '<span style="font-size: 1.6rem;">☀️</span> 買い物と今日のタスク' : '<span style="font-size: 1.6rem;">📝</span> 次のイベントに向けて';
+        
         document.getElementById('checklist-sub1-title').innerText = isDaily ? '🛒 買い物リスト' : '📅 進行・入稿スケジュール';
         document.getElementById('checklist-sub2-title').innerText = isDaily ? '☑️ やること (ToDo)' : '👜 当日の持ち物（ディスプレイ等）';
+        
         document.getElementById('checklist-add1-btn').innerText = isDaily ? '📖 カタログ' : '✏️ 手動入力';
         document.getElementById('checklist-add2-btn').innerText = '✏️ 手動入力';
 
@@ -551,7 +600,9 @@
         if(isDeleteMode) toggleDeleteMode();
         if(isDbDeleteMode) toggleDbDeleteMode();
 
-        renderChecklist(1, 'list-1'); renderChecklist(2, 'list-2'); renderDbItems();
+        renderChecklist(1, 'list-1');
+        renderChecklist(2, 'list-2');
+        renderDbItems();
     }
 
     function switchTab(id, tabElement) {
@@ -568,11 +619,18 @@
     }
 
     function changeTheme(name) { noteData.theme = name; document.body.setAttribute('data-theme', name); saveData(); }
-    function changeCatalogColumns(val) { document.documentElement.style.setProperty('--catalog-cols', val); noteData.catalogColumns = parseInt(val); saveData(); }
+    
+    function changeCatalogColumns(val) {
+        document.documentElement.style.setProperty('--catalog-cols', val);
+        noteData.catalogColumns = parseInt(val);
+        saveData();
+    }
 
-    /* --- チェックリスト用機能 --- */
-    let isDeleteMode = false; let bulkDeleteSelection = new Set();
-    function renderChecklist(listNum, containerId) { 
+    // --- チェックリスト機能 ---
+    let isDeleteMode = false;
+    let bulkDeleteSelection = new Set();
+
+    function renderChecklist(listNum, containerId) {
         const container = document.getElementById(containerId);
         container.innerHTML = '';
         const keys = getListKeysForMode();
@@ -622,7 +680,12 @@
     function addCheckItem(listNum, useCatalog = false) {
         const keys = getListKeysForMode();
         const listKey = listNum === 1 ? keys.top : keys.bottom;
-        if(useCatalog && listKey === 'daily_shopping') { openShoppingModal(); return; }
+        
+        if(useCatalog && listKey === 'daily_shopping') {
+            openShoppingModal();
+            return;
+        }
+
         const text = prompt('新しい項目を入力してください:');
         if (text && text.trim()) {
             if(!noteData.checklists[listKey]) noteData.checklists[listKey] = [];
@@ -630,19 +693,26 @@
             saveData(); renderChecklist(listNum, `list-${listNum}`);
         }
     }
-    function toggleCheck(listKey, id, isDone) { 
+
+    function toggleCheck(listKey, id, isDone) {
         if(isDeleteMode) return; 
         const item = noteData.checklists[listKey].find(i => i.id === id);
         if (item) {
             item.done = isDone; saveData();
             const wrapper = document.getElementById(`item-row-${id}`);
             if(isDone) {
-                wrapper.classList.add('done'); wrapper.classList.remove('anim-jelly');
-                void wrapper.offsetWidth; wrapper.classList.add('anim-jelly');
-            } else { wrapper.classList.remove('done'); wrapper.classList.remove('anim-jelly'); }
+                wrapper.classList.add('done');
+                wrapper.classList.remove('anim-jelly');
+                void wrapper.offsetWidth;
+                wrapper.classList.add('anim-jelly');
+            } else {
+                wrapper.classList.remove('done');
+                wrapper.classList.remove('anim-jelly');
+            }
         }
     }
-    function deleteCheckItem(listKey, id, listNum) { 
+
+    function deleteCheckItem(listKey, id, listNum) {
         const row = document.getElementById(`item-row-${id}`);
         row.classList.add('removing');
         setTimeout(() => {
@@ -650,41 +720,77 @@
             saveData(); renderChecklist(listNum, `list-${listNum}`);
         }, 500); 
     }
-    function toggleDeleteMode() { 
+
+    function toggleDeleteMode() {
         isDeleteMode = !isDeleteMode;
         bulkDeleteSelection.clear();
+        
         const btn = document.getElementById('delete-mode-btn');
         const bar = document.getElementById('bulk-delete-bar');
+        
         if (isDeleteMode) {
-            btn.innerText = "❌ やめる"; btn.style.background = "rgba(244,67,54,0.1)"; btn.style.color = "#f44336"; bar.classList.add('active');
+            btn.innerText = "❌ やめる";
+            btn.style.background = "rgba(244,67,54,0.1)"; btn.style.color = "#f44336";
+            bar.classList.add('active');
         } else {
-            btn.innerText = "🧹 一括削除"; btn.style.background = "rgba(128,128,128,0.15)"; btn.style.color = "var(--text-color)"; bar.classList.remove('active');
+            btn.innerText = "🧹 一括削除";
+            btn.style.background = "rgba(128,128,128,0.15)"; btn.style.color = "var(--text-color)";
+            bar.classList.remove('active');
         }
         updateBulkDeleteText(); renderChecklist(1, 'list-1'); renderChecklist(2, 'list-2');
     }
-    function toggleBulkSelect(id, isChecked) { if (isChecked) bulkDeleteSelection.add(id); else bulkDeleteSelection.delete(id); updateBulkDeleteText(); }
+
+    function toggleBulkSelect(id, isChecked) {
+        if (isChecked) bulkDeleteSelection.add(id); else bulkDeleteSelection.delete(id);
+        updateBulkDeleteText();
+    }
+    
     function updateBulkDeleteText() { 
         document.getElementById('bulk-delete-text').innerText = `${bulkDeleteSelection.size}件 選択中`; 
+        
         const keys = getListKeysForMode();
-        const list1 = noteData.checklists[keys.top] || []; const list2 = noteData.checklists[keys.bottom] || [];
+        const list1 = noteData.checklists[keys.top] || [];
+        const list2 = noteData.checklists[keys.bottom] || [];
         const totalItems = list1.length + list2.length;
+        
         const selectAllBtn = document.getElementById('bulk-select-all-btn');
-        if (selectAllBtn) { selectAllBtn.innerText = (totalItems > 0 && bulkDeleteSelection.size === totalItems) ? "全解除" : "全選択"; }
+        if (selectAllBtn) {
+            if (totalItems > 0 && bulkDeleteSelection.size === totalItems) {
+                selectAllBtn.innerText = "全解除";
+            } else {
+                selectAllBtn.innerText = "全選択";
+            }
+        }
     }
-    function toggleSelectAllBulk() { 
+
+    function toggleSelectAllBulk() {
         const keys = getListKeysForMode();
-        const list1 = noteData.checklists[keys.top] || []; const list2 = noteData.checklists[keys.bottom] || [];
+        const list1 = noteData.checklists[keys.top] || [];
+        const list2 = noteData.checklists[keys.bottom] || [];
         const totalItems = list1.length + list2.length;
+        
         if (totalItems === 0) return;
-        if (bulkDeleteSelection.size === totalItems) { bulkDeleteSelection.clear(); } 
-        else { list1.forEach(i => bulkDeleteSelection.add(i.id)); list2.forEach(i => bulkDeleteSelection.add(i.id)); }
-        updateBulkDeleteText(); renderChecklist(1, 'list-1'); renderChecklist(2, 'list-2');
+        
+        if (bulkDeleteSelection.size === totalItems) {
+            bulkDeleteSelection.clear();
+        } else {
+            list1.forEach(i => bulkDeleteSelection.add(i.id));
+            list2.forEach(i => bulkDeleteSelection.add(i.id));
+        }
+        
+        updateBulkDeleteText();
+        renderChecklist(1, 'list-1');
+        renderChecklist(2, 'list-2');
     }
-    function executeBulkDelete() { 
+
+    function executeBulkDelete() {
         if (bulkDeleteSelection.size === 0) return alert("削除する項目が選択されていません。");
         if(confirm(`選択した ${bulkDeleteSelection.size}件 を一気に削除しますか？`)) {
             const keys = getListKeysForMode();
-            bulkDeleteSelection.forEach(id => { const row = document.getElementById(`item-row-${id}`); if(row) row.classList.add('removing'); });
+            bulkDeleteSelection.forEach(id => {
+                const row = document.getElementById(`item-row-${id}`);
+                if(row) row.classList.add('removing');
+            });
             setTimeout(() => {
                 noteData.checklists[keys.top] = (noteData.checklists[keys.top] || []).filter(i => !bulkDeleteSelection.has(i.id));
                 noteData.checklists[keys.bottom] = (noteData.checklists[keys.bottom] || []).filter(i => !bulkDeleteSelection.has(i.id));
@@ -692,39 +798,407 @@
             }, 500);
         }
     }
-    function openAIEstimate() { 
+
+    function openAIEstimate() {
         const list = noteData.checklists['daily_shopping'] || [];
         const activeItems = list.filter(i => !i.done).map(i => i.text);
+
         if (activeItems.length === 0) { alert('買い物リストにアイテムがありません。'); return; }
+
         const locText = noteData.userLocation ? `\n【地域情報】\nユーザーの居住地周辺: ${noteData.userLocation}\n※可能であれば、この地域の一般的なスーパーの価格相場を考慮してください。` : '';
-        const promptText = `以下の買い物リストの現在（日本のスーパー）の一般的な相場価格を調べ、概算を計算してください。${locText}\n\n【出力形式の指定】\n1. 何よりも先に一番最初に、まず「合計の概算金額（税込）」を非常に大きく分かりやすく表示してください。\n2. その下に、見やすい表形式で各商品の詳細を出力してください（列：商品名、想定単価、備考）。\n3. 指定した単位がない場合は、一般的な販売単位（1パック、100gなど）を想定して計算してください。\n\n【買い物リスト】\n${activeItems.map(i => '・' + i).join('\n')}`.trim();
+
+        const promptText = `以下の買い物リストの現在（日本のスーパー）の一般的な相場価格を調べ、概算を計算してください。${locText}
+
+【出力形式の指定】
+1. 何よりも先に一番最初に、まず「合計の概算金額（税込）」を非常に大きく分かりやすく表示してください。
+2. その下に、見やすい表形式で各商品の詳細を出力してください（列：商品名、想定単価、備考）。
+3. 指定した単位がない場合は、一般的な販売単位（1パック、100gなど）を想定して計算してください。
+
+【買い物リスト】
+${activeItems.map(i => '・' + i).join('\n')}`.trim();
+
         const query = encodeURIComponent(promptText);
+        
         navigator.clipboard.writeText(promptText).then(() => {
             if(confirm('AIへの指示（プロンプト）をコピーしました！\n\nOKを押すとGoogle検索が開きます。\n検索窓に貼り付けておくので、送信するとAIが綺麗な表で相場を計算してくれます！')) {
                 window.open(`https://www.google.com/search?q=${query}`, '_blank');
             }
-        }).catch(err => { window.open(`https://www.google.com/search?q=${query}`, '_blank'); });
+        }).catch(err => {
+            window.open(`https://www.google.com/search?q=${query}`, '_blank');
+        });
     }
 
-    /* --- DB (日記・イベント) 用機能 --- */
+    // --- 🛒 買い物カタログ機能 ---
+    let selectedShoppingItems = new Map(); 
+    let isCatalogEditMode = false;
+    let catalogDeleteSelection = new Set();
+    let sortableInstances = []; 
+
+    function guessDefaultUnit(itemName) {
+        if(itemName.includes('肉') || itemName.includes('バラ') || itemName.includes('レバー')) return '300g';
+        if(itemName.includes('牛乳') || itemName.includes('ジュース')) return '1本';
+        if(itemName.includes('卵')) return '1パック';
+        if(itemName.includes('キャベツ') || itemName.includes('白菜') || itemName.includes('大根') || itemName.includes('レタス')) return '1玉';
+        if(itemName.includes('ネギ') || itemName.includes('ニラ') || itemName.includes('ほうれん草') || itemName.includes('小松菜')) return '1束';
+        if(itemName.includes('米')) return '5kg';
+        if(itemName.includes('袋') || itemName.includes('ゴミ袋')) return '1袋';
+        return '1個';
+    }
+
+    function buildShoppingCatalog() {
+        const container = document.getElementById('catalog-container');
+        container.innerHTML = '';
+        sortableInstances.forEach(inst => inst.destroy()); sortableInstances = [];
+        if(!noteData.shoppingCatalog) return;
+
+        for(const [category, items] of Object.entries(noteData.shoppingCatalog)) {
+            const details = document.createElement('details');
+            details.open = true; 
+            const summary = document.createElement('summary');
+            
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'category-header';
+            
+            let titleHTML = `<span>${category}</span>`;
+            if(isCatalogEditMode) {
+                titleHTML = `<span>${category} <small style="font-size:0.7rem; color:var(--accent-color); font-weight:normal;">👆長押しで並び替え</small></span>`;
+                const delBtn = document.createElement('button');
+                delBtn.className = 'del-cat-btn';
+                delBtn.innerText = '🗑️ カテゴリーを削除';
+                delBtn.onclick = (e) => {
+                    e.preventDefault(); e.stopPropagation();
+                    deleteCustomCategory(category);
+                };
+                headerDiv.innerHTML = titleHTML;
+                headerDiv.appendChild(delBtn);
+            } else {
+                headerDiv.innerHTML = titleHTML;
+            }
+            
+            summary.appendChild(headerDiv);
+            details.appendChild(summary);
+            
+            const contentDiv = document.createElement('div'); contentDiv.className = 'catalog-content';
+            const grid = document.createElement('div'); grid.className = 'catalog-grid';
+            
+            items.forEach(itemText => {
+                const card = document.createElement('div');
+                card.className = 'catalog-item-card';
+                card.dataset.itemName = itemText;
+                
+                const btn = document.createElement('button');
+                btn.className = 'catalog-item-btn'; btn.innerText = itemText;
+                
+                if(isCatalogEditMode) {
+                    if(catalogDeleteSelection.has(itemText)) card.classList.add('delete-selected');
+                    card.onclick = () => toggleCatalogDeleteSelect(itemText, card);
+                    card.appendChild(btn);
+                } else {
+                    if(selectedShoppingItems.has(itemText)) card.classList.add('selected');
+                    
+                    const defaultUnit = selectedShoppingItems.has(itemText) ? selectedShoppingItems.get(itemText) : guessDefaultUnit(itemText);
+                    
+                    btn.onclick = (e) => { e.stopPropagation(); toggleCatalogItem(itemText, card); };
+                    card.onclick = () => toggleCatalogItem(itemText, card);
+                    
+                    const unitBtn = document.createElement('button');
+                    unitBtn.className = 'catalog-unit-btn ignore-drag';
+                    unitBtn.innerText = defaultUnit;
+                    unitBtn.onclick = (e) => { e.stopPropagation(); openCalcModal(itemText); };
+
+                    card.appendChild(btn);
+                    card.appendChild(unitBtn);
+                }
+                grid.appendChild(card);
+            });
+            
+            if(isCatalogEditMode) {
+                const addCard = document.createElement('div');
+                addCard.className = 'catalog-item-card ignore-drag';
+                addCard.style.background = 'rgba(0,122,255,0.05)'; addCard.style.borderStyle = 'dashed'; addCard.style.borderColor = 'var(--accent-color)'; addCard.style.cursor = 'pointer';
+                addCard.onclick = () => addCustomItemToCatalog(category);
+                const addBtn = document.createElement('button'); addBtn.className = 'catalog-item-btn'; addBtn.style.color = 'var(--accent-color)'; addBtn.innerText = '＋ 追加する';
+                addCard.appendChild(addBtn); grid.appendChild(addCard);
+            }
+            
+            contentDiv.appendChild(grid); details.appendChild(contentDiv); container.appendChild(details);
+            
+            if (typeof Sortable !== 'undefined') {
+                const sortable = new Sortable(grid, {
+                    animation: 400, easing: "cubic-bezier(0.25, 1, 0.5, 1)", disabled: !isCatalogEditMode, filter: '.ignore-drag', preventOnFilter: false, draggable: '.catalog-item-card:not(.ignore-drag)', ghostClass: 'sortable-ghost', delay: 150, delayOnTouchOnly: true,
+                    onEnd: function () {
+                        const itemEls = Array.from(grid.querySelectorAll('.catalog-item-card:not(.ignore-drag)'));
+                        noteData.shoppingCatalog[category] = itemEls.map(el => el.dataset.itemName);
+                        saveData();
+                    }
+                });
+                sortableInstances.push(sortable);
+            }
+        }
+    }
+
+    function toggleCatalogItem(itemText, cardEl) {
+        if(selectedShoppingItems.has(itemText)) {
+            selectedShoppingItems.delete(itemText);
+            cardEl.classList.remove('selected');
+        } else {
+            const unitBtn = cardEl.querySelector('.catalog-unit-btn');
+            const unit = unitBtn ? unitBtn.innerText : guessDefaultUnit(itemText);
+            selectedShoppingItems.set(itemText, unit);
+            cardEl.classList.add('selected');
+            cardEl.style.animation = 'none'; void cardEl.offsetWidth; cardEl.style.animation = 'jellyPop 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+        }
+        if(navigator.vibrate) navigator.vibrate(20);
+    }
+
+    function toggleCatalogDeleteSelect(itemText, cardEl) {
+        if(catalogDeleteSelection.has(itemText)) {
+            catalogDeleteSelection.delete(itemText); cardEl.classList.remove('delete-selected');
+        } else {
+            catalogDeleteSelection.add(itemText); cardEl.classList.add('delete-selected');
+        }
+    }
+
+    function toggleCatalogEditMode() {
+        isCatalogEditMode = !isCatalogEditMode; catalogDeleteSelection.clear();
+        document.getElementById('catalog-normal-footer').style.display = isCatalogEditMode ? 'none' : 'flex';
+        document.getElementById('catalog-edit-footer').style.display = isCatalogEditMode ? 'flex' : 'none';
+        document.getElementById('catalog-edit-btn').innerText = isCatalogEditMode ? "戻る" : "✏️ 編集";
+        document.getElementById('catalog-desc').innerText = isCatalogEditMode ? "消したい項目をタップ、または長押しで並び替えできます。" : "ポンポン押して複数選べます！";
+        document.getElementById('catalog-desc').style.color = isCatalogEditMode ? "#f44336" : "inherit";
+        buildShoppingCatalog();
+    }
+
+    function addCustomCategory() {
+        const text = prompt('新しいカテゴリー名を入力してください:\n（例：📱 電化製品、🏥 薬局 など）');
+        if(text && text.trim()) {
+            if(!noteData.shoppingCatalog[text.trim()]) {
+                noteData.shoppingCatalog[text.trim()] = []; 
+                saveData(); buildShoppingCatalog();
+            } else {
+                alert('既にそのカテゴリーは存在します！');
+            }
+        }
+    }
+
+    function deleteCustomCategory(category) {
+        if(confirm(`カテゴリー「${category}」を、中身の商品ごとすべてカタログから削除しますか？`)) {
+            delete noteData.shoppingCatalog[category];
+            saveData();
+            buildShoppingCatalog();
+        }
+    }
+
+    function addCustomItemToCatalog(category) {
+        const text = prompt(`「${category}」に追加するアイテム名:`);
+        if(text && text.trim()) {
+            if(!noteData.shoppingCatalog[category].includes(text.trim())) {
+                noteData.shoppingCatalog[category].push(text.trim()); saveData(); buildShoppingCatalog();
+            } else { alert('既に登録されています！'); }
+        }
+    }
+
+    function deleteSelectedFromCatalog() {
+        if(catalogDeleteSelection.size === 0) return;
+        if(confirm(`選択した ${catalogDeleteSelection.size}個の項目 をカタログから完全に消去しますか？`)) {
+            for(const category in noteData.shoppingCatalog) { noteData.shoppingCatalog[category] = noteData.shoppingCatalog[category].filter(item => !catalogDeleteSelection.has(item)); }
+            saveData(); catalogDeleteSelection.clear(); buildShoppingCatalog();
+        }
+    }
+
+    function openShoppingModal() {
+        selectedShoppingItems.clear();
+        const currentList = noteData.checklists['daily_shopping'] || [];
+        currentList.forEach(item => {
+            const match = item.text.match(/^(.+?)(?:\s*\((.+?)\))?$/);
+            if(match) {
+                const name = match[1].trim();
+                const unit = match[2] ? match[2].trim() : 'なし';
+                selectedShoppingItems.set(name, unit);
+            }
+        });
+
+        isCatalogEditMode = false;
+        document.getElementById('catalog-normal-footer').style.display = 'flex'; document.getElementById('catalog-edit-footer').style.display = 'none';
+        document.getElementById('catalog-edit-btn').innerText = "✏️ 編集"; document.getElementById('catalog-desc').innerText = "ポンポン押して複数選べます！"; document.getElementById('catalog-desc').style.color = "inherit";
+        buildShoppingCatalog(); document.getElementById('shopping-modal').style.display = 'flex';
+    }
+
+    function closeShoppingModal() { document.getElementById('shopping-modal').style.display = 'none'; }
+
+    function commitShoppingModal() {
+        let currentList = noteData.checklists['daily_shopping'] || [];
+        let allCatalogItems = new Set();
+        if(noteData.shoppingCatalog) {
+            Object.values(noteData.shoppingCatalog).forEach(items => { items.forEach(i => allCatalogItems.add(i)); });
+        }
+
+        let newList = [];
+        currentList.forEach(item => {
+            const match = item.text.match(/^(.+?)(?:\s*\((.+?)\))?$/);
+            const name = match ? match[1].trim() : item.text;
+            
+            if (allCatalogItems.has(name)) {
+                if (selectedShoppingItems.has(name)) {
+                    const unit = selectedShoppingItems.get(name);
+                    const finalString = unit === 'なし' ? name : `${name} (${unit})`;
+                    item.text = finalString; 
+                    newList.push(item);      
+                    selectedShoppingItems.delete(name); 
+                }
+            } else {
+                newList.push(item);
+            }
+        });
+
+        selectedShoppingItems.forEach((unitStr, text) => {
+            const finalString = unitStr === 'なし' ? text : `${text} (${unitStr})`;
+            newList.push({ id: Date.now() + Math.random(), text: finalString, done: false });
+        });
+        
+        noteData.checklists['daily_shopping'] = newList; saveData();
+        const keys = getListKeysForMode();
+        if(keys.top === 'daily_shopping') renderChecklist(1, 'list-1'); else renderChecklist(2, 'list-2');
+        closeShoppingModal();
+    }
+
+    // ==========================================
+    // 🔢 超特化型 電卓機能
+    // ==========================================
+    let calcState = { itemText: "", value: "0", prevValue: "0", op: null, unit: "個", isNewInput: true };
+
+    function parseUnitString(str) {
+        if(str === 'なし') return { num: "0", unit: 'なし' };
+        const m = str.match(/^([0-9.]+)(.*)$/);
+        if(m) return { num: m[1], unit: m[2] };
+        return { num: "1", unit: str }; 
+    }
+
+    function openCalcModal(itemText) {
+        calcState.itemText = itemText;
+        let currentStr = selectedShoppingItems.has(itemText) ? selectedShoppingItems.get(itemText) : guessDefaultUnit(itemText);
+        let parsed = parseUnitString(currentStr);
+        
+        calcState.value = parsed.num;
+        calcState.unit = parsed.unit;
+        calcState.prevValue = "0";
+        calcState.op = null;
+        calcState.isNewInput = true; 
+        
+        document.getElementById('calc-item-name').innerText = itemText;
+        updateCalcDisplay(); renderCalcUnits(); document.getElementById('calc-modal').style.display = 'flex';
+    }
+
+    function updateCalcDisplay() {
+        let displayVal = calcState.value;
+        if(displayVal === "0" && calcState.unit === 'なし') displayVal = '';
+        document.getElementById('calc-display-value').innerText = displayVal;
+        document.getElementById('calc-display-unit').innerText = calcState.unit === 'なし' ? '' : calcState.unit;
+    }
+
+    function renderCalcUnits() {
+        const container = document.getElementById('calc-unit-container'); container.innerHTML = '';
+        allUnits.forEach(u => {
+            const btn = document.createElement('button');
+            btn.className = `unit-chip ${calcState.unit === u ? 'active' : ''}`; btn.innerText = u;
+            btn.onclick = () => { calcState.unit = u; if(u === 'なし') calcState.value = "0"; renderCalcUnits(); updateCalcDisplay(); };
+            container.appendChild(btn);
+        });
+    }
+
+    function calcInput(charStr) {
+        if(calcState.unit === 'なし') { calcState.unit = '個'; renderCalcUnits(); }
+        if (calcState.isNewInput) {
+            calcState.value = charStr === '.' ? "0." : charStr; calcState.isNewInput = false;
+        } else {
+            if (charStr === '.' && calcState.value.includes('.')) return;
+            calcState.value += charStr;
+        }
+        updateCalcDisplay();
+    }
+
+    function calcOp(op) {
+        if (calcState.op && !calcState.isNewInput) calcEq();
+        calcState.prevValue = calcState.value; calcState.op = op; calcState.isNewInput = true;
+    }
+
+    function calcEq() {
+        if (!calcState.op) return;
+        let prev = parseFloat(calcState.prevValue); let curr = parseFloat(calcState.value);
+        if(isNaN(prev)) prev = 0; if(isNaN(curr)) curr = 0;
+        let result = 0;
+        if (calcState.op === '+') result = prev + curr;
+        else if (calcState.op === '-') result = Math.max(0, prev - curr);
+        else if (calcState.op === '×') result = prev * curr;
+        calcState.value = parseFloat(result.toFixed(2)).toString();
+        calcState.op = null; calcState.isNewInput = true; updateCalcDisplay();
+    }
+
+    function calcClear() { calcState.value = "0"; calcState.prevValue = "0"; calcState.op = null; calcState.isNewInput = true; updateCalcDisplay(); }
+    function closeCalcModal() { document.getElementById('calc-modal').style.display = 'none'; }
+    function commitCalcModal() {
+        calcEq(); let finalStr = calcState.unit === 'なし' ? 'なし' : `${calcState.value}${calcState.unit}`;
+        selectedShoppingItems.set(calcState.itemText, finalStr);
+        const card = document.querySelector(`.catalog-item-card[data-item-name="${calcState.itemText}"]`);
+        if(card) {
+            const unitBtn = card.querySelector('.catalog-unit-btn'); if(unitBtn) unitBtn.innerText = finalStr;
+            if(!card.classList.contains('selected')) { card.classList.add('selected'); }
+            card.style.animation = 'none'; void card.offsetWidth; card.style.animation = 'jellyPop 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+        }
+        closeCalcModal();
+    }
+
+    // ==========================================
+    // 📓 データベース (イベント/日常 共通) & モーダル編集
+    // ==========================================
     let isDbDeleteMode = false;
     let dbBulkDeleteSelection = new Set();
 
     function getDbArray() { return noteData.appMode === 'daily' ? noteData.dailyNotes : noteData.events; }
 
-    function renderDbItems() { 
+    function parseDateForSort(dateStr) {
+        if (!dateStr) return 0;
+        let m = dateStr.match(/(20\d\d)[年\/\-]\s*(\d{1,2})[月\/\-]\s*(\d{1,2})/);
+        if (m) {
+            return new Date(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3])).getTime();
+        }
+        m = dateStr.match(/(\d{1,2})[月\/\-]\s*(\d{1,2})/);
+        if (m) {
+            const year = new Date().getFullYear();
+            return new Date(year, parseInt(m[1]) - 1, parseInt(m[2])).getTime();
+        }
+        return 0; 
+    }
+
+    function renderDbItems() {
         const container = document.getElementById('db-container'); container.innerHTML = ''; 
         let items = getDbArray(); 
+        
         if (items.length === 0) { 
             container.innerHTML = `<p style="color:#888; font-size:1.1rem; text-align:center; font-weight:bold; padding:30px;">${noteData.appMode === 'daily' ? '📓 日記・メモはありません' : '📚 イベントが登録されていません'}</p>`; 
             return; 
         }
-
-        items.forEach(item => {
-            const tagsHTML = (item.tags||'').split(/[\s,]+/).filter(t=>t).map(t => `<span class="event-tag">${t}</span>`).join('');
+        
+        const isDaily = noteData.appMode === 'daily';
+        let sortedItems = [...items];
+        sortedItems.sort((a, b) => {
+            const timeA = parseDateForSort(a.date) || a.id; 
+            const timeB = parseDateForSort(b.date) || b.id;
+            
+            if (isDaily) {
+                return timeB - timeA;
+            } else {
+                return timeA - timeB;
+            }
+        });
+        
+        sortedItems.forEach(item => {
+            const tagArray = (item.tags || '').split(/[\s,]+/).filter(t => t.trim() !== '');
+            const tagsHTML = tagArray.map(tag => `<span class="event-tag">${tag}</span>`).join('');
             const memoHTML = (item.memo || '').replace(/\n/g, '<br>');
             
-            let onClickAction, checkboxHTML, trashBtnHTML, cardStyle;
+            let onClickAction, checkboxHTML, trashBtnHTML, cardStyle, routeBtnHTML = '';
+            
             if (isDbDeleteMode) {
                 const isSelected = dbBulkDeleteSelection.has(item.id);
                 onClickAction = `toggleDbBulkSelect(${item.id})`;
@@ -734,12 +1208,19 @@
             } else {
                 onClickAction = `openDbEditModal(${item.id})`;
                 checkboxHTML = '';
-                // ⚠️ event.stopPropagation() を追加してバブリングを防止！
                 trashBtnHTML = `<button class="delete-icon-btn" onclick="deleteDbItem(${item.id}, event)">🗑️</button>`;
                 cardStyle = "";
+                
+                if (item.destination && item.destination.trim() !== '') {
+                    routeBtnHTML = `
+                    <div style="margin-top: 15px;">
+                        <button class="secondary-btn" style="margin: 0; padding: 10px; font-size: 0.9rem; background: rgba(0, 122, 255, 0.1); color: #007aff; border: 1px solid rgba(0, 122, 255, 0.2);" onclick="openRouteSearch('${item.destination}', event)">🗺️ 経路を検索</button>
+                    </div>`;
+                }
             }
 
-            container.innerHTML += `<div class="glass-card event-card" onclick="${onClickAction}" style="display:flex; gap:15px; align-items:flex-start; ${cardStyle}">
+            container.innerHTML += `
+            <div class="glass-card event-card" onclick="${onClickAction}" style="display:flex; gap:15px; align-items:flex-start; ${cardStyle}">
                 ${isDbDeleteMode ? `<div style="padding-top:2px;">${checkboxHTML}</div>` : ''}
                 <div style="flex:1;">
                     ${trashBtnHTML}
@@ -747,26 +1228,14 @@
                     <div class="event-card-title" style="padding-right: ${isDbDeleteMode ? '0' : '30px'};">${item.title}</div>
                     <div class="event-tags">${tagsHTML}</div>
                     <p style="font-size: 0.95rem; margin-top: 10px; line-height: 1.6; font-weight:700;">${memoHTML}</p>
+                    ${item.destination ? `<div style="font-size: 0.85rem; color: #666; font-weight: bold; margin-top: 10px;">📍 ${item.destination}</div>` : ''}
+                    ${routeBtnHTML}
                 </div>
             </div>`;
         });
     }
 
-    // DB項目の個別削除（バブリング防止）
-    function deleteDbItem(id, event) {
-        event.stopPropagation();
-        if(confirm("この項目を削除しますか？")) {
-            if(noteData.appMode === 'daily') {
-                noteData.dailyNotes = noteData.dailyNotes.filter(item => item.id !== id);
-            } else {
-                noteData.events = noteData.events.filter(item => item.id !== id);
-            }
-            saveData();
-            renderDbItems();
-        }
-    }
-
-    // DB一括削除の切り替え
+    // --- DB一括削除機能 ---
     function toggleDbDeleteMode() { 
         isDbDeleteMode = !isDbDeleteMode;
         dbBulkDeleteSelection.clear();
@@ -792,7 +1261,7 @@
         if (dbBulkDeleteSelection.has(id)) dbBulkDeleteSelection.delete(id); 
         else dbBulkDeleteSelection.add(id); 
         updateDbBulkDeleteText(); 
-        renderDbItems(); // 画面を更新してチェックを入れる
+        renderDbItems(); 
     }
 
     function updateDbBulkDeleteText() { 
@@ -831,25 +1300,163 @@
         }
     }
 
-    // 編集モーダル等（今回は中身空のスタブのまま維持）
-    function openDbEditModal(id = null) { document.getElementById('db-edit-modal').style.display = 'flex'; }
-    function closeDbEditModal() { document.getElementById('db-edit-modal').style.display = 'none'; }
-    function saveDbItem() { closeDbEditModal(); }
-    function updateDateRange() {}
-    function clearDateRange() {}
-    
+    // --- 安全なカレンダー入力ロジック ---
+    function updateDateRange() {
+        const startPicker = document.getElementById('db-edit-date-start');
+        const endPicker = document.getElementById('db-edit-date-end');
+        let startVal = startPicker.value;
+        let endVal = endPicker.value;
+
+        if (startVal && endVal) {
+            if (new Date(startVal) > new Date(endVal)) {
+                const temp = startVal;
+                startVal = endVal;
+                endVal = temp;
+                startPicker.value = startVal;
+                endPicker.value = endVal;
+            }
+        }
+
+        let startStr = startVal ? startVal.replace(/-/g, '/') : '';
+        let endStr = endVal ? endVal.replace(/-/g, '/') : '';
+
+        let result = '';
+        if (startStr && endStr) {
+            if (startStr === endStr) {
+                result = startStr; 
+            } else {
+                result = startStr + ' 〜 ' + endStr;
+            }
+        } else if (startStr) {
+            result = startStr;
+        } else if (endStr) {
+            result = endStr;
+        }
+
+        document.getElementById('db-edit-date').value = result;
+    }
+
+    function clearDateRange() {
+        document.getElementById('db-edit-date-start').value = '';
+        document.getElementById('db-edit-date-end').value = '';
+        document.getElementById('db-edit-date').value = '';
+    }
+
+    function openDbEditModal(id = null) {
+        const isDaily = noteData.appMode === 'daily';
+        const titleEl = document.getElementById('db-modal-title');
+        titleEl.innerText = id ? '項目を編集' : (isDaily ? '新しい日記・メモ' : '新しいイベント情報');
+
+        let item = null;
+        if (id) {
+            item = getDbArray().find(e => e.id === id);
+        }
+
+        const d = new Date();
+        const todayStr = `${d.getFullYear()}/${('0'+(d.getMonth()+1)).slice(-2)}/${('0'+d.getDate()).slice(-2)}`;
+
+        const initialDate = item && item.date ? item.date : (id ? '' : todayStr);
+
+        document.getElementById('db-edit-id').value = id || '';
+        document.getElementById('db-edit-title').value = item ? item.title : '';
+        document.getElementById('db-edit-date').value = initialDate;
+        document.getElementById('db-edit-destination').value = item && item.destination ? item.destination : '';
+        document.getElementById('db-edit-tags').value = item ? item.tags : '';
+        document.getElementById('db-edit-memo').value = item ? item.memo : '';
+
+        const startPicker = document.getElementById('db-edit-date-start');
+        const endPicker = document.getElementById('db-edit-date-end');
+        startPicker.value = '';
+        endPicker.value = '';
+        
+        if (initialDate) {
+            const matches = initialDate.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/g);
+            if (matches && matches.length >= 1) {
+                const parts = matches[0].split(/[\/\-]/);
+                startPicker.value = `${parts[0]}-${('0'+parts[1]).slice(-2)}-${('0'+parts[2]).slice(-2)}`;
+            }
+            if (matches && matches.length >= 2) {
+                const parts = matches[1].split(/[\/\-]/);
+                endPicker.value = `${parts[0]}-${('0'+parts[1]).slice(-2)}-${('0'+parts[2]).slice(-2)}`;
+            }
+        }
+
+        document.getElementById('db-edit-modal').style.display = 'flex';
+    }
+
+    function closeDbEditModal() {
+        document.getElementById('db-edit-modal').style.display = 'none';
+    }
+
+    function saveDbItem() {
+        const title = document.getElementById('db-edit-title').value;
+        if (!title || !title.trim()) {
+            alert('タイトルまたはイベント名を入力してください。');
+            return;
+        }
+
+        const id = document.getElementById('db-edit-id').value;
+        const dateStr = document.getElementById('db-edit-date').value.trim() || '未定';
+        const destination = document.getElementById('db-edit-destination').value.trim();
+        const tags = document.getElementById('db-edit-tags').value.trim();
+        const memo = document.getElementById('db-edit-memo').value;
+
+        const dataArray = getDbArray();
+
+        if (id) {
+            const item = dataArray.find(e => e.id === parseInt(id));
+            if (item) {
+                item.title = title;
+                item.date = dateStr;
+                item.destination = destination;
+                item.tags = tags;
+                item.memo = memo;
+            }
+        } else {
+            dataArray.unshift({ 
+                id: Date.now(), 
+                title: title, 
+                date: dateStr, 
+                destination: destination,
+                tags: tags, 
+                memo: memo 
+            });
+        }
+
+        saveData();
+        renderDbItems();
+        closeDbEditModal();
+    }
+
+    function deleteDbItem(id, event) {
+        event.stopPropagation();
+        
+        if(confirm('本当に削除しますか？')) {
+            if(noteData.appMode === 'daily') noteData.dailyNotes = noteData.dailyNotes.filter(e => e.id !== id);
+            else noteData.events = noteData.events.filter(e => e.id !== id);
+            saveData(); renderDbItems();
+        }
+    }
+
+    function openRouteSearch(destination, event) {
+        event.stopPropagation();
+        const origin = noteData.userLocation || "";
+        let url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}&travelmode=transit`;
+        if (origin) {
+            url += `&origin=${encodeURIComponent(origin)}`;
+        }
+        window.open(url, '_blank');
+    }
+
     // ✨【完全データ消去処理を強力に修正】✨
     function hardResetApp() { 
         if(confirm("【⚠️警告】\nすべてのデータを完全に消去します。本当によろしいですか？\n※この操作は取り消せません。")) { 
-            // 画面を白紙にして操作不能にする（残像が残るのを防ぐ）
             document.body.innerHTML = '<div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#fff; color:#333; font-size:1.5rem; font-weight:bold;">データを完全に消去しています...</div>';
             
-            // 1. ローカルストレージを強力クリア
             localStorage.clear(); 
             
-            // 2. IndexedDBが存在すれば削除処理を実行
             if(db) { 
-                db.close(); // ★Safari対策: 現在開いている接続を強制切断する
+                db.close(); 
                 const req = indexedDB.deleteDatabase(DB_NAME);
                 req.onsuccess = () => forceReload();
                 req.onerror = () => forceReload();
@@ -861,24 +1468,8 @@
     }
 
     function forceReload() {
-        // ★キャッシュを無視して強制リロードさせるためにURLにタイムスタンプを付与
         window.location.replace(window.location.pathname + '?reset=' + new Date().getTime());
     }
-    
-    // カタログ関数等のモック
-    function buildShoppingCatalog() {}
-    function toggleCatalogEditMode() {}
-    function openShoppingModal() { document.getElementById('shopping-modal').style.display = 'flex'; }
-    function closeShoppingModal() { document.getElementById('shopping-modal').style.display = 'none'; }
-    function commitShoppingModal() { closeShoppingModal(); }
-    function addCustomCategory() {}
-    function deleteSelectedFromCatalog() {}
-    
-    // 電卓機能
-    function calcInput(c) {} function calcOp(o) {} function calcEq() {} function calcClear() {}
-    function closeCalcModal() { document.getElementById('calc-modal').style.display='none'; }
-    function commitCalcModal() { closeCalcModal(); }
-
 
     // ==========================================
     // 🤖 AI機能連携ロジック (超強化版)
@@ -908,20 +1499,17 @@
         }
     }
 
-    // --- ① チャットの履歴表示とメモ化機能 ---
     function renderAiChatHistory() {
         const box = document.getElementById('ai-chat-box');
+        if(!box) return;
         box.innerHTML = '<div class="chat-msg chat-ai">こんにちは！何でも相談してくださいね。スケジュールの登録も手伝いますよ！</div>';
         noteData.aiChatHistory.forEach(msg => {
             const isUser = msg.role === 'user';
             const safeText = msg.content.replace(/</g, "&lt;").replace(/>/g, "&gt;");
             
-            // ユーザー発言
             if (isUser) {
                 box.innerHTML += `<div class="chat-msg chat-user">${safeText}</div>`;
-            } 
-            // AI発言（メモ化ボタン付き）
-            else {
+            } else {
                 const escapedForArg = msg.content.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "\\n");
                 box.innerHTML += `
                     <div class="chat-msg chat-ai">
@@ -943,7 +1531,6 @@
         }
     }
 
-    // AIの言葉を日記・メモにワンタップ保存
     function saveChatToMemo(text) {
         const d = new Date();
         const todayStr = `${d.getFullYear()}/${('0'+(d.getMonth()+1)).slice(-2)}/${('0'+d.getDate()).slice(-2)}`;
@@ -960,13 +1547,11 @@
         alert("📓 日記・メモに保存しました！");
     }
 
-    // --- ② スマートチャット送信 (JSONでやり取りしアクションを実行) ---
     async function sendAiChat() {
         const inputEl = document.getElementById('ai-chat-input');
         const text = inputEl.value.trim();
         if (!text) return;
 
-        // 履歴に追加
         noteData.aiChatHistory.push({ role: 'user', content: text });
         saveData();
         renderAiChatHistory();
@@ -977,7 +1562,6 @@
         box.innerHTML += `<div class="chat-msg chat-ai" id="${loadingId}">考え中...</div>`;
         box.scrollTop = box.scrollHeight;
 
-        // DBの状況をAIに伝える（重複チェックや更新提案のため）
         const dbSummary = `
 【あなたの持つ権限と現在のデータ状況】
 ・日常メモ一覧: ${JSON.stringify(noteData.dailyNotes.map(n=>({id:n.id, title:n.title, date:n.date})))}
@@ -1018,12 +1602,10 @@
                 const responseObj = JSON.parse(resultJsonStr);
                 const replyText = responseObj.reply || "うまく理解できませんでした。";
                 
-                // 履歴に保存
                 noteData.aiChatHistory.push({ role: 'assistant', content: replyText });
                 saveData();
                 renderAiChatHistory();
 
-                // アクションの実行
                 if (responseObj.action && responseObj.action.type) {
                     executeAiAction(responseObj.action);
                 }
@@ -1036,7 +1618,6 @@
         }
     }
 
-    // AIからのコマンドを受け取ってアプリに反映
     function executeAiAction(action) {
         let acted = false;
         try {
@@ -1061,12 +1642,11 @@
             
             if (acted) {
                 saveData();
-                applyModeUI(); // 画面を更新
+                applyModeUI(); 
             }
         } catch(e) { console.error("Action execution failed", e); }
     }
 
-    // --- ③ スケジュール丸投げ（日常／イベントの自動判定、重複削除、更新） ---
     async function aiParseSchedule() {
         const inputEl = document.getElementById('ai-schedule-input');
         const text = inputEl.value.trim();
@@ -1122,7 +1702,6 @@ ${text}`;
                 const result = JSON.parse(resultJsonStr);
                 let changesMade = 0;
 
-                // 1. 削除処理（重複排除）
                 if (result.deleted_ids && result.deleted_ids.length > 0) {
                     result.deleted_ids.forEach(del => {
                         if (del.target === 'event') noteData.events = noteData.events.filter(e => e.id != del.id);
@@ -1131,7 +1710,6 @@ ${text}`;
                     });
                 }
 
-                // 2. 更新・追記処理
                 if (result.updates && result.updates.length > 0) {
                     result.updates.forEach(up => {
                         const targetList = up.target === 'event' ? noteData.events : noteData.dailyNotes;
@@ -1143,7 +1721,6 @@ ${text}`;
                     });
                 }
 
-                // 3. 新規登録
                 if (result.new_items && result.new_items.length > 0) {
                     result.new_items.forEach(ev => {
                         const targetList = ev.target === 'event' ? noteData.events : noteData.dailyNotes;
@@ -1181,7 +1758,6 @@ ${text}`;
         btn.disabled = false;
     }
 
-    // --- ④ 献立自動生成（材料の数量自動合算） ---
     async function aiMakeRecipe() {
         const inputEl = document.getElementById('ai-recipe-input');
         const text = inputEl.value.trim();

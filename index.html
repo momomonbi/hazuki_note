@@ -140,6 +140,10 @@
         .unit-chip { background: #fff; border: 2px solid rgba(128,128,128,0.3); border-radius: 8px; font-size: 0.9rem; font-weight: 900; padding: 6px 10px; color: #555; transition: all 0.2s;}
         .unit-chip.active { background: var(--accent-color); color: white; border-color: var(--accent-color); transform: scale(1.05); box-shadow: 0 2px 8px rgba(0,122,255,0.3);}
 
+        /* カテゴリー削除ボタン用のスタイル */
+        .category-header { display: flex; align-items: center; justify-content: space-between; width: 100%; pointer-events: auto; }
+        .del-cat-btn { background: rgba(244,67,54,0.15); color: #f44336; border: none; border-radius: 8px; padding: 6px 10px; font-size: 0.8rem; font-weight: 900; margin-left: 10px; z-index: 10; }
+        
         /* 固定アクションバー (一括削除時) */
         #bulk-delete-bar { position: fixed; bottom: -100px; left: 0; width: 100%; background: rgba(244,67,54,0.95); backdrop-filter: blur(10px); padding: 20px; padding-bottom: 40px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; transition: bottom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1005; box-shadow: 0 -5px 20px rgba(244,67,54,0.3);}
         #bulk-delete-bar.active { bottom: 0; }
@@ -640,7 +644,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         return '1個';
     }
 
-    function buildShoppingCatalog() {
+function buildShoppingCatalog() {
         const container = document.getElementById('catalog-container');
         container.innerHTML = '';
         sortableInstances.forEach(inst => inst.destroy()); sortableInstances = [];
@@ -650,11 +654,28 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
             const details = document.createElement('details');
             details.open = true; 
             const summary = document.createElement('summary');
-            summary.innerText = category;
             
+            // 🌟 修正ポイント：編集モード時に削除ボタンを表示
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'category-header';
+            
+            let titleHTML = `<span>${category}</span>`;
             if(isCatalogEditMode) {
-                const hint = document.createElement('span'); hint.innerText = '👆 長押しで移動'; hint.style.fontSize = '0.75rem'; hint.style.color = 'var(--accent-color)'; hint.style.opacity = '0.8'; summary.appendChild(hint);
+                titleHTML = `<span>${category} <small style="font-size:0.7rem; color:var(--accent-color); font-weight:normal;">👆長押しで並び替え</small></span>`;
+                const delBtn = document.createElement('button');
+                delBtn.className = 'del-cat-btn';
+                delBtn.innerText = '🗑️ カテゴリーを削除';
+                delBtn.onclick = (e) => {
+                    e.preventDefault(); e.stopPropagation(); // アコーディオンの開閉を防ぐ
+                    deleteCustomCategory(category);
+                };
+                headerDiv.innerHTML = titleHTML;
+                headerDiv.appendChild(delBtn);
+            } else {
+                headerDiv.innerHTML = titleHTML;
             }
+            
+            summary.appendChild(headerDiv);
             details.appendChild(summary);
             
             const contentDiv = document.createElement('div'); contentDiv.className = 'catalog-content';
@@ -664,7 +685,6 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
                 const card = document.createElement('div');
                 card.className = 'catalog-item-card';
                 card.dataset.itemName = itemText;
-                
                 const btn = document.createElement('button');
                 btn.className = 'catalog-item-btn'; btn.innerText = itemText;
                 
@@ -674,17 +694,13 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
                     card.appendChild(btn);
                 } else {
                     if(selectedShoppingItems.has(itemText)) card.classList.add('selected');
-                    
                     const defaultUnit = selectedShoppingItems.has(itemText) ? selectedShoppingItems.get(itemText) : guessDefaultUnit(itemText);
-                    
                     btn.onclick = (e) => { e.stopPropagation(); toggleCatalogItem(itemText, card); };
                     card.onclick = () => toggleCatalogItem(itemText, card);
-                    
                     const unitBtn = document.createElement('button');
                     unitBtn.className = 'catalog-unit-btn ignore-drag';
                     unitBtn.innerText = defaultUnit;
                     unitBtn.onclick = (e) => { e.stopPropagation(); openCalcModal(itemText); };
-
                     card.appendChild(btn);
                     card.appendChild(unitBtn);
                 }
@@ -761,6 +777,15 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         }
     }
 
+    // カテゴリーそのものを消す関数
+    function deleteCustomCategory(category) {
+        if(confirm(`カテゴリー「${category}」を、中身の商品ごとすべてカタログから削除しますか？`)) {
+            delete noteData.shoppingCatalog[category];
+            saveData();
+            buildShoppingCatalog();
+        }
+    }
+    
     function addCustomItemToCatalog(category) {
         const text = prompt(`「${category}」に追加するアイテム名:`);
         if(text && text.trim()) {

@@ -9,7 +9,7 @@
 
     <style>
         /* === テーマ設定 === */
-        :root { --grid-cols: 2; }
+        :root { --grid-cols: 2; --catalog-cols: 2; }
         [data-theme="default"], body { --bg-color: #f0f4f8; --header-bg: rgba(255, 255, 255, 0.85); --tab-bg: rgba(255,255,255,0.5); --accent-color: #007aff; --tab-active-bg: #007aff; --tab-active-color: #fff; --card-bg: rgba(255, 255, 255, 0.5); --text-color: #333; --btn-primary: #007aff; --app-font: 'Zen Maru Gothic', sans-serif; }
         [data-theme="cute"] { --bg-color: #fff0f5; --header-bg: rgba(255, 182, 193, 0.85); --tab-bg: rgba(255,255,255,0.4); --accent-color: #ff69b4; --tab-active-bg: #ff69b4; --tab-active-color: #fff; --card-bg: rgba(255, 255, 255, 0.5); --text-color: #5d4037; --btn-primary: #ff69b4; --app-font: 'Zen Maru Gothic', sans-serif;  }
         [data-theme="gothic"] { --bg-color: #1a0b1c; --header-bg: rgba(26, 11, 28, 0.95); --tab-bg: rgba(40, 20, 45, 0.6); --accent-color: #b50043; --tab-active-bg: #b50043; --tab-active-color: #fff; --card-bg: rgba(40, 20, 45, 0.7); --text-color: #eaddf0; --btn-primary: #8a0033; --app-font: 'Kaisei Decol', serif; }
@@ -42,8 +42,8 @@
         #bg-color-layer { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -2; background-color: var(--bg-color); transition: background-color 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
         .glass-card { background: var(--card-bg); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; animation: popIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
         
-        button { touch-action: manipulation; font-family: inherit; cursor: pointer; border: none; border-radius: 14px; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
-        button:active { transform: scale(0.8) !important; box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important; }
+        button { touch-action: manipulation; font-family: inherit; cursor: pointer; border: none; border-radius: 14px; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
+        button:active { transform: scale(0.85) !important; box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important; }
         input, select, textarea { font-family: inherit; }
 
         /* === ヘッダー & タブ === */
@@ -112,12 +112,9 @@
         details[open] summary::after { transform: rotate(180deg); }
         .catalog-content { padding: 15px; }
 
-        catalog-grid { 
-            display: grid; 
-            grid-template-columns: repeat(var(--catalog-cols, 2), 1fr); 
-            gap: 8px; 
-            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-        }
+        /* カタログのグリッドを可変にする */
+        .catalog-grid { display: grid; grid-template-columns: repeat(var(--catalog-cols, 2), 1fr); gap: 8px; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
+        
         .catalog-item-card { background: #fff; border: 2px solid rgba(128,128,128,0.2); border-radius: 12px; padding: 10px 8px; display: flex; flex-direction: column; gap: 8px; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: stretch; justify-content: center;}
         
         .catalog-unit-btn { padding: 8px; border-radius: 8px; border: 1px solid rgba(128,128,128,0.3); background: rgba(128,128,128,0.05); font-size: 0.85rem; font-weight: 900; width: 100%; box-sizing: border-box; text-align: center; color: var(--text-color);}
@@ -133,10 +130,14 @@
         .sortable-ghost { opacity: 0.4; transform: scale(0.95); border: 2px dashed var(--accent-color); background: rgba(128,128,128,0.1); }
         .sortable-drag { cursor: grabbing !important; }
 
+        /* カテゴリー削除ボタン用のスタイル */
+        .category-header { display: flex; align-items: center; justify-content: space-between; width: 100%; pointer-events: auto; }
+        .del-cat-btn { background: rgba(244,67,54,0.15); color: #f44336; border: none; border-radius: 8px; padding: 6px 10px; font-size: 0.8rem; font-weight: 900; margin-left: 10px; z-index: 10; }
+
         .modal-footer { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--bg-color); padding: 15px 20px 45px 20px; box-sizing: border-box; display: flex; gap: 10px; border-top: 1px solid rgba(128,128,128,0.1); z-index: 2010;}
 
         /* === 🔢 超特化型 電卓モーダル用 (はみ出し防止・少し小さめ) === */
-        .calc-btn { background: #fff; border: 2px solid rgba(128,128,128,0.2); border-radius: 12px; font-size: 1.3rem; font-weight: 900; padding: 10px 0; color: #333; box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; touch-action: manipulation;}
+        .calc-btn { background: #fff; border: 2px solid rgba(128,128,128,0.2); border-radius: 12px; font-size: 1.4rem; font-weight: 900; padding: 10px 0; color: #333; box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; touch-action: manipulation;}
         .calc-btn:active { transform: scale(0.9); box-shadow: none; }
         .calc-btn.op-btn { background: #e3f2fd; color: #007aff; border-color: rgba(0,122,255,0.2); }
         .calc-btn.clear-btn { background: #ffebee; color: #f44336; border-color: rgba(244,67,54,0.2); }
@@ -145,10 +146,6 @@
         .unit-chip { background: #fff; border: 2px solid rgba(128,128,128,0.3); border-radius: 8px; font-size: 0.9rem; font-weight: 900; padding: 6px 10px; color: #555; transition: all 0.2s;}
         .unit-chip.active { background: var(--accent-color); color: white; border-color: var(--accent-color); transform: scale(1.05); box-shadow: 0 2px 8px rgba(0,122,255,0.3);}
 
-        /* カテゴリー削除ボタン用のスタイル */
-        .category-header { display: flex; align-items: center; justify-content: space-between; width: 100%; pointer-events: auto; }
-        .del-cat-btn { background: rgba(244,67,54,0.15); color: #f44336; border: none; border-radius: 8px; padding: 6px 10px; font-size: 0.8rem; font-weight: 900; margin-left: 10px; z-index: 10; }
-        
         /* 固定アクションバー (一括削除時) */
         #bulk-delete-bar { position: fixed; bottom: -100px; left: 0; width: 100%; background: rgba(244,67,54,0.95); backdrop-filter: blur(10px); padding: 20px; padding-bottom: 40px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; transition: bottom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1005; box-shadow: 0 -5px 20px rgba(244,67,54,0.3);}
         #bulk-delete-bar.active { bottom: 0; }
@@ -234,14 +231,14 @@
 
 <div class="modal-overlay" id="shopping-modal">
     <div class="modal-content">
-<div class="modal-sticky-header">
+        <div class="modal-sticky-header">
             <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; gap: 10px;">
                 <h2 style="margin: 0; font-size: 1.4rem; font-weight: 900; color: var(--accent-color); white-space: nowrap;">🛒 カタログ</h2>
                 
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <select id="catalog-cols-select" onchange="changeCatalogColumns(this.value)" style="padding: 8px; border-radius: 10px; border: 1px solid rgba(128,128,128,0.2); font-weight: 900; font-size: 0.85rem; background: rgba(128,128,128,0.1); color: var(--text-color);">
                         <option value="1">1列</option>
-                        <option value="2" selected>2列</option>
+                        <option value="2">2列</option>
                         <option value="3">3列</option>
                         <option value="4">4列</option>
                         <option value="5">5列</option>
@@ -269,7 +266,7 @@
 </div>
 
 <div class="modal-overlay" id="calc-modal" style="z-index: 3000;">
-    <div class="modal-content" style="max-width: 400px; height: auto; max-height: 94vh; border-radius: 24px; padding: 15px; overflow-y: auto;">
+    <div class="modal-content" style="max-width: 420px; height: auto; max-height: 96vh; border-radius: 24px; padding: 18px; overflow-y: auto;">
         
         <div style="margin-bottom: 6px; font-size: 0.9rem; font-weight: 900; color: var(--accent-color); display: flex; align-items: center; gap: 4px;">
             <span>🛒 選択中：</span><span id="calc-item-name">商品名</span>
@@ -283,7 +280,7 @@
         <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; justify-content: center;" id="calc-unit-container">
             </div>
 
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px;">
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 15px;">
             <button class="calc-btn clear-btn" onclick="calcClear()">C</button>
             <button class="calc-btn op-btn" onclick="calcOp('×')">×</button>
             <button class="calc-btn op-btn" onclick="calcOp('-')">－</button>
@@ -307,8 +304,8 @@
         </div>
 
         <div style="display: flex; gap: 8px;">
-            <button class="secondary-btn" style="flex: 1; margin: 0; padding: 12px; font-size: 1rem; border-radius: 12px;" onclick="closeCalcModal()">やめる</button>
-            <button class="primary-btn" style="flex: 2; margin: 0; padding: 12px; font-size: 1.1rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,122,255,0.3);" onclick="commitCalcModal()">決定</button>
+            <button class="secondary-btn" style="flex: 1; margin: 0; padding: 14px; font-size: 1.1rem; border-radius: 12px;" onclick="closeCalcModal()">やめる</button>
+            <button class="primary-btn" style="flex: 2; margin: 0; padding: 14px; font-size: 1.2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,122,255,0.3);" onclick="commitCalcModal()">決定</button>
         </div>
     </div>
 </div>
@@ -326,7 +323,7 @@
     // 🚀 IndexedDB ＆ データ構造
     // ==========================================
     const DB_NAME = 'HazukiNotoDB';
-    const DB_VERSION = 10; 
+    const DB_VERSION = 11; // 構造変更のためバージョンアップ
     let db;
     
     // 主婦向け 超・膨大なデフォルト買い物カタログ
@@ -345,6 +342,7 @@
     let noteData = { 
         theme: 'cute',
         appMode: 'daily',
+        catalogColumns: 2, // カタログの列数
         shoppingCatalog: null,
         checklists: { event_schedule: [], event_belonging: [], daily_todo: [], daily_shopping: [] },
         events: [],
@@ -400,15 +398,14 @@
 
     function finalizeLoad() {
         if(!noteData.appMode) noteData.appMode = 'daily';
-        // ...既存の処理...
-        if(!noteData.catalogColumns) noteData.catalogColumns = 2; // デフォルト2列
+        if(!noteData.catalogColumns) noteData.catalogColumns = 2;
+        if(!noteData.shoppingCatalog) noteData.shoppingCatalog = JSON.parse(JSON.stringify(defaultCatalog));
         
-        // 保存されている列数をCSSに反映
+        document.body.setAttribute('data-theme', noteData.theme || 'cute');
+        document.getElementById('theme-selector').value = noteData.theme || 'cute';
+        
         document.documentElement.style.setProperty('--catalog-cols', noteData.catalogColumns);
         document.getElementById('catalog-cols-select').value = noteData.catalogColumns;
-        
-        // ...既存の処理...
-    }
         
         applyModeUI(); 
         buildShoppingCatalog();
@@ -480,14 +477,14 @@
     }
 
     function changeTheme(name) { noteData.theme = name; document.body.setAttribute('data-theme', name); saveData(); }
-
-    // カタログの列数を変更して保存する
+    
+    // カタログの列数変更
     function changeCatalogColumns(val) {
         document.documentElement.style.setProperty('--catalog-cols', val);
         noteData.catalogColumns = parseInt(val);
         saveData();
     }
-    
+
     // --- チェックリスト機能 ---
     let isDeleteMode = false;
     let bulkDeleteSelection = new Set();
@@ -659,7 +656,6 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
     let catalogDeleteSelection = new Set();
     let sortableInstances = []; 
 
-    // 商品名からデフォルトの単位を推測するロジック（1玉などに変更）
     function guessDefaultUnit(itemName) {
         if(itemName.includes('肉') || itemName.includes('バラ') || itemName.includes('レバー')) return '300g';
         if(itemName.includes('牛乳') || itemName.includes('ジュース')) return '1本';
@@ -671,7 +667,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         return '1個';
     }
 
-function buildShoppingCatalog() {
+    function buildShoppingCatalog() {
         const container = document.getElementById('catalog-container');
         container.innerHTML = '';
         sortableInstances.forEach(inst => inst.destroy()); sortableInstances = [];
@@ -682,7 +678,6 @@ function buildShoppingCatalog() {
             details.open = true; 
             const summary = document.createElement('summary');
             
-            // 🌟 修正ポイント：編集モード時に削除ボタンを表示
             const headerDiv = document.createElement('div');
             headerDiv.className = 'category-header';
             
@@ -693,7 +688,7 @@ function buildShoppingCatalog() {
                 delBtn.className = 'del-cat-btn';
                 delBtn.innerText = '🗑️ カテゴリーを削除';
                 delBtn.onclick = (e) => {
-                    e.preventDefault(); e.stopPropagation(); // アコーディオンの開閉を防ぐ
+                    e.preventDefault(); e.stopPropagation();
                     deleteCustomCategory(category);
                 };
                 headerDiv.innerHTML = titleHTML;
@@ -712,6 +707,7 @@ function buildShoppingCatalog() {
                 const card = document.createElement('div');
                 card.className = 'catalog-item-card';
                 card.dataset.itemName = itemText;
+                
                 const btn = document.createElement('button');
                 btn.className = 'catalog-item-btn'; btn.innerText = itemText;
                 
@@ -721,13 +717,17 @@ function buildShoppingCatalog() {
                     card.appendChild(btn);
                 } else {
                     if(selectedShoppingItems.has(itemText)) card.classList.add('selected');
+                    
                     const defaultUnit = selectedShoppingItems.has(itemText) ? selectedShoppingItems.get(itemText) : guessDefaultUnit(itemText);
+                    
                     btn.onclick = (e) => { e.stopPropagation(); toggleCatalogItem(itemText, card); };
                     card.onclick = () => toggleCatalogItem(itemText, card);
+                    
                     const unitBtn = document.createElement('button');
                     unitBtn.className = 'catalog-unit-btn ignore-drag';
                     unitBtn.innerText = defaultUnit;
                     unitBtn.onclick = (e) => { e.stopPropagation(); openCalcModal(itemText); };
+
                     card.appendChild(btn);
                     card.appendChild(unitBtn);
                 }
@@ -785,18 +785,17 @@ function buildShoppingCatalog() {
         isCatalogEditMode = !isCatalogEditMode; catalogDeleteSelection.clear();
         document.getElementById('catalog-normal-footer').style.display = isCatalogEditMode ? 'none' : 'flex';
         document.getElementById('catalog-edit-footer').style.display = isCatalogEditMode ? 'flex' : 'none';
-        document.getElementById('catalog-edit-btn').innerText = isCatalogEditMode ? "戻る" : "✏️ 編集する";
+        document.getElementById('catalog-edit-btn').innerText = isCatalogEditMode ? "戻る" : "✏️ 編集";
         document.getElementById('catalog-desc').innerText = isCatalogEditMode ? "消したい項目をタップ、または長押しで並び替えできます。" : "ポンポン押して複数選べます！";
         document.getElementById('catalog-desc').style.color = isCatalogEditMode ? "#f44336" : "inherit";
         buildShoppingCatalog();
     }
 
-    // 新規カテゴリーの追加
     function addCustomCategory() {
         const text = prompt('新しいカテゴリー名を入力してください:\n（例：📱 電化製品、🏥 薬局 など）');
         if(text && text.trim()) {
             if(!noteData.shoppingCatalog[text.trim()]) {
-                noteData.shoppingCatalog[text.trim()] = []; // 空の配列で作成
+                noteData.shoppingCatalog[text.trim()] = []; 
                 saveData(); buildShoppingCatalog();
             } else {
                 alert('既にそのカテゴリーは存在します！');
@@ -804,7 +803,6 @@ function buildShoppingCatalog() {
         }
     }
 
-    // カテゴリーそのものを消す関数
     function deleteCustomCategory(category) {
         if(confirm(`カテゴリー「${category}」を、中身の商品ごとすべてカタログから削除しますか？`)) {
             delete noteData.shoppingCatalog[category];
@@ -812,7 +810,7 @@ function buildShoppingCatalog() {
             buildShoppingCatalog();
         }
     }
-    
+
     function addCustomItemToCatalog(category) {
         const text = prompt(`「${category}」に追加するアイテム名:`);
         if(text && text.trim()) {
@@ -844,7 +842,7 @@ function buildShoppingCatalog() {
 
         isCatalogEditMode = false;
         document.getElementById('catalog-normal-footer').style.display = 'flex'; document.getElementById('catalog-edit-footer').style.display = 'none';
-        document.getElementById('catalog-edit-btn').innerText = "✏️ 編集する"; document.getElementById('catalog-desc').innerText = "ポンポン押して複数選べます！"; document.getElementById('catalog-desc').style.color = "inherit";
+        document.getElementById('catalog-edit-btn').innerText = "✏️ 編集"; document.getElementById('catalog-desc').innerText = "ポンポン押して複数選べます！"; document.getElementById('catalog-desc').style.color = "inherit";
         buildShoppingCatalog(); document.getElementById('shopping-modal').style.display = 'flex';
     }
 

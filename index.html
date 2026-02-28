@@ -246,43 +246,44 @@
 </div>
 
 <div class="modal-overlay" id="calc-modal" style="z-index: 3000;">
-    <div class="modal-content" style="max-width: 400px; height: auto; border-radius: 28px; padding: 0; overflow: hidden;">
-        <div style="background: var(--accent-color); color: white; padding: 20px 15px; text-align: center; font-weight: 900; font-size: 1.3rem; letter-spacing: 1px;" id="calc-item-name">商品名</div>
+    <div class="modal-content" style="max-width: 400px; height: auto; border-radius: 28px; padding: 20px; overflow: hidden;">
         
-        <div style="padding: 20px;">
-            <div style="background: #f8f9fa; border-radius: 16px; padding: 15px 20px; text-align: right; color: #333; margin-bottom: 20px; display: flex; justify-content: flex-end; align-items: baseline; gap: 8px; border: 3px solid rgba(128,128,128,0.2); box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);">
-                <span id="calc-display-value" style="font-size: 3rem; font-weight: 900; line-height: 1; letter-spacing: -2px;">1</span>
-                <span id="calc-display-unit" style="font-size: 1.4rem; color: var(--accent-color); font-weight: 900;">個</span>
+        <div style="margin-bottom: 10px; font-size: 0.95rem; font-weight: 900; color: var(--accent-color); opacity: 0.9; display: flex; align-items: center; gap: 6px;">
+            <span>🛒 選択中：</span><span id="calc-item-name">商品名</span>
+        </div>
+        
+        <div style="background: #f8f9fa; border-radius: 16px; padding: 15px 20px; text-align: right; color: #333; margin-bottom: 20px; display: flex; justify-content: flex-end; align-items: baseline; gap: 8px; border: 3px solid rgba(128,128,128,0.2); box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);">
+            <span id="calc-display-value" style="font-size: 3rem; font-weight: 900; line-height: 1; letter-spacing: -2px;">1</span>
+            <span id="calc-display-unit" style="font-size: 1.4rem; color: var(--accent-color); font-weight: 900;">個</span>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; justify-content: center;" id="calc-unit-container">
             </div>
 
-            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; justify-content: center;" id="calc-unit-container">
-                </div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 25px;">
+            <button class="calc-btn" onclick="calcInput('7')">7</button>
+            <button class="calc-btn" onclick="calcInput('8')">8</button>
+            <button class="calc-btn" onclick="calcInput('9')">9</button>
+            <button class="calc-btn op-btn" onclick="calcOp('+')">＋</button>
 
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 25px;">
-                <button class="calc-btn" onclick="calcInput('7')">7</button>
-                <button class="calc-btn" onclick="calcInput('8')">8</button>
-                <button class="calc-btn" onclick="calcInput('9')">9</button>
-                <button class="calc-btn op-btn" onclick="calcOp('+')">＋</button>
+            <button class="calc-btn" onclick="calcInput('4')">4</button>
+            <button class="calc-btn" onclick="calcInput('5')">5</button>
+            <button class="calc-btn" onclick="calcInput('6')">6</button>
+            <button class="calc-btn op-btn" onclick="calcOp('-')">－</button>
 
-                <button class="calc-btn" onclick="calcInput('4')">4</button>
-                <button class="calc-btn" onclick="calcInput('5')">5</button>
-                <button class="calc-btn" onclick="calcInput('6')">6</button>
-                <button class="calc-btn op-btn" onclick="calcOp('-')">－</button>
+            <button class="calc-btn" onclick="calcInput('1')">1</button>
+            <button class="calc-btn" onclick="calcInput('2')">2</button>
+            <button class="calc-btn" onclick="calcInput('3')">3</button>
+            <button class="calc-btn clear-btn" onclick="calcClear()">C</button>
 
-                <button class="calc-btn" onclick="calcInput('1')">1</button>
-                <button class="calc-btn" onclick="calcInput('2')">2</button>
-                <button class="calc-btn" onclick="calcInput('3')">3</button>
-                <button class="calc-btn clear-btn" onclick="calcClear()">C</button>
+            <button class="calc-btn" style="grid-column: span 2;" onclick="calcInput('0')">0</button>
+            <button class="calc-btn" onclick="calcInput('00')">00</button>
+            <button class="calc-btn eq-btn" onclick="calcEq()">＝</button>
+        </div>
 
-                <button class="calc-btn" style="grid-column: span 2;" onclick="calcInput('0')">0</button>
-                <button class="calc-btn" onclick="calcInput('00')">00</button>
-                <button class="calc-btn eq-btn" onclick="calcEq()">＝</button>
-            </div>
-
-            <div style="display: flex; gap: 10px;">
-                <button class="secondary-btn" style="flex: 1; margin: 0; padding: 18px; font-size: 1.1rem; border-radius: 16px;" onclick="closeCalcModal()">やめる</button>
-                <button class="primary-btn" style="flex: 2; margin: 0; padding: 18px; font-size: 1.2rem; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,122,255,0.3);" onclick="commitCalcModal()">決定</button>
-            </div>
+        <div style="display: flex; gap: 10px;">
+            <button class="secondary-btn" style="flex: 1; margin: 0; padding: 18px; font-size: 1.1rem; border-radius: 16px;" onclick="closeCalcModal()">やめる</button>
+            <button class="primary-btn" style="flex: 2; margin: 0; padding: 18px; font-size: 1.2rem; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,122,255,0.3);" onclick="commitCalcModal()">決定</button>
         </div>
     </div>
 </div>

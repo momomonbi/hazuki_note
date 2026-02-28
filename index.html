@@ -96,7 +96,7 @@
         /* --- データベース用 --- */
         .event-card { padding: 18px; margin-bottom: 15px; position: relative; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
         .event-card:active { transform: scale(0.98); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .event-card-title { font-size: 1.3rem; font-weight: 900; margin-bottom: 6px; padding-right: 30px; }
+        .event-card-title { font-size: 1.3rem; font-weight: 900; margin-bottom: 6px; }
         .event-card-date { font-size: 0.9rem; color: var(--accent-color); font-weight: 900; margin-bottom: 12px; display: flex; align-items: center; gap: 5px;}
         .event-tags { margin-bottom: 12px; }
         .event-tag { display: inline-block; padding: 6px 10px; border-radius: 10px; font-size: 0.8rem; font-weight: 900; background: rgba(128,128,128,0.1); margin-right: 6px; margin-bottom: 6px;}
@@ -137,8 +137,10 @@
         .calc-btn.eq-btn { background: var(--accent-color); color: white; border-color: var(--accent-color); }
         .unit-chip { background: #fff; border: 2px solid rgba(128,128,128,0.3); border-radius: 8px; font-size: 0.9rem; font-weight: 900; padding: 6px 10px; color: #555; transition: all 0.2s;}
         .unit-chip.active { background: var(--accent-color); color: white; border-color: var(--accent-color); transform: scale(1.05); box-shadow: 0 2px 8px rgba(0,122,255,0.3);}
-        #bulk-delete-bar { position: fixed; bottom: -100px; left: 0; width: 100%; background: rgba(244,67,54,0.95); backdrop-filter: blur(10px); padding: 20px; padding-bottom: 40px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; transition: bottom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1005; box-shadow: 0 -5px 20px rgba(244,67,54,0.3);}
-        #bulk-delete-bar.active { bottom: 0; }
+        
+        /* 共通一括削除バー */
+        #bulk-delete-bar, #db-bulk-delete-bar { position: fixed; bottom: -100px; left: 0; width: 100%; background: rgba(244,67,54,0.95); backdrop-filter: blur(10px); padding: 20px; padding-bottom: 40px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; transition: bottom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1005; box-shadow: 0 -5px 20px rgba(244,67,54,0.3);}
+        #bulk-delete-bar.active, #db-bulk-delete-bar.active { bottom: 0; }
     </style>
 </head>
 <body data-theme="cute">
@@ -190,7 +192,10 @@
 </div>
 
 <div id="tab-database" class="tab-content">
-    <button class="primary-btn" id="db-add-btn" style="margin-bottom: 20px; font-size: 1.1rem;" onclick="openDbEditModal()">✏️ 新しい日記・メモを書く</button>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <button class="primary-btn" id="db-add-btn" style="margin: 0; flex: 1; font-size: 1.1rem;" onclick="openDbEditModal()">✏️ 新しい日記・メモを書く</button>
+        <button onclick="toggleDbDeleteMode()" id="db-delete-mode-btn" style="background: rgba(128,128,128,0.15); font-weight: 900; padding: 15px 12px; margin-left: 10px; font-size: 0.85rem; border-radius: 16px; color: var(--text-color); white-space: nowrap;">🧹 一括削除</button>
+    </div>
     <div id="db-container"></div>
 </div>
 
@@ -367,7 +372,7 @@
     </div>
 </div>
 
-<div id="bulk-delete-bar">
+<div id="bulk-delete-bar" class="bulk-delete-bar">
     <span style="color: white; font-weight: 900; font-size: 1.1rem;" id="bulk-delete-text">0件 選択中</span>
     <div style="display: flex; gap: 8px;">
         <button onclick="toggleSelectAllBulk()" id="bulk-select-all-btn" style="background: rgba(255,255,255,0.2); color: white; padding: 10px 12px; font-weight: bold; border-radius: 10px; font-size: 0.9rem; white-space: nowrap;">全選択</button>
@@ -375,6 +380,16 @@
         <button onclick="executeBulkDelete()" style="background: white; color: #f44336; padding: 10px 15px; font-weight: 900; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); font-size: 0.95rem; white-space: nowrap;">一気に消す！</button>
     </div>
 </div>
+
+<div id="db-bulk-delete-bar" class="bulk-delete-bar">
+    <span style="color: white; font-weight: 900; font-size: 1.1rem;" id="db-bulk-delete-text">0件 選択中</span>
+    <div style="display: flex; gap: 8px;">
+        <button onclick="toggleSelectAllDbBulk()" id="db-bulk-select-all-btn" style="background: rgba(255,255,255,0.2); color: white; padding: 10px 12px; font-weight: bold; border-radius: 10px; font-size: 0.9rem; white-space: nowrap;">全選択</button>
+        <button onclick="toggleDbDeleteMode()" style="background: rgba(255,255,255,0.2); color: white; padding: 10px 12px; font-weight: bold; border-radius: 10px; font-size: 0.9rem; white-space: nowrap;">やめる</button>
+        <button onclick="executeDbBulkDelete()" style="background: white; color: #f44336; padding: 10px 15px; font-weight: 900; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); font-size: 0.95rem; white-space: nowrap;">一気に消す！</button>
+    </div>
+</div>
+
 
 <script>
     // ==========================================
@@ -411,7 +426,7 @@
         checklists: { event_schedule: [], event_belonging: [], daily_todo: [], daily_shopping: [] },
         events: [],
         dailyNotes: [],
-        aiChatHistory: [] // ✨ AIの記憶用配列を追加
+        aiChatHistory: [] 
     };
 
     function initDB() {
@@ -485,7 +500,7 @@
         
         applyModeUI(); 
         buildShoppingCatalog();
-        renderAiChatHistory(); // チャット履歴復元
+        renderAiChatHistory(); 
         
         const activeTab = document.querySelector('.tab.active');
         if(activeTab) { switchTab(activeTab.getAttribute('onclick').match(/'([^']+)'/)[1], activeTab); }
@@ -532,8 +547,11 @@
 
         document.getElementById('db-add-btn').innerText = isDaily ? '✏️ 新しい日記・メモを書く' : '✏️ 新しいイベント情報を登録';
         
-        renderChecklist(1, 'list-1'); renderChecklist(2, 'list-2'); renderDbItems();
+        // モード切替時に一括削除モードをリセットする
         if(isDeleteMode) toggleDeleteMode();
+        if(isDbDeleteMode) toggleDbDeleteMode();
+
+        renderChecklist(1, 'list-1'); renderChecklist(2, 'list-2'); renderDbItems();
     }
 
     function switchTab(id, tabElement) {
@@ -552,7 +570,7 @@
     function changeTheme(name) { noteData.theme = name; document.body.setAttribute('data-theme', name); saveData(); }
     function changeCatalogColumns(val) { document.documentElement.style.setProperty('--catalog-cols', val); noteData.catalogColumns = parseInt(val); saveData(); }
 
-    /* --- チェックリスト・カタログ・DB機能 --- */
+    /* --- チェックリスト用機能 --- */
     let isDeleteMode = false; let bulkDeleteSelection = new Set();
     function renderChecklist(listNum, containerId) { 
         const container = document.getElementById(containerId);
@@ -688,45 +706,163 @@
         }).catch(err => { window.open(`https://www.google.com/search?q=${query}`, '_blank'); });
     }
 
+    /* --- DB (日記・イベント) 用機能 --- */
+    let isDbDeleteMode = false;
+    let dbBulkDeleteSelection = new Set();
+
     function getDbArray() { return noteData.appMode === 'daily' ? noteData.dailyNotes : noteData.events; }
+
     function renderDbItems() { 
         const container = document.getElementById('db-container'); container.innerHTML = ''; 
         let items = getDbArray(); 
-        if (items.length === 0) { container.innerHTML = `<p style="color:#888; font-size:1.1rem; text-align:center; font-weight:bold; padding:30px;">${noteData.appMode === 'daily' ? '📓 日記・メモはありません' : '📚 イベントが登録されていません'}</p>`; return; }
+        if (items.length === 0) { 
+            container.innerHTML = `<p style="color:#888; font-size:1.1rem; text-align:center; font-weight:bold; padding:30px;">${noteData.appMode === 'daily' ? '📓 日記・メモはありません' : '📚 イベントが登録されていません'}</p>`; 
+            return; 
+        }
+
         items.forEach(item => {
             const tagsHTML = (item.tags||'').split(/[\s,]+/).filter(t=>t).map(t => `<span class="event-tag">${t}</span>`).join('');
             const memoHTML = (item.memo || '').replace(/\n/g, '<br>');
-            container.innerHTML += `<div class="glass-card event-card" onclick="openDbEditModal(${item.id})">
-                <button class="delete-icon-btn" onclick="deleteDbItem(${item.id}, event)">🗑️</button>
-                <div class="event-card-date">📅 ${item.date}</div>
-                <div class="event-card-title">${item.title}</div>
-                <div class="event-tags">${tagsHTML}</div>
-                <p style="font-size: 0.95rem; margin-top: 10px; line-height: 1.6; font-weight:700;">${memoHTML}</p>
+            
+            let onClickAction, checkboxHTML, trashBtnHTML, cardStyle;
+            if (isDbDeleteMode) {
+                const isSelected = dbBulkDeleteSelection.has(item.id);
+                onClickAction = `toggleDbBulkSelect(${item.id})`;
+                checkboxHTML = `<input type="checkbox" style="width:24px; height:24px; accent-color:#f44336; pointer-events:none; flex-shrink:0;" ${isSelected ? 'checked' : ''}>`;
+                trashBtnHTML = '';
+                cardStyle = isSelected ? "background: rgba(244,67,54,0.05); border: 2px solid rgba(244,67,54,0.3);" : "";
+            } else {
+                onClickAction = `openDbEditModal(${item.id})`;
+                checkboxHTML = '';
+                // ⚠️ event.stopPropagation() を追加してバブリングを防止！
+                trashBtnHTML = `<button class="delete-icon-btn" onclick="deleteDbItem(${item.id}, event)">🗑️</button>`;
+                cardStyle = "";
+            }
+
+            container.innerHTML += `<div class="glass-card event-card" onclick="${onClickAction}" style="display:flex; gap:15px; align-items:flex-start; ${cardStyle}">
+                ${isDbDeleteMode ? `<div style="padding-top:2px;">${checkboxHTML}</div>` : ''}
+                <div style="flex:1;">
+                    ${trashBtnHTML}
+                    <div class="event-card-date">📅 ${item.date}</div>
+                    <div class="event-card-title" style="padding-right: ${isDbDeleteMode ? '0' : '30px'};">${item.title}</div>
+                    <div class="event-tags">${tagsHTML}</div>
+                    <p style="font-size: 0.95rem; margin-top: 10px; line-height: 1.6; font-weight:700;">${memoHTML}</p>
+                </div>
             </div>`;
         });
     }
+
+    // DB項目の個別削除（バブリング防止）
+    function deleteDbItem(id, event) {
+        event.stopPropagation();
+        if(confirm("この項目を削除しますか？")) {
+            if(noteData.appMode === 'daily') {
+                noteData.dailyNotes = noteData.dailyNotes.filter(item => item.id !== id);
+            } else {
+                noteData.events = noteData.events.filter(item => item.id !== id);
+            }
+            saveData();
+            renderDbItems();
+        }
+    }
+
+    // DB一括削除の切り替え
+    function toggleDbDeleteMode() { 
+        isDbDeleteMode = !isDbDeleteMode;
+        dbBulkDeleteSelection.clear();
+        const btn = document.getElementById('db-delete-mode-btn');
+        const bar = document.getElementById('db-bulk-delete-bar');
+        
+        if (isDbDeleteMode) {
+            btn.innerText = "❌ やめる"; 
+            btn.style.background = "rgba(244,67,54,0.1)"; 
+            btn.style.color = "#f44336"; 
+            bar.classList.add('active');
+        } else {
+            btn.innerText = "🧹 一括削除"; 
+            btn.style.background = "rgba(128,128,128,0.15)"; 
+            btn.style.color = "var(--text-color)"; 
+            bar.classList.remove('active');
+        }
+        updateDbBulkDeleteText(); 
+        renderDbItems();
+    }
+
+    function toggleDbBulkSelect(id) { 
+        if (dbBulkDeleteSelection.has(id)) dbBulkDeleteSelection.delete(id); 
+        else dbBulkDeleteSelection.add(id); 
+        updateDbBulkDeleteText(); 
+        renderDbItems(); // 画面を更新してチェックを入れる
+    }
+
+    function updateDbBulkDeleteText() { 
+        document.getElementById('db-bulk-delete-text').innerText = `${dbBulkDeleteSelection.size}件 選択中`; 
+        const items = getDbArray();
+        const selectAllBtn = document.getElementById('db-bulk-select-all-btn');
+        if (selectAllBtn) { 
+            selectAllBtn.innerText = (items.length > 0 && dbBulkDeleteSelection.size === items.length) ? "全解除" : "全選択"; 
+        }
+    }
+
+    function toggleSelectAllDbBulk() { 
+        const items = getDbArray();
+        if (items.length === 0) return;
+        if (dbBulkDeleteSelection.size === items.length) { 
+            dbBulkDeleteSelection.clear(); 
+        } else { 
+            items.forEach(i => dbBulkDeleteSelection.add(i.id)); 
+        }
+        updateDbBulkDeleteText(); 
+        renderDbItems();
+    }
+
+    function executeDbBulkDelete() { 
+        if (dbBulkDeleteSelection.size === 0) return alert("削除する項目が選択されていません。");
+        if(confirm(`選択した ${dbBulkDeleteSelection.size}件 を一気に削除しますか？`)) {
+            let items = getDbArray();
+            items = items.filter(i => !dbBulkDeleteSelection.has(i.id));
+            if (noteData.appMode === 'daily') {
+                noteData.dailyNotes = items;
+            } else {
+                noteData.events = items;
+            }
+            saveData(); 
+            toggleDbDeleteMode();
+        }
+    }
+
+    // 編集モーダル等（今回は中身空のスタブのまま維持）
     function openDbEditModal(id = null) { document.getElementById('db-edit-modal').style.display = 'flex'; }
     function closeDbEditModal() { document.getElementById('db-edit-modal').style.display = 'none'; }
     function saveDbItem() { closeDbEditModal(); }
     function updateDateRange() {}
     function clearDateRange() {}
-    function deleteDbItem(id, event) {}
     
-    // ✨【完全データ消去処理を修正】✨
+    // ✨【完全データ消去処理を強力に修正】✨
     function hardResetApp() { 
         if(confirm("【⚠️警告】\nすべてのデータを完全に消去します。本当によろしいですか？\n※この操作は取り消せません。")) { 
+            // 画面を白紙にして操作不能にする（残像が残るのを防ぐ）
+            document.body.innerHTML = '<div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#fff; color:#333; font-size:1.5rem; font-weight:bold;">データを完全に消去しています...</div>';
+            
             // 1. ローカルストレージを強力クリア
             localStorage.clear(); 
-            // 2. IndexedDBが存在すれば削除処理を実行し、完了後にリロード
+            
+            // 2. IndexedDBが存在すれば削除処理を実行
             if(db) { 
+                db.close(); // ★Safari対策: 現在開いている接続を強制切断する
                 const req = indexedDB.deleteDatabase(DB_NAME);
-                req.onsuccess = () => location.reload();
-                req.onerror = () => location.reload();
-                req.onblocked = () => location.reload();
+                req.onsuccess = () => forceReload();
+                req.onerror = () => forceReload();
+                req.onblocked = () => forceReload();
             } else {
-                location.reload();
+                forceReload();
             }
         } 
+    }
+
+    function forceReload() {
+        // ★キャッシュを無視して強制リロードさせるためにURLにタイムスタンプを付与
+        window.location.replace(window.location.pathname + '?reset=' + new Date().getTime());
     }
     
     // カタログ関数等のモック

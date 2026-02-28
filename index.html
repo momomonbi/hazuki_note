@@ -87,7 +87,8 @@
         .ai-calc-btn { background: linear-gradient(135deg, #FFC107, #FF9800); color: white; padding: 15px; border-radius: 16px; font-weight: 900; font-size: 1.1rem; width: 100%; box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 15px;}
 
         /* --- データベース用 --- */
-        .event-card { padding: 18px; margin-bottom: 15px; position: relative; }
+        .event-card { padding: 18px; margin-bottom: 15px; position: relative; transition: all 0.2s; cursor: pointer; }
+        .event-card:active { transform: scale(0.98); }
         .event-card-title { font-size: 1.3rem; font-weight: 900; margin-bottom: 6px; }
         .event-card-date { font-size: 0.9rem; color: var(--accent-color); font-weight: 900; margin-bottom: 12px; display: flex; align-items: center; gap: 5px;}
         .event-tags { margin-bottom: 12px; }
@@ -136,7 +137,7 @@
 
         .modal-footer { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--bg-color); padding: 15px 20px 45px 20px; box-sizing: border-box; display: flex; gap: 10px; border-top: 1px solid rgba(128,128,128,0.1); z-index: 2010;}
 
-        /* === 🔢 超特化型 電卓モーダル用 (はみ出し防止・少し小さめ) === */
+        /* === 🔢 超特化型 電卓モーダル用 === */
         .calc-btn { background: #fff; border: 2px solid rgba(128,128,128,0.2); border-radius: 12px; font-size: 1.4rem; font-weight: 900; padding: 10px 0; color: #333; box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; touch-action: manipulation;}
         .calc-btn:active { transform: scale(0.9); box-shadow: none; }
         .calc-btn.op-btn { background: #e3f2fd; color: #007aff; border-color: rgba(0,122,255,0.2); }
@@ -149,6 +150,10 @@
         /* 固定アクションバー (一括削除時) */
         #bulk-delete-bar { position: fixed; bottom: -100px; left: 0; width: 100%; background: rgba(244,67,54,0.95); backdrop-filter: blur(10px); padding: 20px; padding-bottom: 40px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; transition: bottom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1005; box-shadow: 0 -5px 20px rgba(244,67,54,0.3);}
         #bulk-delete-bar.active { bottom: 0; }
+
+        /* DB入力モーダル用タグサジェスト */
+        .db-tag-btn { padding: 6px 12px; border-radius: 12px; border: 1px solid var(--accent-color); background: rgba(255,255,255,0.5); color: var(--accent-color); font-size: 0.85rem; font-weight: bold; cursor: pointer; transition: all 0.2s;}
+        .db-tag-btn:active { transform: scale(0.9); background: var(--accent-color); color: white;}
     </style>
 </head>
 <body data-theme="cute">
@@ -199,11 +204,18 @@
 </div>
 
 <div id="tab-database" class="tab-content">
-    <button class="primary-btn" id="db-add-btn" style="margin-bottom: 20px; font-size: 1.1rem;" onclick="addDbItem()">✏️ 新しい日記・メモを書く</button>
+    <button class="primary-btn" id="db-add-btn" style="margin-bottom: 20px; font-size: 1.1rem;" onclick="openDbModal()">✏️ 新しい日記・メモを書く</button>
     <div id="db-container"></div>
 </div>
 
 <div id="tab-settings" class="tab-content">
+    
+    <div class="glass-card" style="padding: 20px; margin-bottom: 20px;">
+        <h2 style="margin-top:0; font-size: 1.2rem; color:var(--accent-color); font-weight: 900;">🏠 お住まいの地域 (AI相場検索用)</h2>
+        <p style="font-size:0.9rem; color:var(--text-color); opacity:0.8; font-weight:700;">スーパーの相場をより正確に検索するために使用します。（番地不要）</p>
+        <input type="text" id="setting-location" class="form-input" placeholder="例: 東京都新宿区" onchange="saveLocation(this.value)" style="margin-bottom: 0;">
+    </div>
+
     <div class="glass-card" style="padding: 20px; margin-bottom: 20px;">
         <h2 style="margin-top:0; font-size: 1.2rem; color:var(--accent-color); font-weight: 900;">🎨 テーマのカスタマイズ</h2>
         <p style="font-size:0.9rem; color:var(--text-color); opacity:0.8; font-weight:700;">気分に合わせてデザインを変更できます。</p>
@@ -310,6 +322,34 @@
     </div>
 </div>
 
+<div class="modal-overlay" id="db-modal" style="z-index: 4000; align-items: center;">
+    <div class="modal-content glass-card" style="max-width: 500px; height: auto; max-height: 90vh; border-radius: 24px; padding: 25px; margin: 15px; display: flex; flex-direction: column;">
+        <h2 id="db-modal-title" style="margin-top:0; color: var(--accent-color); font-weight: 900; margin-bottom: 20px;">ノートを編集</h2>
+        
+        <div style="overflow-y: auto; flex-grow: 1; padding-bottom: 10px;">
+            <label style="font-weight: 900; font-size: 0.9rem; color: var(--text-color); margin-bottom: 5px; display: block;">タイトル / イベント名</label>
+            <input type="text" id="db-input-title" class="form-input" placeholder="入力してください">
+            
+            <label style="font-weight: 900; font-size: 0.9rem; color: var(--text-color); margin-bottom: 5px; margin-top: 10px; display: block;">日付 / 開催時期</label>
+            <input type="date" id="db-input-date" class="form-input" style="cursor: pointer;">
+            
+            <label style="font-weight: 900; font-size: 0.9rem; color: var(--text-color); margin-bottom: 5px; margin-top: 10px; display: block;">タグ（カンマ区切り）</label>
+            <input type="text" id="db-input-tags" class="form-input" placeholder="例: 買い物, お出かけ" style="margin-bottom: 8px;">
+            
+            <div id="db-tag-suggestions" style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 15px;">
+                </div>
+            
+            <label style="font-weight: 900; font-size: 0.9rem; color: var(--text-color); margin-bottom: 5px; margin-top: 10px; display: block;">メモ本文</label>
+            <textarea id="db-input-memo" class="form-input" rows="5" placeholder="詳細やメモを記入..."></textarea>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+            <button class="secondary-btn" style="flex: 1; margin: 0;" onclick="closeDbModal()">キャンセル</button>
+            <button class="primary-btn" style="flex: 2; margin: 0;" onclick="saveDbModal()">💾 保存する</button>
+        </div>
+    </div>
+</div>
+
 <div id="bulk-delete-bar">
     <span style="color: white; font-weight: 900; font-size: 1.1rem;" id="bulk-delete-text">0件 選択中</span>
     <div style="display: flex; gap: 8px;">
@@ -324,7 +364,7 @@
     // 🚀 IndexedDB ＆ データ構造
     // ==========================================
     const DB_NAME = 'HazukiNotoDB';
-    const DB_VERSION = 11; // 構造変更のためバージョンアップ
+    const DB_VERSION = 12; // 構造変更のためバージョンアップ
     let db;
     
     // 主婦向け 超・膨大なデフォルト買い物カタログ
@@ -344,6 +384,7 @@
         theme: 'cute',
         appMode: 'daily',
         catalogColumns: 2, // カタログの列数
+        location: undefined, // 地域情報
         shoppingCatalog: null,
         checklists: { event_schedule: [], event_belonging: [], daily_todo: [], daily_shopping: [] },
         events: [],
@@ -402,6 +443,10 @@
         if(!noteData.catalogColumns) noteData.catalogColumns = 2;
         if(!noteData.shoppingCatalog) noteData.shoppingCatalog = JSON.parse(JSON.stringify(defaultCatalog));
         
+        // 🏠 デフォルトの地域をあらかじめ設定しています
+        if(noteData.location === undefined) noteData.location = "青森県三沢市";
+        document.getElementById('setting-location').value = noteData.location || "";
+        
         document.body.setAttribute('data-theme', noteData.theme || 'cute');
         document.getElementById('theme-selector').value = noteData.theme || 'cute';
         
@@ -422,6 +467,11 @@
     // ==========================================
     // UI制御 & ロジック
     // ==========================================
+    function saveLocation(val) {
+        noteData.location = val;
+        saveData();
+    }
+
     function toggleAppMode() {
         noteData.appMode = noteData.appMode === 'event' ? 'daily' : 'event';
         saveData(); applyModeUI();
@@ -625,7 +675,7 @@
         }
     }
 
-    // 🌟 新機能：全選択 / 全解除
+    // 全選択 / 全解除
     function toggleSelectAllBulk() {
         const keys = getListKeysForMode();
         const list1 = noteData.checklists[keys.top] || [];
@@ -635,10 +685,8 @@
         if (totalItems === 0) return;
         
         if (bulkDeleteSelection.size === totalItems) {
-            // すべて選択されている場合は全解除
             bulkDeleteSelection.clear();
         } else {
-            // そうでなければ全選択
             list1.forEach(i => bulkDeleteSelection.add(i.id));
             list2.forEach(i => bulkDeleteSelection.add(i.id));
         }
@@ -671,7 +719,9 @@
 
         if (activeItems.length === 0) { alert('買い物リストにアイテムがありません。'); return; }
 
-        const promptText = `以下の買い物リストの現在（日本のスーパー）の一般的な相場価格を調べ、概算を計算してください。
+        const userLocation = noteData.location ? noteData.location : '日本';
+
+        const promptText = `以下の買い物リストの現在（${userLocation}のスーパー）の一般的な相場価格を調べ、概算を計算してください。
 
 【出力形式の指定】
 1. 何よりも先に一番最初に、まず「合計の概算金額（税込）」を非常に大きく分かりやすく表示してください。
@@ -1012,40 +1062,134 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         closeCalcModal();
     }
 
-    // --- データベース (イベント/日常 共通) ---
+    // ==========================================
+    // 📝 新しいデータベース (入力モーダル・インライン編集)
+    // ==========================================
     function getDbArray() { return noteData.appMode === 'daily' ? noteData.dailyNotes : noteData.events; }
 
+    let currentEditDbId = null;
+
     function renderDbItems() {
-        const container = document.getElementById('db-container'); container.innerHTML = ''; const items = getDbArray();
-        if (items.length === 0) { container.innerHTML = `<p style="color:#888; font-size:1.1rem; text-align:center; font-weight:bold; padding:30px;">${noteData.appMode === 'daily' ? '📓 日記・メモはありません' : '📚 イベントが登録されていません'}</p>`; return; }
+        const container = document.getElementById('db-container'); container.innerHTML = ''; 
+        const items = getDbArray();
+        if (items.length === 0) { 
+            container.innerHTML = `<p style="color:#888; font-size:1.1rem; text-align:center; font-weight:bold; padding:30px;">${noteData.appMode === 'daily' ? '📓 日記・メモはありません' : '📚 イベントが登録されていません'}</p>`; 
+            return; 
+        }
+        
         items.forEach(item => {
-            const tagsHTML = (item.tags || '').split(',').map(tag => { if(!tag.trim()) return ''; return `<span class="event-tag">${tag.trim()}</span>`; }).join('');
+            const tagsHTML = (item.tags || '').split(',').map(tag => { 
+                if(!tag.trim()) return ''; 
+                return `<span class="event-tag">${tag.trim()}</span>`; 
+            }).join('');
+            
             const memoHTML = (item.memo || '').replace(/\n/g, '<br>');
-            container.innerHTML += `<div class="glass-card event-card"><div class="event-card-date">📅 ${item.date}</div><div class="event-card-title">${item.title}</div><div class="event-tags">${tagsHTML}</div><p style="font-size: 0.95rem; margin-top: 10px; line-height: 1.6; font-weight:700;">${memoHTML}</p><div style="display:flex; gap:10px; margin-top:20px;"><button class="secondary-btn" style="margin-top:0;" onclick="editDbItem(${item.id})">✏️ 編集</button><button class="danger-btn" onclick="deleteDbItem(${item.id})">削除</button></div></div>`;
+            
+            // カード全体をタップで編集モーダルが開くように変更
+            container.innerHTML += `
+            <div class="glass-card event-card" style="position: relative;">
+                <button onclick="deleteDbItem(${item.id}, event)" style="position: absolute; top: 15px; right: 15px; background: transparent; border: none; font-size: 1.4rem; cursor: pointer; padding: 5px; z-index: 10;" title="削除">🗑️</button>
+                
+                <div onclick="openDbModal(${item.id})" style="padding-right: 35px;">
+                    <div class="event-card-date">📅 ${item.date}</div>
+                    <div class="event-card-title">${item.title}</div>
+                    <div class="event-tags">${tagsHTML}</div>
+                    <p style="font-size: 0.95rem; margin-top: 10px; line-height: 1.6; font-weight:700;">${memoHTML}</p>
+                </div>
+            </div>`;
         });
     }
 
-    function addDbItem() {
+    function openDbModal(id = null) {
+        currentEditDbId = id;
         const isDaily = noteData.appMode === 'daily';
-        const title = prompt(isDaily ? 'タイトル:' : 'イベント名:'); if (!title) return;
-        let d = new Date(); let todayStr = `${d.getFullYear()}/${('0'+(d.getMonth()+1)).slice(-2)}/${('0'+d.getDate()).slice(-2)}`;
-        const date = prompt(isDaily ? '日付:' : '開催時期 (例: 2026年 夏):', isDaily ? todayStr : '未定');
-        const tags = prompt('タグ (カンマ区切り):', ''); const memo = prompt('メモ本文:');
-        getDbArray().unshift({ id: Date.now(), title, date, tags: tags || "", memo: memo || "" }); saveData(); renderDbItems();
+        
+        // モーダルのタイトル変更
+        document.getElementById('db-modal-title').innerText = isDaily ? (id ? '日記・メモを編集' : '新しい日記・メモ') : (id ? 'イベントを編集' : '新しいイベント');
+        
+        // おすすめタグの生成
+        const tagsContainer = document.getElementById('db-tag-suggestions');
+        tagsContainer.innerHTML = '';
+        const suggestedTags = isDaily ? ["育児", "買い物", "Python", "投資", "音楽"] : ["ボカロ", "同人", "入稿", "スケジュール", "作曲", "イベント"];
+        
+        suggestedTags.forEach(tag => {
+            const btn = document.createElement('button');
+            btn.className = 'db-tag-btn';
+            btn.innerText = '+ ' + tag;
+            btn.onclick = () => {
+                const input = document.getElementById('db-input-tags');
+                let current = input.value.split(',').map(s => s.trim()).filter(s => s);
+                if(!current.includes(tag)) {
+                    current.push(tag);
+                    input.value = current.join(', ');
+                }
+            };
+            tagsContainer.appendChild(btn);
+        });
+
+        // データのセット
+        if (id) {
+            const item = getDbArray().find(e => e.id === id);
+            document.getElementById('db-input-title').value = item.title;
+            
+            let dateVal = item.date;
+            if(dateVal.includes('/')) dateVal = dateVal.replace(/\//g, '-');
+            document.getElementById('db-input-date').value = dateVal;
+            
+            document.getElementById('db-input-tags').value = item.tags || "";
+            document.getElementById('db-input-memo').value = item.memo || "";
+        } else {
+            document.getElementById('db-input-title').value = "";
+            
+            const d = new Date();
+            const todayStr = `${d.getFullYear()}-${('0'+(d.getMonth()+1)).slice(-2)}-${('0'+d.getDate()).slice(-2)}`;
+            document.getElementById('db-input-date').value = todayStr;
+            
+            document.getElementById('db-input-tags').value = "";
+            document.getElementById('db-input-memo').value = "";
+        }
+        
+        document.getElementById('db-modal').style.display = 'flex';
     }
 
-    function editDbItem(id) {
-        const isDaily = noteData.appMode === 'daily'; const item = getDbArray().find(e => e.id === id); if(!item) return;
-        const title = prompt(isDaily ? 'タイトル:' : 'イベント名:', item.title); if (!title) return;
-        const date = prompt(isDaily ? '日付:' : '開催時期:', item.date); const tags = prompt('タグ (カンマ区切り):', item.tags); const memo = prompt('メモ本文:', item.memo);
-        item.title = title; item.date = date; item.tags = tags || ""; item.memo = memo || ""; saveData(); renderDbItems();
+    function closeDbModal() {
+        document.getElementById('db-modal').style.display = 'none';
     }
 
-    function deleteDbItem(id) {
-        if(confirm('本当に削除しますか？')) {
+    function saveDbModal() {
+        const title = document.getElementById('db-input-title').value;
+        if (!title) { alert('タイトルを入力してください！'); return; }
+        
+        let dateVal = document.getElementById('db-input-date').value;
+        if(dateVal.includes('-')) dateVal = dateVal.replace(/-/g, '/'); // 内部ではスラッシュ区切りで保存
+        
+        const tags = document.getElementById('db-input-tags').value;
+        const memo = document.getElementById('db-input-memo').value;
+
+        if (currentEditDbId) {
+            const item = getDbArray().find(e => e.id === currentEditDbId);
+            if (item) {
+                item.title = title;
+                item.date = dateVal;
+                item.tags = tags;
+                item.memo = memo;
+            }
+        } else {
+            getDbArray().unshift({ id: Date.now(), title, date: dateVal, tags: tags, memo: memo });
+        }
+        
+        saveData();
+        renderDbItems();
+        closeDbModal();
+    }
+
+    function deleteDbItem(id, event) {
+        event.stopPropagation(); // カードクリックの編集を防止
+        if(confirm('本当にこのノートを削除しますか？')) {
             if(noteData.appMode === 'daily') noteData.dailyNotes = noteData.dailyNotes.filter(e => e.id !== id);
             else noteData.events = noteData.events.filter(e => e.id !== id);
-            saveData(); renderDbItems();
+            saveData(); 
+            renderDbItems();
         }
     }
 

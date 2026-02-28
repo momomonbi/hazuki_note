@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>はづきのと - イベント＆日常サポート -</title>
+    <title>はづきのと - 日常とイベントのサポート -</title>
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Decol:wght@400;700&family=Kiwi+Maru:wght@400;700&family=M+PLUS+Rounded+1c:wght@400;700;900&family=Noto+Sans+JP:wght@400;700;900&family=Shippori+Mincho:wght@400;700;800&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
@@ -256,7 +256,7 @@
             <button class="primary-btn" style="flex: 2; margin: 0;" onclick="commitShoppingModal()">✨ 選んだものを追加</button>
         </div>
         <div class="modal-footer" id="catalog-edit-footer" style="display: none; flex-direction: column; gap: 10px; background: rgba(244,67,54,0.1);">
-            <button class="secondary-btn" style="width: 100%; margin: 0; background: rgba(0,122,255,0.1); color: var(--accent-color); border: 2px dashed var(--accent-color);" onclick="addCustomCategory()">＋ 新しいカテゴリーを作成</button>
+            <button class="secondary-btn" style="width: 100%; margin: 0; background: rgba(0,122,255,0.1); color: var(--accent-color); border: 2px dashed var(--accent-color);" onclick="addCustomCategory()">新しいカテゴリーを作成</button>
             <div style="display: flex; gap: 10px; width: 100%;">
                 <button class="secondary-btn" style="flex: 1; margin: 0; background: #fff; color: #333;" onclick="toggleCatalogEditMode()">完了</button>
                 <button class="primary-btn" style="flex: 2; margin: 0; background: #f44336; box-shadow: 0 4px 15px rgba(244,67,54,0.3);" onclick="deleteSelectedFromCatalog()">🗑 カタログから消去</button>
@@ -436,11 +436,11 @@
         const isDaily = noteData.appMode === 'daily';
         
         const toggleBtn = document.getElementById('mode-toggle-btn');
-        toggleBtn.innerText = isDaily ? '🌸 日常中 (切替)' : '🎪 イベント中 (切替)';
+        toggleBtn.innerText = isDaily ? '🌸 日常中 (切替)' : '🎪 イベント (切替)';
         toggleBtn.style.background = isDaily ? '#4CAF50' : 'var(--accent-color)';
         
-        document.getElementById('tab-btn-checklist').innerText = isDaily ? '✅ 買物・やる事' : '✅ 準備・持物';
-        document.getElementById('tab-btn-database').innerText = isDaily ? '📓 日記・メモ' : '📚 イベント管理';
+        document.getElementById('tab-btn-checklist').innerText = isDaily ? '✅ 買物やる事' : '✅ 準備持物';
+        document.getElementById('tab-btn-database').innerText = isDaily ? '📓 日記メモ' : '📚 イベント管理';
 
         document.getElementById('checklist-main-title').innerHTML = isDaily ? '<span style="font-size: 1.6rem;">☀️</span> 買い物と今日のタスク' : '<span style="font-size: 1.6rem;">📝</span> 次のイベントに向けて';
         

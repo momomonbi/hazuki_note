@@ -130,13 +130,13 @@
 
         .modal-footer { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--bg-color); padding: 15px 20px 45px 20px; box-sizing: border-box; display: flex; gap: 10px; border-top: 1px solid rgba(128,128,128,0.1); z-index: 2010;}
 
-        /* === 🔢 電卓モーダル用 === */
-        .calc-btn { background: #fff; border: 2px solid rgba(128,128,128,0.2); border-radius: 16px; font-size: 1.6rem; font-weight: 900; padding: 18px 0; color: #333; box-shadow: 0 4px 8px rgba(0,0,0,0.05); transition: all 0.2s; touch-action: manipulation;}
+        /* === 🔢 電卓モーダル用（スリム化） === */
+        .calc-btn { background: #fff; border: 2px solid rgba(128,128,128,0.2); border-radius: 12px; font-size: 1.4rem; font-weight: 900; padding: 10px 0; color: #333; box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; touch-action: manipulation;}
         .calc-btn:active { transform: scale(0.9); box-shadow: none; }
         .calc-btn.op-btn { background: #e3f2fd; color: #007aff; border-color: rgba(0,122,255,0.2); }
         .calc-btn.clear-btn { background: #ffebee; color: #f44336; border-color: rgba(244,67,54,0.2); }
         .calc-btn.eq-btn { background: var(--accent-color); color: white; border-color: var(--accent-color); }
-        .unit-chip { background: #fff; border: 2px solid rgba(128,128,128,0.3); border-radius: 10px; font-size: 0.95rem; font-weight: 900; padding: 8px 12px; color: #555; transition: all 0.2s;}
+        .unit-chip { background: #fff; border: 2px solid rgba(128,128,128,0.3); border-radius: 8px; font-size: 0.85rem; font-weight: 900; padding: 6px 10px; color: #555; transition: all 0.2s;}
         .unit-chip.active { background: var(--accent-color); color: white; border-color: var(--accent-color); transform: scale(1.05);}
 
         /* 固定アクションバー (一括削除時) */
@@ -246,21 +246,21 @@
 </div>
 
 <div class="modal-overlay" id="calc-modal" style="z-index: 3000;">
-    <div class="modal-content" style="max-width: 400px; height: auto; border-radius: 28px; padding: 20px; overflow: hidden;">
+    <div class="modal-content" style="max-width: 400px; height: auto; max-height: 92vh; border-radius: 24px; padding: 15px; overflow-y: auto;">
         
-        <div style="margin-bottom: 10px; font-size: 0.95rem; font-weight: 900; color: var(--accent-color); opacity: 0.9; display: flex; align-items: center; gap: 6px;">
+        <div style="margin-bottom: 8px; font-size: 0.9rem; font-weight: 900; color: var(--accent-color); display: flex; align-items: center; gap: 4px;">
             <span>🛒 選択中：</span><span id="calc-item-name">商品名</span>
         </div>
         
-        <div style="background: #f8f9fa; border-radius: 16px; padding: 15px 20px; text-align: right; color: #333; margin-bottom: 20px; display: flex; justify-content: flex-end; align-items: baseline; gap: 8px; border: 3px solid rgba(128,128,128,0.2); box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);">
-            <span id="calc-display-value" style="font-size: 3rem; font-weight: 900; line-height: 1; letter-spacing: -2px;">1</span>
-            <span id="calc-display-unit" style="font-size: 1.4rem; color: var(--accent-color); font-weight: 900;">個</span>
+        <div style="background: #f8f9fa; border-radius: 12px; padding: 10px 15px; text-align: right; color: #333; margin-bottom: 12px; display: flex; justify-content: flex-end; align-items: baseline; gap: 8px; border: 2px solid rgba(128,128,128,0.2); box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);">
+            <span id="calc-display-value" style="font-size: 2.2rem; font-weight: 900; line-height: 1; letter-spacing: -1px;">1</span>
+            <span id="calc-display-unit" style="font-size: 1.1rem; color: var(--accent-color); font-weight: 900;">個</span>
         </div>
 
-        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; justify-content: center;" id="calc-unit-container">
+        <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; justify-content: center;" id="calc-unit-container">
             </div>
 
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 25px;">
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 15px;">
             <button class="calc-btn" onclick="calcInput('7')">7</button>
             <button class="calc-btn" onclick="calcInput('8')">8</button>
             <button class="calc-btn" onclick="calcInput('9')">9</button>
@@ -281,9 +281,9 @@
             <button class="calc-btn eq-btn" onclick="calcEq()">＝</button>
         </div>
 
-        <div style="display: flex; gap: 10px;">
-            <button class="secondary-btn" style="flex: 1; margin: 0; padding: 18px; font-size: 1.1rem; border-radius: 16px;" onclick="closeCalcModal()">やめる</button>
-            <button class="primary-btn" style="flex: 2; margin: 0; padding: 18px; font-size: 1.2rem; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,122,255,0.3);" onclick="commitCalcModal()">決定</button>
+        <div style="display: flex; gap: 8px;">
+            <button class="secondary-btn" style="flex: 1; margin: 0; padding: 12px; font-size: 1rem; border-radius: 12px;" onclick="closeCalcModal()">やめる</button>
+            <button class="primary-btn" style="flex: 2; margin: 0; padding: 12px; font-size: 1.1rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,122,255,0.3);" onclick="commitCalcModal()">決定</button>
         </div>
     </div>
 </div>

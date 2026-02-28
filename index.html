@@ -311,10 +311,11 @@
 </div>
 
 <div id="bulk-delete-bar">
-    <span style="color: white; font-weight: 900; font-size: 1.1rem;" id="bulk-delete-text">0件選択中</span>
-    <div style="display: flex; gap: 10px;">
-        <button onclick="toggleDeleteMode()" style="background: rgba(255,255,255,0.2); color: white; padding: 10px 15px; font-weight: bold; border-radius: 10px;">やめる</button>
-        <button onclick="executeBulkDelete()" style="background: white; color: #f44336; padding: 10px 15px; font-weight: 900; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">一気に消す！</button>
+    <span style="color: white; font-weight: 900; font-size: 1.1rem;" id="bulk-delete-text">0件 選択中</span>
+    <div style="display: flex; gap: 8px;">
+        <button onclick="toggleSelectAllBulk()" id="bulk-select-all-btn" style="background: rgba(255,255,255,0.2); color: white; padding: 10px 12px; font-weight: bold; border-radius: 10px; font-size: 0.9rem; white-space: nowrap;">全選択</button>
+        <button onclick="toggleDeleteMode()" style="background: rgba(255,255,255,0.2); color: white; padding: 10px 12px; font-weight: bold; border-radius: 10px; font-size: 0.9rem; white-space: nowrap;">やめる</button>
+        <button onclick="executeBulkDelete()" style="background: white; color: #f44336; padding: 10px 15px; font-weight: 900; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); font-size: 0.95rem; white-space: nowrap;">一気に消す！</button>
     </div>
 </div>
 
@@ -580,7 +581,7 @@
         }, 500); 
     }
 
-    // --- 一括削除（選択消去） ---
+// --- 一括削除（選択消去） ---
     function toggleDeleteMode() {
         isDeleteMode = !isDeleteMode;
         bulkDeleteSelection.clear();
@@ -604,7 +605,48 @@
         if (isChecked) bulkDeleteSelection.add(id); else bulkDeleteSelection.delete(id);
         updateBulkDeleteText();
     }
-    function updateBulkDeleteText() { document.getElementById('bulk-delete-text').innerText = `${bulkDeleteSelection.size}件 選択中`; }
+    
+    function updateBulkDeleteText() { 
+        document.getElementById('bulk-delete-text').innerText = `${bulkDeleteSelection.size}件 選択中`; 
+        
+        // 全選択ボタンの表示切り替えロジック
+        const keys = getListKeysForMode();
+        const list1 = noteData.checklists[keys.top] || [];
+        const list2 = noteData.checklists[keys.bottom] || [];
+        const totalItems = list1.length + list2.length;
+        
+        const selectAllBtn = document.getElementById('bulk-select-all-btn');
+        if (selectAllBtn) {
+            if (totalItems > 0 && bulkDeleteSelection.size === totalItems) {
+                selectAllBtn.innerText = "全解除";
+            } else {
+                selectAllBtn.innerText = "全選択";
+            }
+        }
+    }
+
+    // 🌟 新機能：全選択 / 全解除
+    function toggleSelectAllBulk() {
+        const keys = getListKeysForMode();
+        const list1 = noteData.checklists[keys.top] || [];
+        const list2 = noteData.checklists[keys.bottom] || [];
+        const totalItems = list1.length + list2.length;
+        
+        if (totalItems === 0) return;
+        
+        if (bulkDeleteSelection.size === totalItems) {
+            // すべて選択されている場合は全解除
+            bulkDeleteSelection.clear();
+        } else {
+            // そうでなければ全選択
+            list1.forEach(i => bulkDeleteSelection.add(i.id));
+            list2.forEach(i => bulkDeleteSelection.add(i.id));
+        }
+        
+        updateBulkDeleteText();
+        renderChecklist(1, 'list-1');
+        renderChecklist(2, 'list-2');
+    }
 
     function executeBulkDelete() {
         if (bulkDeleteSelection.size === 0) return alert("削除する項目が選択されていません。");

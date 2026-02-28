@@ -23,12 +23,10 @@
         [data-theme="retro"] { --bg-color: #f5deb3; --header-bg: rgba(139, 69, 19, 0.85); --tab-bg: rgba(255,255,255,0.4); --accent-color: #d2691e; --tab-active-bg: #d2691e; --tab-active-color: #fff; --card-bg: rgba(255, 248, 220, 0.65); --text-color: #5c3a21; --btn-primary: #a0522d; --app-font: 'M PLUS Rounded 1c', sans-serif; }
         [data-theme="vivid"] { --bg-color: #111; --header-bg: rgba(30, 30, 30, 0.95); --tab-bg: rgba(50, 50, 50, 0.6); --accent-color: #ff00ff; --tab-active-bg: #ff00ff; --tab-active-color: #fff; --card-bg: rgba(40, 40, 40, 0.8); --text-color: #fff; --btn-primary: #cc00cc; --app-font: 'Noto Sans JP', sans-serif; }
 
-        /* === ぬるぬるアニメーション（オーバー仕様） === */
+        /* === ぬるぬるアニメーション === */
         @keyframes popIn { 0% { opacity: 0; transform: scale(0.7) translateY(40px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
         @keyframes bounceInRight { 0% { opacity: 0; transform: translateX(-80px); } 60% { opacity: 1; transform: translateX(15px); } 100% { transform: translateX(0); } }
         @keyframes fadeOutDown { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(40px) scale(0.9); } }
-        
-        /* 新しいアニメーション：ぷるるんっ！とゼリーのように弾む */
         @keyframes jellyPop { 
             0% { transform: scale(1, 1); } 
             30% { transform: scale(1.25, 0.75); } 
@@ -85,7 +83,6 @@
         .search-btn { background: rgba(0, 122, 255, 0.1); color: #007aff; font-size: 0.8rem; padding: 6px 8px; border-radius: 8px; font-weight: 900; white-space: nowrap; border: 1px solid rgba(0, 122, 255, 0.2);}
         .del-check-btn { background: rgba(244,67,54,0.1); color: #f44336; font-size: 0.85rem; padding: 6px 10px; border-radius: 8px; font-weight: 900;}
 
-        /* AI検索ボタン */
         .ai-calc-btn { background: linear-gradient(135deg, #FFC107, #FF9800); color: white; padding: 15px; border-radius: 16px; font-weight: 900; font-size: 1.1rem; width: 100%; box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 15px;}
 
         /* --- データベース用 --- */
@@ -95,16 +92,25 @@
         .event-tags { margin-bottom: 12px; }
         .event-tag { display: inline-block; padding: 6px 10px; border-radius: 10px; font-size: 0.8rem; font-weight: 900; background: rgba(128,128,128,0.1); margin-right: 6px; margin-bottom: 6px;}
 
-        /* --- 買い物モーダル (主婦向けカタログ) --- */
+        /* --- モーダル共通 --- */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: flex-end; animation: fadeIn 0.5s cubic-bezier(0.25, 1, 0.5, 1);}
         @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
         
-        .modal-content { background: var(--bg-color); width: 100%; height: 90vh; border-top-left-radius: 30px; border-top-right-radius: 30px; padding: 0 0 100px 0; box-sizing: border-box; overflow-y: auto; animation: slideUpModal 0.7s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 -10px 40px rgba(0,0,0,0.2); position: relative; display: flex; flex-direction: column;}
+        /* 買い物カタログ モーダル */
+        #shopping-modal .modal-content { 
+            background: var(--bg-color); 
+            width: 100%; height: 90vh; 
+            border-top-left-radius: 30px; border-top-right-radius: 30px; 
+            padding: 0; /* flex制御のため内部でpadding設定 */
+            box-sizing: border-box; 
+            animation: slideUpModal 0.7s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.2); 
+            display: flex; flex-direction: column; overflow: hidden; /* ★重要: ヘッダー固定用 */
+        }
         @keyframes slideUpModal { from{transform: translateY(100%);} to{transform: translateY(0);} }
         
-        /* 固定上部エリア (Sticky Header) */
-        .modal-sticky-header { position: sticky; top: 0; background: var(--bg-color); padding: 25px 20px 10px 20px; z-index: 2005; border-bottom: 2px solid rgba(128,128,128,0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.05);}
-        .modal-scroll-area { padding: 15px 20px; flex-grow: 1; overflow-y: auto; }
+        .modal-sticky-header { flex-shrink: 0; background: var(--bg-color); padding: 25px 20px 10px 20px; z-index: 2005; border-bottom: 2px solid rgba(128,128,128,0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.05);}
+        .modal-scroll-area { padding: 15px 20px 100px 20px; flex-grow: 1; overflow-y: auto; }
 
         details { margin-bottom: 15px; background: var(--card-bg); border-radius: 16px; border: 1px solid rgba(128,128,128,0.15); box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);}
         summary { font-size: 1.1rem; font-weight: 900; color: var(--text-color); padding: 15px; cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; background: rgba(128,128,128,0.05);}
@@ -113,18 +119,15 @@
         details[open] summary::after { transform: rotate(180deg); }
         .catalog-content { padding: 15px; }
 
-        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
         
-        .catalog-item-card { background: #fff; border: 2px solid rgba(128,128,128,0.2); border-radius: 12px; padding: 10px 8px; display: flex; flex-direction: column; gap: 8px; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: stretch; justify-content: center;}
+        .catalog-item-card { background: #fff; border: 2px solid rgba(128,128,128,0.2); border-radius: 12px; padding: 12px 8px; display: flex; flex-direction: column; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: center; justify-content: center; position: relative;}
         
-        /* 単位セレクタ */
-        .catalog-unit-select { padding: 6px; border-radius: 8px; border: 1px solid rgba(128,128,128,0.3); background: rgba(128,128,128,0.05); font-size: 0.8rem; font-weight: bold; width: 100%; box-sizing: border-box;}
+        .catalog-item-btn { background: transparent; border: none; font-size: 1rem; font-weight: 900; color: var(--text-color); text-align: center; width: 100%; pointer-events: none;}
+        .catalog-unit-badge { background: rgba(255,255,255,0.3); color: white; font-size: 0.8rem; font-weight: bold; text-align: center; border-radius: 8px; padding: 3px 8px; margin-top: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
 
-        .catalog-item-btn { background: transparent; border: none; font-size: 0.95rem; font-weight: 900; color: var(--text-color); text-align: center; width: 100%; padding: 4px; border-radius: 8px;}
-        
         .catalog-item-card.selected { background: var(--accent-color); border-color: var(--accent-color); transform: scale(0.95); box-shadow: inset 0 3px 6px rgba(0,0,0,0.2); animation: jellyPop 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
         .catalog-item-card.selected .catalog-item-btn { color: white; }
-        .catalog-item-card.selected .catalog-unit-select { background: rgba(255,255,255,0.2); color: white; border-color: transparent;}
         
         .catalog-item-card.delete-selected { background: #f44336; border-color: #f44336; transform: scale(0.9) rotate(-3deg); animation: jellyPop 0.6s; }
         .catalog-item-card.delete-selected .catalog-item-btn { color: white; }
@@ -132,8 +135,27 @@
         .sortable-ghost { opacity: 0.4; transform: scale(0.95); border: 2px dashed var(--accent-color); background: rgba(128,128,128,0.1); }
         .sortable-drag { cursor: grabbing !important; }
 
-        .modal-footer { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-color); padding: 15px 20px 25px 20px; box-sizing: border-box; display: flex; gap: 10px; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); z-index: 2010;}
+        .modal-footer { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--bg-color); padding: 15px 20px 25px 20px; box-sizing: border-box; display: flex; gap: 10px; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); z-index: 2010;}
 
+        /* --- スーパー特化計算機 (電卓UI) --- */
+        #calc-modal .modal-content { height: auto; max-height: 85vh; padding: 25px 20px; border-radius: 30px 30px 0 0; overflow-y: visible;}
+        .calc-display-wrap { background: #fff; border: 3px solid var(--accent-color); border-radius: 16px; padding: 15px 20px; font-size: 2rem; font-weight: 900; text-align: right; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: inset 0 4px 10px rgba(0,0,0,0.05);}
+        .calc-target-name { font-size: 1.1rem; color: #888; max-width: 45%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left;}
+        .calc-input-area { display: flex; align-items: baseline; gap: 5px; }
+        .calc-num { color: #333; }
+        .calc-unit { color: var(--accent-color); font-size: 1.3rem; margin-left: 5px;}
+
+        .calc-keyboard { display: grid; grid-template-columns: 1fr 1.5fr; gap: 15px; margin-bottom: 20px;}
+        .calc-units-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-content: start; }
+        .calc-unit-btn { background: rgba(128,128,128,0.1); border: none; border-radius: 12px; padding: 12px 5px; font-weight: 900; font-size: 0.95rem; color: var(--text-color); transition: all 0.2s;}
+        .calc-unit-btn.active { background: var(--accent-color); color: white; transform: scale(0.95); box-shadow: 0 4px 10px rgba(0,122,255,0.2);}
+        
+        .calc-num-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .calc-num-btn { background: #fff; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 8px rgba(0,0,0,0.05); border-radius: 14px; font-size: 1.6rem; font-weight: 900; padding: 15px 0; color: #333; transition: transform 0.1s, background 0.1s;}
+        .calc-num-btn:active { background: #eee; transform: scale(0.9); }
+        .calc-num-btn.ctrl { background: rgba(244,67,54,0.1); color: #f44336; border-color: transparent;}
+
+        /* 固定アクションバー (一括削除時) */
         #bulk-delete-bar { position: fixed; bottom: -100px; left: 0; width: 100%; background: rgba(244,67,54,0.95); backdrop-filter: blur(10px); padding: 20px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; transition: bottom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1005; box-shadow: 0 -5px 20px rgba(244,67,54,0.3);}
         #bulk-delete-bar.active { bottom: 0; }
     </style>
@@ -174,7 +196,7 @@
         </div>
 
         <button class="ai-calc-btn" id="ai-calc-btn" onclick="openAIEstimate()">
-            ✨ AIに概算・相場を計算させる ✨
+            ✨ AIに概算を計算させる ✨
         </button>
 
         <div class="section-title" style="margin-top: 35px;">
@@ -223,7 +245,7 @@
                 <h2 style="margin: 0; font-size: 1.4rem; font-weight: 900; color: var(--accent-color);">🛒 買い物カタログ</h2>
                 <button id="catalog-edit-btn" onclick="toggleCatalogEditMode()" style="background: rgba(128,128,128,0.15); font-weight: 900; padding: 8px 12px; border-radius: 12px; transition: all 0.3s;">✏️ 編集する</button>
             </div>
-            <p id="catalog-desc" style="text-align: center; font-size: 0.9rem; font-weight: bold; opacity: 0.7; margin: 5px 0 0 0; transition: color 0.3s;">ポンポン押して複数選べます！</p>
+            <p id="catalog-desc" style="text-align: center; font-size: 0.9rem; font-weight: bold; opacity: 0.7; margin: 5px 0 0 0; transition: color 0.3s;">タップして数量を入力できます！</p>
         </div>
         
         <div class="modal-scroll-area" id="catalog-container"></div>
@@ -235,6 +257,51 @@
         <div class="modal-footer" id="catalog-edit-footer" style="display: none; background: rgba(244,67,54,0.1);">
             <button class="secondary-btn" style="flex: 1; margin: 0; background: #fff; color: #333;" onclick="toggleCatalogEditMode()">完了</button>
             <button class="primary-btn" style="flex: 2; margin: 0; background: #f44336; box-shadow: 0 4px 15px rgba(244,67,54,0.3);" onclick="deleteSelectedFromCatalog()">🗑 カタログから消去</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="calc-modal" style="z-index: 2100;">
+    <div class="modal-content">
+        <div class="calc-display-wrap">
+            <div class="calc-target-name" id="calc-target-name">商品名</div>
+            <div class="calc-input-area">
+                <span class="calc-num" id="calc-num-display"></span>
+                <span class="calc-unit" id="calc-unit-display"></span>
+            </div>
+        </div>
+        <div class="calc-keyboard">
+            <div class="calc-units-grid">
+                <button class="calc-unit-btn" onclick="setCalcUnit('個')">個</button>
+                <button class="calc-unit-btn" onclick="setCalcUnit('パック')">パック</button>
+                <button class="calc-unit-btn" onclick="setCalcUnit('g')">g</button>
+                <button class="calc-unit-btn" onclick="setCalcUnit('本')">本</button>
+                <button class="calc-unit-btn" onclick="setCalcUnit('枚')">枚</button>
+                <button class="calc-unit-btn" onclick="setCalcUnit('玉')">玉</button>
+                <button class="calc-unit-btn" onclick="setCalcUnit('袋')">袋</button>
+                <button class="calc-unit-btn" onclick="setCalcUnit('ℓ')">ℓ</button>
+                <button class="calc-unit-btn" onclick="setCalcUnit('ml')">ml</button>
+                <button class="calc-unit-btn" onclick="setCalcUnit('箱')">箱</button>
+                <button class="calc-unit-btn" onclick="setCalcUnit('')" style="grid-column: span 2;">単位なし</button>
+            </div>
+            <div class="calc-num-grid">
+                <button class="calc-num-btn" onclick="addCalcNum('7')">7</button>
+                <button class="calc-num-btn" onclick="addCalcNum('8')">8</button>
+                <button class="calc-num-btn" onclick="addCalcNum('9')">9</button>
+                <button class="calc-num-btn" onclick="addCalcNum('4')">4</button>
+                <button class="calc-num-btn" onclick="addCalcNum('5')">5</button>
+                <button class="calc-num-btn" onclick="addCalcNum('6')">6</button>
+                <button class="calc-num-btn" onclick="addCalcNum('1')">1</button>
+                <button class="calc-num-btn" onclick="addCalcNum('2')">2</button>
+                <button class="calc-num-btn" onclick="addCalcNum('3')">3</button>
+                <button class="calc-num-btn" onclick="addCalcNum('0')">0</button>
+                <button class="calc-num-btn" onclick="addCalcNum('00')">00</button>
+                <button class="calc-num-btn ctrl" onclick="clearCalcNum()">C</button>
+            </div>
+        </div>
+        <div style="display:flex; gap:10px; margin-top: 5px;">
+            <button class="secondary-btn" style="flex: 1; padding: 18px;" onclick="closeCalcModal()">キャンセル</button>
+            <button class="primary-btn" style="flex: 2; margin-bottom: 0; padding: 18px;" onclick="commitCalc()">決定</button>
         </div>
     </div>
 </div>
@@ -252,7 +319,7 @@
     // 🚀 IndexedDB ＆ データ構造
     // ==========================================
     const DB_NAME = 'HazukiNotoDB';
-    const DB_VERSION = 8; 
+    const DB_VERSION = 9; 
     let db;
     
     const defaultCatalog = {
@@ -264,12 +331,6 @@
         "☕ 飲料・おやつ": ["お茶（ペットボトル）", "水", "コーヒー", "紅茶", "牛乳（予備）", "豆乳", "ジュース", "お酒・ビール", "ポテトチップス", "チョコレート", "クッキー", "おせんべい", "アイス"],
         "🧻 日用品・消耗品": ["トイレットペーパー", "ティッシュ", "キッチンペーパー", "洗剤（衣類用）", "柔軟剤", "漂白剤", "食器用洗剤", "スポンジ", "お風呂用洗剤", "トイレ用洗剤", "シャンプー", "コンディショナー", "ボディソープ", "洗顔料", "歯磨き粉", "歯ブラシ", "ゴミ袋（大）", "ゴミ袋（小）", "ラップ", "アルミホイル", "クッキングシート", "フリーザーバッグ", "電池"]
     };
-
-    // 単位の選択肢
-    const unitOptions = [
-        "1個", "2個", "3個", "1パック", "2パック", "100g", "200g", "300g", "400g", "500g", 
-        "1本", "2本", "1玉", "1/2玉", "1/4玉", "1袋", "1箱", "1ℓ", "500ml", "1枚", "なし(指定しない)"
-    ];
 
     let noteData = { 
         theme: 'cute',
@@ -388,7 +449,6 @@
         const manualBtn = document.getElementById('checklist-add1-manual-btn');
         if(manualBtn) manualBtn.style.display = isDaily ? 'block' : 'none';
 
-        // AIボタンの表示制御
         const aiBtn = document.getElementById('ai-calc-btn');
         if(aiBtn) aiBtn.style.display = isDaily ? 'flex' : 'none';
 
@@ -590,14 +650,13 @@
     // --- 🌟 AIで相場を計算（Google検索AIモード） ---
     function openAIEstimate() {
         const list = noteData.checklists['daily_shopping'] || [];
-        const activeItems = list.filter(i => !i.done).map(i => i.text); // 未完了のものだけ抽出
+        const activeItems = list.filter(i => !i.done).map(i => i.text);
 
         if (activeItems.length === 0) {
             alert('買い物リストにアイテムがありません。');
             return;
         }
 
-        // 強力なプロンプトを作成
         const promptText = `
 以下の買い物リストの現在（日本のスーパー）の一般的な相場価格を調べ、概算を計算してください。
 
@@ -610,49 +669,22 @@ ${activeItems.map(i => '・' + i).join('\n')}
 3. 最後に「合計の概算金額（税込）」を分かりやすく提示してください。
         `.trim();
 
-        // クリップボードにコピーするか、直接URLを開く
-        // Google検索は直接プロンプトを投げてSGE(AIモード)を開く専用のパラメータが公式には無いため、
-        // 検索クエリとして長文を投げます。AIモードが有効なユーザーなら自動でAI回答が生成されます。
         const query = encodeURIComponent(promptText);
         
-        // ユーザーにコピーしたことを伝えて検索画面へ遷移
         navigator.clipboard.writeText(promptText).then(() => {
-            if(confirm('AIへの指示（プロンプト）をコピーしました！\n\nOKを押すとGoogle検索が開きます。\n検索窓に貼り付けて送信すると、AIが綺麗な表で相場を計算してくれます！')) {
-                // SGEを意識した検索URL（長文をクエリに直接入れる）
+            if(confirm('AIへの指示（プロンプト）をコピーしました！\n\nOKを押すとGoogle検索が開きます。\n検索窓に貼り付けておくので、そのまま検索（エンター）してください！')) {
                 window.open(`https://www.google.com/search?q=${query}`, '_blank');
             }
         }).catch(err => {
-            // コピー失敗時でも検索画面には遷移
             window.open(`https://www.google.com/search?q=${query}`, '_blank');
         });
     }
 
     // --- 🛒 買い物カタログ機能 ---
-    let selectedShoppingItems = new Map(); // SetからMapに変更 (itemText -> unit)
+    let selectedShoppingItems = new Map(); 
     let isCatalogEditMode = false;
     let catalogDeleteSelection = new Set();
     let sortableInstances = []; 
-
-    // 単位セレクタのHTMLを生成する関数
-    function generateUnitOptionsHTML(defaultUnit) {
-        let html = '';
-        unitOptions.forEach(u => {
-            const isSelected = u === defaultUnit ? 'selected' : '';
-            html += `<option value="${u}" ${isSelected}>${u}</option>`;
-        });
-        return html;
-    }
-
-    // 商品名からデフォルトの単位を推測する簡易ロジック
-    function guessDefaultUnit(itemName) {
-        if(itemName.includes('肉') || itemName.includes('バラ') || itemName.includes('レバー')) return '300g';
-        if(itemName.includes('牛乳') || itemName.includes('ジュース')) return '1本';
-        if(itemName.includes('卵')) return '1パック';
-        if(itemName.includes('キャベツ') || itemName.includes('白菜')) return '1/2玉';
-        if(itemName.includes('大根')) return '1/2本';
-        if(itemName.includes('洗剤') || itemName.includes('シャンプー')) return '1個';
-        return '1個'; // デフォルト
-    }
 
     function buildShoppingCatalog() {
         const container = document.getElementById('catalog-container');
@@ -691,36 +723,29 @@ ${activeItems.map(i => '・' + i).join('\n')}
                 card.className = 'catalog-item-card';
                 card.dataset.itemName = itemText;
                 
-                // 上部：商品名ボタン
                 const btn = document.createElement('button');
                 btn.className = 'catalog-item-btn'; 
                 btn.innerText = itemText;
                 
-                // 下部：単位セレクタ（編集モード時は非表示）
-                const defaultUnit = selectedShoppingItems.has(itemText) ? selectedShoppingItems.get(itemText) : guessDefaultUnit(itemText);
-                const selectHTML = `<select class="catalog-unit-select ignore-drag" onchange="updateSelectedUnit('${itemText}', this.value)">
-                                        ${generateUnitOptionsHTML(defaultUnit)}
-                                    </select>`;
+                const badge = document.createElement('div');
+                badge.className = 'catalog-unit-badge';
+                badge.style.display = 'none';
 
                 if(isCatalogEditMode) {
                     if(catalogDeleteSelection.has(itemText)) card.classList.add('delete-selected');
                     card.onclick = () => toggleCatalogDeleteSelect(itemText, card);
-                    card.innerHTML = ''; // 編集モードはセレクタなし
                     card.appendChild(btn);
                 } else {
-                    if(selectedShoppingItems.has(itemText)) card.classList.add('selected');
+                    if(selectedShoppingItems.has(itemText)) {
+                        card.classList.add('selected');
+                        badge.innerText = selectedShoppingItems.get(itemText);
+                        badge.style.display = 'block';
+                    }
                     
-                    // カード全体、またはボタンタップで選択切り替え
-                    btn.onclick = (e) => { e.stopPropagation(); toggleCatalogItem(itemText, card); };
-                    card.onclick = () => toggleCatalogItem(itemText, card);
+                    card.onclick = () => handleCatalogCardClick(itemText, card, badge);
                     
                     card.appendChild(btn);
-                    
-                    const selectWrapper = document.createElement('div');
-                    selectWrapper.innerHTML = selectHTML;
-                    // セレクトボックスのクリックイベントがカードに伝播しないようにする
-                    selectWrapper.querySelector('select').onclick = (e) => e.stopPropagation();
-                    card.appendChild(selectWrapper.firstElementChild);
+                    card.appendChild(badge);
                 }
                 
                 grid.appendChild(card);
@@ -753,8 +778,7 @@ ${activeItems.map(i => '・' + i).join('\n')}
                     animation: 400, 
                     easing: "cubic-bezier(0.25, 1, 0.5, 1)",
                     disabled: !isCatalogEditMode, 
-                    filter: '.ignore-drag, select', 
-                    preventOnFilter: false, // select操作を邪魔しない
+                    filter: '.ignore-drag', 
                     draggable: '.catalog-item-card:not(.ignore-drag)',
                     ghostClass: 'sortable-ghost',
                     delay: 150, 
@@ -771,29 +795,15 @@ ${activeItems.map(i => '・' + i).join('\n')}
         }
     }
 
-    // 単位が変更されたらMapを更新
-    function updateSelectedUnit(itemText, unitValue) {
-        if(selectedShoppingItems.has(itemText)) {
-            selectedShoppingItems.set(itemText, unitValue);
-        }
-    }
-
-    function toggleCatalogItem(itemText, cardEl) {
+    function handleCatalogCardClick(itemText, card, badge) {
         if(selectedShoppingItems.has(itemText)) {
             selectedShoppingItems.delete(itemText);
-            cardEl.classList.remove('selected');
+            card.classList.remove('selected');
+            badge.style.display = 'none';
+            if(navigator.vibrate) navigator.vibrate(10);
         } else {
-            // 選択された時の単位を取得
-            const selectEl = cardEl.querySelector('.catalog-unit-select');
-            const unit = selectEl ? selectEl.value : '1個';
-            
-            selectedShoppingItems.set(itemText, unit);
-            cardEl.classList.add('selected');
-            cardEl.style.animation = 'none';
-            void cardEl.offsetWidth;
-            cardEl.style.animation = 'jellyPop 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+            openCalcModal(itemText, card, badge);
         }
-        if(navigator.vibrate) navigator.vibrate(20);
     }
 
     function toggleCatalogDeleteSelect(itemText, cardEl) {
@@ -814,7 +824,7 @@ ${activeItems.map(i => '・' + i).join('\n')}
         document.getElementById('catalog-edit-footer').style.display = isCatalogEditMode ? 'flex' : 'none';
         
         document.getElementById('catalog-edit-btn').innerText = isCatalogEditMode ? "戻る" : "✏️ 編集する";
-        document.getElementById('catalog-desc').innerText = isCatalogEditMode ? "消したい項目をタップ、または長押しで並び替えできます。" : "ポンポン押して複数選べます！単位も選べます。";
+        document.getElementById('catalog-desc').innerText = isCatalogEditMode ? "消したい項目をタップ、または長押しで並び替えできます。" : "タップして数量を入力できます！";
         document.getElementById('catalog-desc').style.color = isCatalogEditMode ? "#f44336" : "inherit";
         
         buildShoppingCatalog();
@@ -851,7 +861,7 @@ ${activeItems.map(i => '・' + i).join('\n')}
         document.getElementById('catalog-normal-footer').style.display = 'flex';
         document.getElementById('catalog-edit-footer').style.display = 'none';
         document.getElementById('catalog-edit-btn').innerText = "✏️ 編集する";
-        document.getElementById('catalog-desc').innerText = "ポンポン押して複数選べます！単位も選べます。";
+        document.getElementById('catalog-desc').innerText = "タップして数量を入力できます！";
         document.getElementById('catalog-desc').style.color = "inherit";
         
         buildShoppingCatalog(); 
@@ -870,9 +880,8 @@ ${activeItems.map(i => '・' + i).join('\n')}
 
         if(!noteData.checklists['daily_shopping']) noteData.checklists['daily_shopping'] = [];
         
-        // Mapを使って、商品名と単位を結合してリストに追加
-        selectedShoppingItems.forEach((unit, text) => {
-            const finalString = unit === 'なし(指定しない)' ? text : `${text} (${unit})`;
+        selectedShoppingItems.forEach((unitStr, text) => {
+            const finalString = unitStr ? `${text} (${unitStr})` : text;
             noteData.checklists['daily_shopping'].push({ id: Date.now() + Math.random(), text: finalString, done: false });
         });
         
@@ -883,6 +892,91 @@ ${activeItems.map(i => '・' + i).join('\n')}
         else renderChecklist(2, 'list-2');
         
         closeShoppingModal();
+    }
+
+    // --- 🔢 スーパー特化計算機 (電卓UI) ---
+    let currentCalcItemText = "";
+    let currentCalcCard = null;
+    let currentCalcBadge = null;
+    let calcNumValue = "";
+    let calcUnitValue = "";
+
+    function guessDefaultCalc(itemName) {
+        let num = "1"; let unit = "個";
+        if(itemName.includes('肉') || itemName.includes('バラ') || itemName.includes('レバー')) { num = "300"; unit = "g"; }
+        else if(itemName.includes('牛乳') || itemName.includes('ジュース')) { num = "1"; unit = "本"; }
+        else if(itemName.includes('卵')) { num = "1"; unit = "パック"; }
+        else if(itemName.includes('大根')) { num = "1"; unit = "本"; }
+        else if(itemName.includes('キャベツ') || itemName.includes('白菜') || itemName.includes('レタス')) { num = "1"; unit = "玉"; }
+        else if(itemName.includes('洗剤') || itemName.includes('シャンプー')) { num = "1"; unit = "個"; }
+        return { num, unit };
+    }
+
+    function openCalcModal(itemText, card, badge) {
+        currentCalcItemText = itemText;
+        currentCalcCard = card;
+        currentCalcBadge = badge;
+        
+        const def = guessDefaultCalc(itemText);
+        calcNumValue = def.num;
+        calcUnitValue = def.unit;
+        
+        updateCalcDisplay();
+        document.getElementById('calc-modal').style.display = 'flex';
+    }
+
+    function updateCalcDisplay() {
+        document.getElementById('calc-target-name').innerText = currentCalcItemText;
+        document.getElementById('calc-num-display').innerText = calcNumValue;
+        document.getElementById('calc-unit-display').innerText = calcUnitValue;
+        
+        document.querySelectorAll('.calc-unit-btn').forEach(btn => {
+            if(btn.innerText === calcUnitValue || (btn.innerText === '単位なし' && calcUnitValue === '')) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    function addCalcNum(val) {
+        calcNumValue += val;
+        updateCalcDisplay();
+    }
+
+    function clearCalcNum() {
+        calcNumValue = "";
+        updateCalcDisplay();
+    }
+
+    function setCalcUnit(unit) {
+        calcUnitValue = unit;
+        updateCalcDisplay();
+    }
+
+    function closeCalcModal() {
+        document.getElementById('calc-modal').style.display = 'none';
+    }
+
+    function commitCalc() {
+        const finalVal = calcNumValue ? `${calcNumValue}${calcUnitValue}` : calcUnitValue;
+        
+        selectedShoppingItems.set(currentCalcItemText, finalVal);
+        
+        currentCalcCard.classList.add('selected');
+        currentCalcCard.style.animation = 'none';
+        void currentCalcCard.offsetWidth;
+        currentCalcCard.style.animation = 'jellyPop 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+        
+        if (finalVal) {
+            currentCalcBadge.innerText = finalVal;
+            currentCalcBadge.style.display = 'block';
+        } else {
+            currentCalcBadge.style.display = 'none';
+        }
+        
+        if(navigator.vibrate) navigator.vibrate(20);
+        closeCalcModal();
     }
 
     // --- データベース (イベント/日常 共通) ---

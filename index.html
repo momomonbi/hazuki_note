@@ -400,10 +400,15 @@
 
     function finalizeLoad() {
         if(!noteData.appMode) noteData.appMode = 'daily';
-        if(!noteData.shoppingCatalog) noteData.shoppingCatalog = JSON.parse(JSON.stringify(defaultCatalog));
+        // ...既存の処理...
+        if(!noteData.catalogColumns) noteData.catalogColumns = 2; // デフォルト2列
         
-        document.body.setAttribute('data-theme', noteData.theme || 'cute');
-        document.getElementById('theme-selector').value = noteData.theme || 'cute';
+        // 保存されている列数をCSSに反映
+        document.documentElement.style.setProperty('--catalog-cols', noteData.catalogColumns);
+        document.getElementById('catalog-cols-select').value = noteData.catalogColumns;
+        
+        // ...既存の処理...
+    }
         
         applyModeUI(); 
         buildShoppingCatalog();
@@ -476,6 +481,13 @@
 
     function changeTheme(name) { noteData.theme = name; document.body.setAttribute('data-theme', name); saveData(); }
 
+    // カタログの列数を変更して保存する
+    function changeCatalogColumns(val) {
+        document.documentElement.style.setProperty('--catalog-cols', val);
+        noteData.catalogColumns = parseInt(val);
+        saveData();
+    }
+    
     // --- チェックリスト機能 ---
     let isDeleteMode = false;
     let bulkDeleteSelection = new Set();

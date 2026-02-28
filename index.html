@@ -227,13 +227,13 @@
         </div>
         <div class="chat-container" id="ai-chat-box">
             </div>
-        <div style="display: flex; gap: 10px;">
-            <input type="text" id="ai-chat-input" class="form-input" style="margin-bottom: 0;" placeholder="メッセージを入力...">
-            <button class="primary-btn" style="width: auto; margin-bottom: 0; padding: 10px 20px; font-size: 1.4rem;" onclick="sendAiChat()">✈️</button>
+        <div style="display: flex; gap: 10px; align-items: flex-end;">
+            <textarea id="ai-chat-input" class="form-input" style="margin-bottom: 0; resize: none; overflow-y: hidden; min-height: 52px; line-height: 1.5; padding: 14px; flex-grow: 1;" rows="1" placeholder="メッセージを入力..." oninput="autoResizeChat(this)"></textarea>
+            <button class="primary-btn" style="width: auto; margin-bottom: 0; padding: 14px 20px; font-size: 1.4rem; height: 52px; display: flex; align-items: center;" onclick="sendAiChat()">✈️</button>
         </div>
     </div>
 
-    <div class="glass-card" style="padding: 20px; margin-bottom: 20px;">
+    <div class="glass-card" style="padding: 20px; margin-bottom: 20px;" id="ai-schedule-card">
         <h2 style="margin-top:0; font-size: 1.2rem; color:var(--accent-color); font-weight: 900;">📅 スケジュール丸投げ登録</h2>
         <p style="font-size:0.9rem; font-weight:700; opacity:0.8; line-height: 1.4;">
             LINEやサイトの長文、あるいは<span style="color:var(--accent-color); font-weight:900;">複数イベントが載っているページ全体をそのまま丸ごとコピペ</span>してOK！<br>
@@ -395,8 +395,8 @@
             <button type="button" onclick="clearDateRange()" style="background:transparent; border:none; font-size:1.2rem; cursor:pointer; padding:5px; transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.8)'" onmouseup="this.style.transform='scale(1)'" title="クリア">🔄</button>
         </div>
         
-        <label style="font-weight:900; font-size:0.95rem; color: var(--text-color);">📍 予定先の住所 (ルート検索用)</label>
-        <input type="text" id="db-edit-destination" class="form-input" placeholder="例：東京ビッグサイト、〇〇デパート">
+        <label style="font-weight:900; font-size:0.95rem; color: var(--text-color);">📍 予定先の住所 または 施設名</label>
+        <input type="text" id="db-edit-destination" class="form-input" placeholder="例：東京ビッグサイト、〇〇病院">
         
         <label style="font-weight:900; font-size:0.95rem; color: var(--text-color);">🏷️ タグ (スペースかカンマで区切る・任意)</label>
         <input type="text" id="db-edit-tags" class="form-input" placeholder="例：買い物 ランチ">
@@ -407,6 +407,20 @@
         <div style="display: flex; gap: 10px; margin-top: 15px;">
             <button class="secondary-btn" style="flex: 1; margin: 0;" onclick="closeDbEditModal()">キャンセル</button>
             <button class="primary-btn" style="flex: 2; margin: 0;" onclick="saveDbItem()">保存</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="schedule-preview-modal" style="z-index: 4000;">
+    <div class="modal-content" style="max-width: 500px; height: auto; max-height: 90vh; border-radius: 24px; padding: 25px 20px; overflow-y: auto;">
+        <h2 style="margin-top:0; color:var(--accent-color); font-weight: 900;">✨ AIの整理結果</h2>
+        <p style="font-size:0.9rem; font-weight:bold; color:var(--text-color);">この内容で登録します。必要に応じて「日常/イベント」を切り替えてください。</p>
+        
+        <div id="schedule-preview-container" style="margin-top: 15px;"></div>
+        
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button class="secondary-btn" style="flex: 1; margin: 0;" onclick="closeSchedulePreview()">キャンセル</button>
+            <button class="primary-btn" style="flex: 2; margin: 0; box-shadow: 0 4px 15px rgba(0,122,255,0.3);" onclick="commitSchedulePreview()">保存して確定</button>
         </div>
     </div>
 </div>
@@ -439,7 +453,7 @@
     // 🚀 IndexedDB ＆ データ構造
     // ==========================================
     const DB_NAME = 'HazukiNotoDB';
-    const DB_VERSION = 15; // バージョンアップ
+    const DB_VERSION = 15; 
     let db;
     
     // 主婦向け 超・膨大なデフォルト買い物カタログ
@@ -596,7 +610,6 @@
 
         document.getElementById('db-add-btn').innerText = isDaily ? '✏️ 新しい日記・メモを書く' : '✏️ 新しいイベント情報を登録';
         
-        // モード切替時に一括削除モードをリセットする
         if(isDeleteMode) toggleDeleteMode();
         if(isDbDeleteMode) toggleDbDeleteMode();
 
@@ -1499,6 +1512,19 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         }
     }
 
+    // --- ① チャット入力欄の自動リサイズ ---
+    function autoResizeChat(el) {
+        el.style.height = 'auto';
+        el.style.height = (el.scrollHeight) + 'px';
+    }
+    
+    function handleChatEnter(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendAiChat();
+        }
+    }
+
     function renderAiChatHistory() {
         const box = document.getElementById('ai-chat-box');
         if(!box) return;
@@ -1556,6 +1582,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         saveData();
         renderAiChatHistory();
         inputEl.value = '';
+        autoResizeChat(inputEl); // 高さを戻す
 
         const box = document.getElementById('ai-chat-box');
         const loadingId = "loading-" + Date.now();
@@ -1574,19 +1601,23 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
 【厳守事項】
 1. 「**」などのMarkdown記号は一切使用しないでください（HTML側で非対応のため）。
 2. ユーザーの会話に日付やイベント、通院、買い物の予定などが含まれた場合、「スケジュールやリストに記録しましょうか？」と積極的に提案してください。
-3. ユーザーが「お願い」「登録して」等と指示した場合は、会話履歴から情報を推測し、以下の "action" を使って実際にデータをアプリに登録・更新する指示を出してください。
+3. ユーザーが「お願い」「登録して」等と明確にスケジュール登録を指示した場合、または予定情報を提供した場合、直接DBへ保存するのではなく、以下の "transfer_to_schedule" アクションを使ってください。
 
 【出力JSONフォーマット】
 {
   "reply": "ユーザーへの返答メッセージ（Markdown不可）",
   "action": null // 通常の会話や提案のみの場合は null
 }
-※ユーザーからデータ登録の明確な指示があった場合のみ、actionを以下のように設定してください。
+※スケジュール登録へ情報を送る場合は以下の形式
 "action": {
-  "type": "add_daily_note", // 日常メモ追加
-  "data": { "title": "タイトル", "date": "日付", "memo": "内容" }
+  "type": "transfer_to_schedule",
+  "data": { "text": "明日の15時から耳鼻科。今度の土日は東京ビッグサイトでイベント" }
 }
-または "type": "add_event" (イベント追加), "add_shopping" (dataはアイテムの配列 ["にんじん","玉ねぎ"]), "add_todo" (dataはタスク配列), "update_note" (既存更新: dataに "id", "target"("daily"|"event"), "added_memo" を指定)
+※買い物リストに追加する場合は従来通り
+"action": {
+  "type": "add_shopping",
+  "data": ["にんじん", "玉ねぎ"]
+}
 `;
 
         const messages = [
@@ -1621,23 +1652,22 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
     function executeAiAction(action) {
         let acted = false;
         try {
-            if (action.type === 'add_daily_note') {
-                noteData.dailyNotes.unshift({ id: Date.now(), title: action.data.title, date: action.data.date||'', destination: '', tags: '', memo: action.data.memo||'' });
-                acted = true;
-            } else if (action.type === 'add_event') {
-                noteData.events.unshift({ id: Date.now(), title: action.data.title, date: action.data.date||'', destination: action.data.destination||'', tags: '', memo: action.data.memo||'' });
-                acted = true;
+            if (action.type === 'transfer_to_schedule') {
+                const scheduleInput = document.getElementById('ai-schedule-input');
+                const card = document.getElementById('ai-schedule-card');
+                
+                scheduleInput.value = action.data.text;
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // 強調アニメーション
+                card.style.animation = 'none';
+                setTimeout(() => { card.style.animation = 'jellyPop 0.8s'; }, 50);
+                
+                alert("📝 スケジュール登録に予定のテキストを移動しました！\n「AIでスケジュール一括登録」ボタンを押して確認画面に進んでください。");
             } else if (action.type === 'add_shopping') {
                 if(!noteData.checklists['daily_shopping']) noteData.checklists['daily_shopping'] = [];
                 action.data.forEach(item => noteData.checklists['daily_shopping'].push({ id: Date.now()+Math.random(), text: item, done: false }));
                 acted = true;
-            } else if (action.type === 'update_note') {
-                const targetList = action.data.target === 'event' ? noteData.events : noteData.dailyNotes;
-                const idx = targetList.findIndex(n => n.id == action.data.id);
-                if (idx !== -1) {
-                    targetList[idx].memo += `\n[追記] ${action.data.added_memo}`;
-                    acted = true;
-                }
             }
             
             if (acted) {
@@ -1646,6 +1676,9 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
             }
         } catch(e) { console.error("Action execution failed", e); }
     }
+
+    // --- ✨ スケジュール丸投げと確認モーダル機能 ---
+    let pendingScheduleData = null;
 
     async function aiParseSchedule() {
         const inputEl = document.getElementById('ai-schedule-input');
@@ -1668,6 +1701,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
 2. 既存のデータと「完全に重複」している不要な予定があれば、"deleted_ids" の配列にそのIDを入れて消去の指示をしてください。
 3. 既存のデータ（例: 耳鼻科）に関する「追加情報」だと判断できる場合は、新規登録ではなく "updates" 配列に入れ、対象のIDと追加すべきメモテキストを指示してください。
 4. 全く新しい予定は "new_items" 配列に入れてください。
+5. 【重要】 "destination" (場所) には、住所だけでなく「施設名（例：東京ビッグサイト、〇〇病院）」もそのまま入力してください。Googleマップで検索できる名称であれば何でも構いません。
 
 【出力フォーマット】
 {
@@ -1680,14 +1714,14 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
       "target": "event",
       "title": "予定のタイトル",
       "date": "2026/03/21 〜 2026/03/22",
-      "destination": "場所や住所",
+      "destination": "場所や施設名",
       "tags": "関連タグ",
       "memo": "詳細な内容や持ち物"
     }
   ]
 }
 
-【入力テキスト（複数イベントが含まれる場合あり）】
+【入力テキスト】
 ${text}`;
 
         const messages = [
@@ -1700,54 +1734,8 @@ ${text}`;
         if (resultJsonStr) {
             try {
                 const result = JSON.parse(resultJsonStr);
-                let changesMade = 0;
-
-                if (result.deleted_ids && result.deleted_ids.length > 0) {
-                    result.deleted_ids.forEach(del => {
-                        if (del.target === 'event') noteData.events = noteData.events.filter(e => e.id != del.id);
-                        else noteData.dailyNotes = noteData.dailyNotes.filter(e => e.id != del.id);
-                        changesMade++;
-                    });
-                }
-
-                if (result.updates && result.updates.length > 0) {
-                    result.updates.forEach(up => {
-                        const targetList = up.target === 'event' ? noteData.events : noteData.dailyNotes;
-                        const idx = targetList.findIndex(n => n.id == up.id);
-                        if (idx !== -1) {
-                            targetList[idx].memo += `\n[追記] ${up.added_memo}`;
-                            changesMade++;
-                        }
-                    });
-                }
-
-                if (result.new_items && result.new_items.length > 0) {
-                    result.new_items.forEach(ev => {
-                        const targetList = ev.target === 'event' ? noteData.events : noteData.dailyNotes;
-                        targetList.unshift({
-                            id: Date.now() + Math.random(),
-                            title: ev.title || '無題の予定',
-                            date: ev.date || '',
-                            destination: ev.destination || '',
-                            tags: ev.tags || '',
-                            memo: ev.memo || ''
-                        });
-                        changesMade++;
-                    });
-                }
-                
-                if (changesMade > 0) {
-                    saveData();
-                    applyModeUI();
-                    inputEl.value = '';
-                    let msg = "✨ スケジュールを整理しました！\n";
-                    if(result.new_items?.length) msg += `新規登録: ${result.new_items.length}件\n`;
-                    if(result.updates?.length) msg += `情報追記: ${result.updates.length}件\n`;
-                    if(result.deleted_ids?.length) msg += `重複削除: ${result.deleted_ids.length}件\n`;
-                    alert(msg);
-                } else {
-                    alert("変更すべき予定が見つかりませんでした。");
-                }
+                pendingScheduleData = result;
+                showSchedulePreview(result);
             } catch (e) {
                 alert("データの解釈に失敗しました。");
                 console.error(e);
@@ -1757,6 +1745,126 @@ ${text}`;
         btn.innerText = originalText;
         btn.disabled = false;
     }
+
+    function showSchedulePreview(result) {
+        const container = document.getElementById('schedule-preview-container');
+        container.innerHTML = '';
+        let hasItems = false;
+        
+        // 新規追加
+        if (result.new_items && result.new_items.length > 0) {
+            hasItems = true;
+            container.innerHTML += `<h3 style="font-size:1.1rem; color:#4CAF50; margin-bottom:8px;">🆕 新規登録</h3>`;
+            result.new_items.forEach((item, idx) => {
+                container.innerHTML += `
+                <div style="background:rgba(128,128,128,0.1); padding:12px; border-radius:12px; margin-bottom:12px; border:1px solid rgba(128,128,128,0.2);">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; gap:10px;">
+                        <div style="font-weight:900; font-size:1.1rem; line-height:1.3;">${item.title}</div>
+                        <select id="preview-target-${idx}" style="padding:6px; border-radius:8px; border:1px solid var(--accent-color); font-weight:bold; background:#fff; color:var(--accent-color); flex-shrink:0;">
+                            <option value="daily" ${item.target==='daily'?'selected':''}>📓 日常へ</option>
+                            <option value="event" ${item.target==='event'?'selected':''}>📚 イベントへ</option>
+                        </select>
+                    </div>
+                    <div style="font-size:0.85rem; color:var(--text-color); margin-bottom:4px;">📅 ${item.date}</div>
+                    <div style="font-size:0.85rem; color:var(--text-color);">📍 ${item.destination || '場所の指定なし'}</div>
+                </div>`;
+            });
+        }
+        
+        // 更新
+        if (result.updates && result.updates.length > 0) {
+            hasItems = true;
+            container.innerHTML += `<h3 style="font-size:1.1rem; color:#FF9800; margin-bottom:8px; margin-top:20px;">🔄 情報の追記</h3>`;
+            result.updates.forEach(up => {
+                const list = up.target === 'event' ? noteData.events : noteData.dailyNotes;
+                const existing = list.find(n => n.id == up.id);
+                const title = existing ? existing.title : '不明な項目';
+                container.innerHTML += `
+                <div style="background:rgba(255,152,0,0.1); padding:10px; border-radius:12px; margin-bottom:10px; border:1px solid rgba(255,152,0,0.3);">
+                    <div style="font-weight:bold; margin-bottom:4px;">${title}</div>
+                    <div style="font-size:0.85rem; color:#d84315;">[追記] ${up.added_memo}</div>
+                </div>`;
+            });
+        }
+        
+        // 削除
+        if (result.deleted_ids && result.deleted_ids.length > 0) {
+            hasItems = true;
+            container.innerHTML += `<h3 style="font-size:1.1rem; color:#f44336; margin-bottom:8px; margin-top:20px;">🗑 重複の削除</h3>`;
+            result.deleted_ids.forEach(del => {
+                const list = del.target === 'event' ? noteData.events : noteData.dailyNotes;
+                const existing = list.find(n => n.id == del.id);
+                const title = existing ? existing.title : '不明な項目';
+                container.innerHTML += `
+                <div style="background:rgba(244,67,54,0.1); padding:10px; border-radius:12px; margin-bottom:10px; color:#f44336; border:1px solid rgba(244,67,54,0.3);">
+                    <div style="font-weight:bold; text-decoration:line-through;">${title}</div>
+                </div>`;
+            });
+        }
+
+        if (!hasItems) {
+            container.innerHTML = `<p style="font-weight:bold; color:#888;">変更すべき予定は見つかりませんでした。</p>`;
+        }
+        
+        document.getElementById('schedule-preview-modal').style.display = 'flex';
+    }
+
+    function closeSchedulePreview() {
+        document.getElementById('schedule-preview-modal').style.display = 'none';
+        pendingScheduleData = null;
+    }
+
+    function commitSchedulePreview() {
+        if (!pendingScheduleData) return;
+        const result = pendingScheduleData;
+        let changesMade = 0;
+
+        if (result.deleted_ids) {
+            result.deleted_ids.forEach(del => {
+                if (del.target === 'event') noteData.events = noteData.events.filter(e => e.id != del.id);
+                else noteData.dailyNotes = noteData.dailyNotes.filter(e => e.id != del.id);
+                changesMade++;
+            });
+        }
+
+        if (result.updates) {
+            result.updates.forEach(up => {
+                const targetList = up.target === 'event' ? noteData.events : noteData.dailyNotes;
+                const idx = targetList.findIndex(n => n.id == up.id);
+                if (idx !== -1) {
+                    targetList[idx].memo += `\n[追記] ${up.added_memo}`;
+                    changesMade++;
+                }
+            });
+        }
+
+        if (result.new_items) {
+            result.new_items.forEach((ev, idx) => {
+                const selectEl = document.getElementById(`preview-target-${idx}`);
+                const finalTarget = selectEl ? selectEl.value : ev.target;
+                const targetList = finalTarget === 'event' ? noteData.events : noteData.dailyNotes;
+                targetList.unshift({
+                    id: Date.now() + Math.random(),
+                    title: ev.title || '無題の予定',
+                    date: ev.date || '',
+                    destination: ev.destination || '',
+                    tags: ev.tags || '',
+                    memo: ev.memo || ''
+                });
+                changesMade++;
+            });
+        }
+
+        if (changesMade > 0) {
+            saveData();
+            applyModeUI();
+            document.getElementById('ai-schedule-input').value = '';
+            alert("✨ スケジュールを登録・整理しました！");
+        }
+        
+        closeSchedulePreview();
+    }
+
 
     async function aiMakeRecipe() {
         const inputEl = document.getElementById('ai-recipe-input');

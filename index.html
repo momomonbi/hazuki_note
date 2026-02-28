@@ -100,7 +100,6 @@
         .event-card-date { font-size: 0.9rem; color: var(--accent-color); font-weight: 900; margin-bottom: 12px; display: flex; align-items: center; gap: 5px;}
         .event-tags { margin-bottom: 12px; }
         .event-tag { display: inline-block; padding: 6px 10px; border-radius: 10px; font-size: 0.8rem; font-weight: 900; background: rgba(128,128,128,0.1); margin-right: 6px; margin-bottom: 6px;}
-        /* ゴミ箱アイコン */
         .delete-icon-btn { position: absolute; top: 15px; right: 15px; background: transparent; border: none; font-size: 1.4rem; cursor: pointer; padding: 5px; border-radius: 50%; transition: background 0.2s; z-index: 10; }
         .delete-icon-btn:active { background: rgba(244,67,54,0.1); transform: scale(0.9); }
 
@@ -111,9 +110,7 @@
         .modal-content { background: var(--bg-color); width: 100%; max-width: 600px; height: 100%; max-height: 100dvh; border-top-left-radius: 30px; border-top-right-radius: 30px; padding: 0; box-sizing: border-box; overflow: hidden; animation: slideUpModal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 -10px 40px rgba(0,0,0,0.2); position: relative; display: flex; flex-direction: column;}
         @keyframes slideUpModal { from{transform: translateY(100%);} to{transform: translateY(0);} }
         
-        /* 固定上部エリア */
         .modal-sticky-header { flex-shrink: 0; background: var(--bg-color); padding: 25px 20px 10px 20px; z-index: 2005; border-bottom: 2px solid rgba(128,128,128,0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.05);}
-        /* スクロールエリア */
         .modal-scroll-area { flex-grow: 1; overflow-y: auto; padding: 15px 20px 140px 20px; }
 
         details { margin-bottom: 15px; background: var(--card-bg); border-radius: 16px; border: 1px solid rgba(128,128,128,0.15); box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; transition: all 0.3s;}
@@ -123,9 +120,7 @@
         details[open] summary::after { transform: rotate(180deg); }
         .catalog-content { padding: 15px; }
 
-        /* カタログのグリッドを可変にする */
         .catalog-grid { display: grid; grid-template-columns: repeat(var(--catalog-cols, 2), 1fr); gap: 8px; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
-        
         .catalog-item-card { background: #fff; border: 2px solid rgba(128,128,128,0.2); border-radius: 12px; padding: 10px 8px; display: flex; flex-direction: column; gap: 8px; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: stretch; justify-content: center;}
         
         .catalog-unit-btn { padding: 8px; border-radius: 8px; border: 1px solid rgba(128,128,128,0.3); background: rgba(128,128,128,0.05); font-size: 0.85rem; font-weight: 900; width: 100%; box-sizing: border-box; text-align: center; color: var(--text-color);}
@@ -141,7 +136,6 @@
         .sortable-ghost { opacity: 0.4; transform: scale(0.95); border: 2px dashed var(--accent-color); background: rgba(128,128,128,0.1); }
         .sortable-drag { cursor: grabbing !important; }
 
-        /* カテゴリー削除ボタン用のスタイル */
         .category-header { display: flex; align-items: center; justify-content: space-between; width: 100%; pointer-events: auto; }
         .del-cat-btn { background: rgba(244,67,54,0.15); color: #f44336; border: none; border-radius: 8px; padding: 6px 10px; font-size: 0.8rem; font-weight: 900; margin-left: 10px; z-index: 10; }
 
@@ -225,8 +219,7 @@
             <h2 style="margin:0; font-size: 1.2rem; color:var(--accent-color); font-weight: 900;">💬 AIアシスタント</h2>
             <button onclick="clearAiChat()" style="background: rgba(244,67,54,0.1); color: #f44336; padding: 6px 12px; border-radius: 10px; font-weight: 900; font-size: 0.85rem;">🗑️ ログ消去</button>
         </div>
-        <div class="chat-container" id="ai-chat-box">
-            </div>
+        <div class="chat-container" id="ai-chat-box"></div>
         <div style="display: flex; gap: 10px; align-items: flex-end;">
             <textarea id="ai-chat-input" class="form-input" style="margin-bottom: 0; resize: none; overflow-y: hidden; min-height: 52px; line-height: 1.5; padding: 14px; flex-grow: 1;" rows="1" placeholder="メッセージを入力..." oninput="autoResizeChat(this)"></textarea>
             <button class="primary-btn" style="width: auto; margin-bottom: 0; padding: 14px 20px; font-size: 1.4rem; height: 52px; display: flex; align-items: center;" onclick="sendAiChat()">✈️</button>
@@ -338,8 +331,7 @@
             <span id="calc-display-unit" style="font-size: 1.1rem; color: var(--accent-color); font-weight: 900;">個</span>
         </div>
 
-        <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; justify-content: center;" id="calc-unit-container">
-        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; justify-content: center;" id="calc-unit-container"></div>
 
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 15px;">
             <button class="calc-btn clear-btn" onclick="calcClear()">C</button>
@@ -414,7 +406,7 @@
 <div class="modal-overlay" id="schedule-preview-modal" style="z-index: 4000;">
     <div class="modal-content" style="max-width: 500px; height: auto; max-height: 90vh; border-radius: 24px; padding: 25px 20px; overflow-y: auto;">
         <h2 style="margin-top:0; color:var(--accent-color); font-weight: 900;">✨ AIの整理結果</h2>
-        <p style="font-size:0.9rem; font-weight:bold; color:var(--text-color);">この内容で登録します。必要に応じて「日常/イベント」を切り替えてください。</p>
+        <p style="font-size:0.9rem; font-weight:bold; color:var(--text-color);">この内容で登録します。ここで<span style="color:#f44336;">直接文字を編集して</span>修正することも可能です！</p>
         
         <div id="schedule-preview-container" style="margin-top: 15px;"></div>
         
@@ -529,6 +521,11 @@
         localStorage.setItem('hazuki_noto_data_backup', JSON.stringify(noteData));
     }
 
+    // IDを整数で発行するための補助関数（小数点のバグを防ぐ）
+    function generateSafeId() {
+        return Date.now() + Math.floor(Math.random() * 10000);
+    }
+
     function finalizeLoad() {
         if(!noteData.appMode) noteData.appMode = 'daily';
         if(!noteData.catalogColumns) noteData.catalogColumns = 2;
@@ -539,10 +536,10 @@
         
         if (!noteData.events || noteData.events.length === 0) {
             noteData.events = [
-                { id: Date.now() + 1, title: 'FANTASIA 2026春', date: '2026/03/21 〜 2026/03/22', tags: 'グッズ イラスト 漫画 小説 ゲーム 音楽', destination: '東京流通センター（TRC）第一展示場 Bホール 東京都大田区平和島6-1-1', memo: '入口のスタッフに電子チケットFANTASIA2026春をお見せください。スタッフがチケットをもぎり、リストバンドをお渡しいたします。\n再入場する際は、入口にてリストバンドのご提示をお願いいたします。' },
-                { id: Date.now() + 2, title: 'M3-2026春', date: '2026/04/26', tags: '音楽', destination: '東京流通センター(TRC)第一・第二展示場 東京都大田区平和島6-1-1', memo: '自主制作音系作品の展示即売会' },
-                { id: Date.now() + 3, title: 'デザインフェスタ vol.63', date: '2026/05/23 〜 2026/05/24', tags: 'アート パフォーマンス', destination: '東京ビッグサイト 西＆南ホール全館', memo: 'オリジナル作品なら審査なしで参加可能。プロ・アマ問わず、イラストやアート作品、パフォーマンスまでジャンル自由。ブースサイズにより費用は異なり、Sブース1日で1万円台～。' },
-                { id: Date.now() + 4, title: 'コミックマーケット108 (C108)', date: '2026/08/15 〜 2026/08/16', tags: '同人誌 グッズ コスプレ', destination: '東京ビッグサイト（東京国際展示場）', memo: 'オールジャンル即売会で、オリジナル・二次創作問わず参加可。サークル参加申込を行い、抽選に当選すると出店できる。出店料は1スペース約8,000円（机半分・椅子2脚付き）。\n日本最大級の同人イベントで数十万人が来場する。頒布物のジャンル制限が少なく、イラスト集・オリジナル漫画・グッズなど自由に販売可能。' }
+                { id: generateSafeId(), title: 'FANTASIA 2026春', date: '2026/03/21 〜 2026/03/22', tags: 'グッズ イラスト 漫画 小説 ゲーム 音楽', destination: '東京流通センター（TRC）第一展示場 Bホール 東京都大田区平和島6-1-1', memo: '入口のスタッフに電子チケットFANTASIA2026春をお見せください。スタッフがチケットをもぎり、リストバンドをお渡しいたします。\n再入場する際は、入口にてリストバンドのご提示をお願いいたします。' },
+                { id: generateSafeId() + 1, title: 'M3-2026春', date: '2026/04/26', tags: '音楽', destination: '東京流通センター(TRC)第一・第二展示場 東京都大田区平和島6-1-1', memo: '自主制作音系作品の展示即売会' },
+                { id: generateSafeId() + 2, title: 'デザインフェスタ vol.63', date: '2026/05/23 〜 2026/05/24', tags: 'アート パフォーマンス', destination: '東京ビッグサイト 西＆南ホール全館', memo: 'オリジナル作品なら審査なしで参加可能。プロ・アマ問わず、イラストやアート作品、パフォーマンスまでジャンル自由。ブースサイズにより費用は異なり、Sブース1日で1万円台～。' },
+                { id: generateSafeId() + 3, title: 'コミックマーケット108 (C108)', date: '2026/08/15 〜 2026/08/16', tags: '同人誌 グッズ コスプレ', destination: '東京ビッグサイト（東京国際展示場）', memo: 'オールジャンル即売会で、オリジナル・二次創作問わず参加可。サークル参加申込を行い、抽選に当選すると出店できる。出店料は1スペース約8,000円（机半分・椅子2脚付き）。\n日本最大級の同人イベントで数十万人が来場する。頒布物のジャンル制限が少なく、イラスト集・オリジナル漫画・グッズなど自由に販売可能。' }
             ];
             saveData();
         }
@@ -702,14 +699,14 @@
         const text = prompt('新しい項目を入力してください:');
         if (text && text.trim()) {
             if(!noteData.checklists[listKey]) noteData.checklists[listKey] = [];
-            noteData.checklists[listKey].push({ id: Date.now(), text: text.trim(), done: false });
+            noteData.checklists[listKey].push({ id: generateSafeId(), text: text.trim(), done: false });
             saveData(); renderChecklist(listNum, `list-${listNum}`);
         }
     }
 
     function toggleCheck(listKey, id, isDone) {
         if(isDeleteMode) return; 
-        const item = noteData.checklists[listKey].find(i => i.id === id);
+        const item = noteData.checklists[listKey].find(i => String(i.id) === String(id));
         if (item) {
             item.done = isDone; saveData();
             const wrapper = document.getElementById(`item-row-${id}`);
@@ -729,7 +726,7 @@
         const row = document.getElementById(`item-row-${id}`);
         row.classList.add('removing');
         setTimeout(() => {
-            noteData.checklists[listKey] = noteData.checklists[listKey].filter(i => i.id !== id);
+            noteData.checklists[listKey] = noteData.checklists[listKey].filter(i => String(i.id) !== String(id));
             saveData(); renderChecklist(listNum, `list-${listNum}`);
         }, 500); 
     }
@@ -754,7 +751,7 @@
     }
 
     function toggleBulkSelect(id, isChecked) {
-        if (isChecked) bulkDeleteSelection.add(id); else bulkDeleteSelection.delete(id);
+        if (isChecked) bulkDeleteSelection.add(String(id)); else bulkDeleteSelection.delete(String(id));
         updateBulkDeleteText();
     }
     
@@ -787,8 +784,8 @@
         if (bulkDeleteSelection.size === totalItems) {
             bulkDeleteSelection.clear();
         } else {
-            list1.forEach(i => bulkDeleteSelection.add(i.id));
-            list2.forEach(i => bulkDeleteSelection.add(i.id));
+            list1.forEach(i => bulkDeleteSelection.add(String(i.id)));
+            list2.forEach(i => bulkDeleteSelection.add(String(i.id)));
         }
         
         updateBulkDeleteText();
@@ -805,8 +802,8 @@
                 if(row) row.classList.add('removing');
             });
             setTimeout(() => {
-                noteData.checklists[keys.top] = (noteData.checklists[keys.top] || []).filter(i => !bulkDeleteSelection.has(i.id));
-                noteData.checklists[keys.bottom] = (noteData.checklists[keys.bottom] || []).filter(i => !bulkDeleteSelection.has(i.id));
+                noteData.checklists[keys.top] = (noteData.checklists[keys.top] || []).filter(i => !bulkDeleteSelection.has(String(i.id)));
+                noteData.checklists[keys.bottom] = (noteData.checklists[keys.bottom] || []).filter(i => !bulkDeleteSelection.has(String(i.id)));
                 saveData(); toggleDeleteMode();
             }, 500);
         }
@@ -1066,7 +1063,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
 
         selectedShoppingItems.forEach((unitStr, text) => {
             const finalString = unitStr === 'なし' ? text : `${text} (${unitStr})`;
-            newList.push({ id: Date.now() + Math.random(), text: finalString, done: false });
+            newList.push({ id: generateSafeId(), text: finalString, done: false });
         });
         
         noteData.checklists['daily_shopping'] = newList; saveData();
@@ -1213,15 +1210,15 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
             let onClickAction, checkboxHTML, trashBtnHTML, cardStyle, routeBtnHTML = '';
             
             if (isDbDeleteMode) {
-                const isSelected = dbBulkDeleteSelection.has(item.id);
-                onClickAction = `toggleDbBulkSelect(${item.id})`;
+                const isSelected = dbBulkDeleteSelection.has(String(item.id));
+                onClickAction = `toggleDbBulkSelect('${item.id}')`;
                 checkboxHTML = `<input type="checkbox" style="width:24px; height:24px; accent-color:#f44336; pointer-events:none; flex-shrink:0;" ${isSelected ? 'checked' : ''}>`;
                 trashBtnHTML = '';
                 cardStyle = isSelected ? "background: rgba(244,67,54,0.05); border: 2px solid rgba(244,67,54,0.3);" : "";
             } else {
-                onClickAction = `openDbEditModal(${item.id})`;
+                onClickAction = `openDbEditModal('${item.id}')`;
                 checkboxHTML = '';
-                trashBtnHTML = `<button class="delete-icon-btn" onclick="deleteDbItem(${item.id}, event)">🗑️</button>`;
+                trashBtnHTML = `<button class="delete-icon-btn" onclick="deleteDbItem('${item.id}', event)">🗑️</button>`;
                 cardStyle = "";
                 
                 if (item.destination && item.destination.trim() !== '') {
@@ -1271,8 +1268,8 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
     }
 
     function toggleDbBulkSelect(id) { 
-        if (dbBulkDeleteSelection.has(id)) dbBulkDeleteSelection.delete(id); 
-        else dbBulkDeleteSelection.add(id); 
+        if (dbBulkDeleteSelection.has(String(id))) dbBulkDeleteSelection.delete(String(id)); 
+        else dbBulkDeleteSelection.add(String(id)); 
         updateDbBulkDeleteText(); 
         renderDbItems(); 
     }
@@ -1292,7 +1289,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         if (dbBulkDeleteSelection.size === items.length) { 
             dbBulkDeleteSelection.clear(); 
         } else { 
-            items.forEach(i => dbBulkDeleteSelection.add(i.id)); 
+            items.forEach(i => dbBulkDeleteSelection.add(String(i.id))); 
         }
         updateDbBulkDeleteText(); 
         renderDbItems();
@@ -1302,7 +1299,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         if (dbBulkDeleteSelection.size === 0) return alert("削除する項目が選択されていません。");
         if(confirm(`選択した ${dbBulkDeleteSelection.size}件 を一気に削除しますか？`)) {
             let items = getDbArray();
-            items = items.filter(i => !dbBulkDeleteSelection.has(i.id));
+            items = items.filter(i => !dbBulkDeleteSelection.has(String(i.id)));
             if (noteData.appMode === 'daily') {
                 noteData.dailyNotes = items;
             } else {
@@ -1362,7 +1359,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
 
         let item = null;
         if (id) {
-            item = getDbArray().find(e => e.id === id);
+            item = getDbArray().find(e => String(e.id) === String(id));
         }
 
         const d = new Date();
@@ -1401,6 +1398,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         document.getElementById('db-edit-modal').style.display = 'none';
     }
 
+    // 💡【重要】保存時のID照合バグを修正
     function saveDbItem() {
         const title = document.getElementById('db-edit-title').value;
         if (!title || !title.trim()) {
@@ -1417,7 +1415,8 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         const dataArray = getDbArray();
 
         if (id) {
-            const item = dataArray.find(e => e.id === parseInt(id));
+            // ここがバグの原因でした。文字列同士で安全に比較するように修正しています。
+            const item = dataArray.find(e => String(e.id) === String(id));
             if (item) {
                 item.title = title;
                 item.date = dateStr;
@@ -1427,7 +1426,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
             }
         } else {
             dataArray.unshift({ 
-                id: Date.now(), 
+                id: generateSafeId(), 
                 title: title, 
                 date: dateStr, 
                 destination: destination,
@@ -1445,8 +1444,8 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         event.stopPropagation();
         
         if(confirm('本当に削除しますか？')) {
-            if(noteData.appMode === 'daily') noteData.dailyNotes = noteData.dailyNotes.filter(e => e.id !== id);
-            else noteData.events = noteData.events.filter(e => e.id !== id);
+            if(noteData.appMode === 'daily') noteData.dailyNotes = noteData.dailyNotes.filter(e => String(e.id) !== String(id));
+            else noteData.events = noteData.events.filter(e => String(e.id) !== String(id));
             saveData(); renderDbItems();
         }
     }
@@ -1531,12 +1530,12 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         box.innerHTML = '<div class="chat-msg chat-ai">こんにちは！何でも相談してくださいね。スケジュールの登録も手伝いますよ！</div>';
         noteData.aiChatHistory.forEach(msg => {
             const isUser = msg.role === 'user';
-            const safeText = msg.content.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            const safeText = msg.content.replace(/</g, "<").replace(/>/g, ">");
             
             if (isUser) {
                 box.innerHTML += `<div class="chat-msg chat-user">${safeText}</div>`;
             } else {
-                const escapedForArg = msg.content.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "\\n");
+                const escapedForArg = msg.content.replace(/'/g, "\\'").replace(/"/g, """).replace(/\n/g, "\\n");
                 box.innerHTML += `
                     <div class="chat-msg chat-ai">
                         <div style="margin-bottom: 8px;">${safeText.replace(/\n/g, '<br>')}</div>
@@ -1561,7 +1560,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         const d = new Date();
         const todayStr = `${d.getFullYear()}/${('0'+(d.getMonth()+1)).slice(-2)}/${('0'+d.getDate()).slice(-2)}`;
         noteData.dailyNotes.unshift({
-            id: Date.now(),
+            id: generateSafeId(),
             title: `💬 AIからのメモ (${todayStr})`,
             date: todayStr,
             destination: '',
@@ -1666,7 +1665,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
                 alert("📝 スケジュール登録に予定のテキストを移動しました！\n「AIでスケジュール一括登録」ボタンを押して確認画面に進んでください。");
             } else if (action.type === 'add_shopping') {
                 if(!noteData.checklists['daily_shopping']) noteData.checklists['daily_shopping'] = [];
-                action.data.forEach(item => noteData.checklists['daily_shopping'].push({ id: Date.now()+Math.random(), text: item, done: false }));
+                action.data.forEach(item => noteData.checklists['daily_shopping'].push({ id: generateSafeId(), text: item, done: false }));
                 acted = true;
             }
             
@@ -1702,6 +1701,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
 3. 既存のデータ（例: 耳鼻科）に関する「追加情報」だと判断できる場合は、新規登録ではなく "updates" 配列に入れ、対象のIDと追加すべきメモテキストを指示してください。
 4. 全く新しい予定は "new_items" 配列に入れてください。
 5. 【重要】 "destination" (場所) には、住所だけでなく「施設名（例：東京ビッグサイト、〇〇病院）」もそのまま入力してください。Googleマップで検索できる名称であれば何でも構いません。
+6. 【超重要】 入力テキストが膨大な長文（サイト全体のコピー等）の場合、挨拶や無関係な文章を完全に削ぎ落とし、"memo" の内容は「当日の行動に必要な要点・時間・持ち物・注意事項など」を箇条書き等で極限まで要約して短く詰めてください。
 
 【出力フォーマット】
 {
@@ -1746,6 +1746,7 @@ ${text}`;
         btn.disabled = false;
     }
 
+    // 💡【新機能】プレビュー画面で直接編集できるように入力欄（input/textarea）で表示
     function showSchedulePreview(result) {
         const container = document.getElementById('schedule-preview-container');
         container.innerHTML = '';
@@ -1757,16 +1758,19 @@ ${text}`;
             container.innerHTML += `<h3 style="font-size:1.1rem; color:#4CAF50; margin-bottom:8px;">🆕 新規登録</h3>`;
             result.new_items.forEach((item, idx) => {
                 container.innerHTML += `
-                <div style="background:rgba(128,128,128,0.1); padding:12px; border-radius:12px; margin-bottom:12px; border:1px solid rgba(128,128,128,0.2);">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; gap:10px;">
-                        <div style="font-weight:900; font-size:1.1rem; line-height:1.3;">${item.title}</div>
-                        <select id="preview-target-${idx}" style="padding:6px; border-radius:8px; border:1px solid var(--accent-color); font-weight:bold; background:#fff; color:var(--accent-color); flex-shrink:0;">
+                <div style="background:rgba(128,128,128,0.1); padding:15px; border-radius:16px; margin-bottom:15px; border:1px solid rgba(128,128,128,0.2);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:10px;">
+                        <input type="text" id="preview-title-${idx}" value="${item.title}" class="form-input" style="margin-bottom:0; font-weight:900; font-size:1.1rem; padding:10px; flex-grow:1;">
+                        <select id="preview-target-${idx}" style="padding:10px; border-radius:12px; border:1px solid var(--accent-color); font-weight:bold; background:#fff; color:var(--accent-color); flex-shrink:0;">
                             <option value="daily" ${item.target==='daily'?'selected':''}>📓 日常へ</option>
                             <option value="event" ${item.target==='event'?'selected':''}>📚 イベントへ</option>
                         </select>
                     </div>
-                    <div style="font-size:0.85rem; color:var(--text-color); margin-bottom:4px;">📅 ${item.date}</div>
-                    <div style="font-size:0.85rem; color:var(--text-color);">📍 ${item.destination || '場所の指定なし'}</div>
+                    <div style="display:flex; gap:10px; margin-bottom:10px;">
+                        <input type="text" id="preview-date-${idx}" value="${item.date}" class="form-input" style="margin-bottom:0; padding:10px; flex:1;" placeholder="日付 (例: 3/21)">
+                        <input type="text" id="preview-dest-${idx}" value="${item.destination || ''}" class="form-input" style="margin-bottom:0; padding:10px; flex:1;" placeholder="場所・施設名">
+                    </div>
+                    <textarea id="preview-memo-${idx}" class="form-input" style="margin-bottom:0; padding:10px; font-size:0.95rem; line-height:1.4;" rows="3" placeholder="メモ（要約）">${item.memo || ''}</textarea>
                 </div>`;
             });
         }
@@ -1777,12 +1781,12 @@ ${text}`;
             container.innerHTML += `<h3 style="font-size:1.1rem; color:#FF9800; margin-bottom:8px; margin-top:20px;">🔄 情報の追記</h3>`;
             result.updates.forEach(up => {
                 const list = up.target === 'event' ? noteData.events : noteData.dailyNotes;
-                const existing = list.find(n => n.id == up.id);
+                const existing = list.find(n => String(n.id) === String(up.id));
                 const title = existing ? existing.title : '不明な項目';
                 container.innerHTML += `
                 <div style="background:rgba(255,152,0,0.1); padding:10px; border-radius:12px; margin-bottom:10px; border:1px solid rgba(255,152,0,0.3);">
                     <div style="font-weight:bold; margin-bottom:4px;">${title}</div>
-                    <div style="font-size:0.85rem; color:#d84315;">[追記] ${up.added_memo}</div>
+                    <textarea id="preview-update-${up.id}" class="form-input" style="margin-bottom:0; padding:8px; font-size:0.85rem; color:#d84315;" rows="2">${up.added_memo}</textarea>
                 </div>`;
             });
         }
@@ -1793,7 +1797,7 @@ ${text}`;
             container.innerHTML += `<h3 style="font-size:1.1rem; color:#f44336; margin-bottom:8px; margin-top:20px;">🗑 重複の削除</h3>`;
             result.deleted_ids.forEach(del => {
                 const list = del.target === 'event' ? noteData.events : noteData.dailyNotes;
-                const existing = list.find(n => n.id == del.id);
+                const existing = list.find(n => String(n.id) === String(del.id));
                 const title = existing ? existing.title : '不明な項目';
                 container.innerHTML += `
                 <div style="background:rgba(244,67,54,0.1); padding:10px; border-radius:12px; margin-bottom:10px; color:#f44336; border:1px solid rgba(244,67,54,0.3);">
@@ -1814,6 +1818,7 @@ ${text}`;
         pendingScheduleData = null;
     }
 
+    // 💡編集された値を取得して保存
     function commitSchedulePreview() {
         if (!pendingScheduleData) return;
         const result = pendingScheduleData;
@@ -1821,8 +1826,8 @@ ${text}`;
 
         if (result.deleted_ids) {
             result.deleted_ids.forEach(del => {
-                if (del.target === 'event') noteData.events = noteData.events.filter(e => e.id != del.id);
-                else noteData.dailyNotes = noteData.dailyNotes.filter(e => e.id != del.id);
+                if (del.target === 'event') noteData.events = noteData.events.filter(e => String(e.id) !== String(del.id));
+                else noteData.dailyNotes = noteData.dailyNotes.filter(e => String(e.id) !== String(del.id));
                 changesMade++;
             });
         }
@@ -1830,9 +1835,11 @@ ${text}`;
         if (result.updates) {
             result.updates.forEach(up => {
                 const targetList = up.target === 'event' ? noteData.events : noteData.dailyNotes;
-                const idx = targetList.findIndex(n => n.id == up.id);
+                const idx = targetList.findIndex(n => String(n.id) === String(up.id));
                 if (idx !== -1) {
-                    targetList[idx].memo += `\n[追記] ${up.added_memo}`;
+                    const updateMemoEl = document.getElementById(`preview-update-${up.id}`);
+                    const finalUpdate = updateMemoEl ? updateMemoEl.value : up.added_memo;
+                    targetList[idx].memo += `\n[追記] ${finalUpdate}`;
                     changesMade++;
                 }
             });
@@ -1841,15 +1848,25 @@ ${text}`;
         if (result.new_items) {
             result.new_items.forEach((ev, idx) => {
                 const selectEl = document.getElementById(`preview-target-${idx}`);
+                const titleEl = document.getElementById(`preview-title-${idx}`);
+                const dateEl = document.getElementById(`preview-date-${idx}`);
+                const destEl = document.getElementById(`preview-dest-${idx}`);
+                const memoEl = document.getElementById(`preview-memo-${idx}`);
+
                 const finalTarget = selectEl ? selectEl.value : ev.target;
+                const finalTitle = titleEl ? titleEl.value : ev.title;
+                const finalDate = dateEl ? dateEl.value : ev.date;
+                const finalDest = destEl ? destEl.value : ev.destination;
+                const finalMemo = memoEl ? memoEl.value : ev.memo;
+
                 const targetList = finalTarget === 'event' ? noteData.events : noteData.dailyNotes;
                 targetList.unshift({
-                    id: Date.now() + Math.random(),
-                    title: ev.title || '無題の予定',
-                    date: ev.date || '',
-                    destination: ev.destination || '',
+                    id: generateSafeId(),
+                    title: finalTitle || '無題の予定',
+                    date: finalDate || '',
+                    destination: finalDest || '',
                     tags: ev.tags || '',
-                    memo: ev.memo || ''
+                    memo: finalMemo || ''
                 });
                 changesMade++;
             });
@@ -1911,7 +1928,7 @@ ${text}`;
                     if(!noteData.checklists['daily_shopping']) noteData.checklists['daily_shopping'] = [];
                     ingredients.forEach(ing => {
                         noteData.checklists['daily_shopping'].push({
-                            id: Date.now() + Math.random(),
+                            id: generateSafeId(),
                             text: ing,
                             done: false
                         });
@@ -1924,7 +1941,7 @@ ${text}`;
                     
                     recipes.forEach(r => {
                         noteData.dailyNotes.unshift({
-                            id: Date.now() + Math.random(),
+                            id: generateSafeId(),
                             title: `🍳 レシピ: ${r.title}`,
                             date: todayStr,
                             destination: '',

@@ -758,27 +758,82 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         }
     }
 
-    function openShoppingModal() {
-        selectedShoppingItems.clear(); isCatalogEditMode = false;
-        document.getElementById('catalog-normal-footer').style.display = 'flex'; document.getElementById('catalog-edit-footer').style.display = 'none';
-        document.getElementById('catalog-edit-btn').innerText = "✏️ 編集する"; document.getElementById('catalog-desc').innerText = "ポンポン押して複数選べます！単位ボタンを押すと計算機が開きます。"; document.getElementById('catalog-desc').style.color = "inherit";
-        buildShoppingCatalog(); document.getElementById('shopping-modal').style.display = 'flex';
+function openShoppingModal() {
+        selectedShoppingItems.clear();
+        
+        // ★ リストにあるアイテムを読み込んで「選択状態」を復元！
+        const currentList = noteData.checklists['daily_shopping'] || [];
+        currentList.forEach(item => {
+            const match = item.text.match(/^(.+?)(?:\s*\((.+?)\))?$/);
+            if(match) {
+                const name = match[1].trim();
+                const unit = match[2] ? match[2].trim() : 'なし';
+                selectedShoppingItems.set(name, unit);
+            }
+        });
+
+        isCatalogEditMode = false;
+        document.getElementById('catalog-normal-footer').style.display = 'flex';
+        document.getElementById('catalog-edit-footer').style.display = 'none';
+        document.getElementById('catalog-edit-btn').innerText = "✏️ 編集する";
+        document.getElementById('catalog-desc').innerText = "ポンポン押して複数選べます！単位ボタンを押すと計算機が開きます。";
+        document.getElementById('catalog-desc').style.color = "inherit";
+        
+        buildShoppingCatalog(); 
+        document.getElementById('shopping-modal').style.display = 'flex';
     }
 
-    function closeShoppingModal() { document.getElementById('shopping-modal').style.display = 'none'; }
+    function closeShoppingModal() {
+        document.getElementById('shopping-modal').style.display = 'none';
+    }
 
     function commitShoppingModal() {
-        if(selectedShoppingItems.size === 0) { closeShoppingModal(); return; }
-        if(!noteData.checklists['daily_shopping']) noteData.checklists['daily_shopping'] = [];
+        let currentList = noteData.checklists['daily_shopping'] || [];
         
+        // カタログに存在する全アイテムのリストを作成（手動入力と区別するため）
+        let allCatalogItems = new Set();
+        if(noteData.shoppingCatalog) {
+            Object.values(noteData.shoppingCatalog).forEach(items => {
+                items.forEach(i => allCatalogItems.add(i));
+            });
+        }
+
+        let newList = [];
+        
+        // 既存のリストを走査し、カタログとの同期を行う
+        currentList.forEach(item => {
+            const match = item.text.match(/^(.+?)(?:\s*\((.+?)\))?$/);
+            const name = match ? match[1].trim() : item.text;
+            
+            if (allCatalogItems.has(name)) {
+                // カタログにある商品の場合、現在も選択されているかチェック
+                if (selectedShoppingItems.has(name)) {
+                    const unit = selectedShoppingItems.get(name);
+                    const finalString = unit === 'なし' ? name : `${name} (${unit})`;
+                    item.text = finalString; // 単位が変更されていれば上書き更新
+                    newList.push(item);      // 追加して
+                    selectedShoppingItems.delete(name); // 処理済みのものはMapから消す
+                }
+                // もしカタログ画面で「選択解除」されていたら、 newList に入れない（＝リストから削除）
+            } else {
+                // カタログにない商品（完全な手動入力）はそのまま残す
+                newList.push(item);
+            }
+        });
+
+        // 新しくカタログで選択された項目（上記でdeleteされなかったもの）を末尾に追加
         selectedShoppingItems.forEach((unitStr, text) => {
             const finalString = unitStr === 'なし' ? text : `${text} (${unitStr})`;
-            noteData.checklists['daily_shopping'].push({ id: Date.now() + Math.random(), text: finalString, done: false });
+            newList.push({ id: Date.now() + Math.random(), text: finalString, done: false });
         });
         
+        noteData.checklists['daily_shopping'] = newList;
         saveData();
+        
         const keys = getListKeysForMode();
-        if(keys.top === 'daily_shopping') renderChecklist(1, 'list-1'); else renderChecklist(2, 'list-2');
+        if(keys.top === 'daily_shopping') renderChecklist(1, 'list-1');
+        else renderChecklist(2, 'list-2');
+        
         closeShoppingModal();
     }
 

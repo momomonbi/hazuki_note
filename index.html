@@ -328,8 +328,15 @@
         <label style="font-weight:900; font-size:0.95rem; color: var(--text-color);">📝 タイトル / イベント名</label>
         <input type="text" id="db-edit-title" class="form-input" placeholder="タイトルを入力">
         
-        <label style="font-weight:900; font-size:0.95rem; color: var(--text-color);">📅 日付 (タップでカレンダー)</label>
-        <input type="date" id="db-edit-date" class="form-input">
+        <label style="font-weight:900; font-size:0.95rem; color: var(--text-color);">📅 日付 (直接入力 または カレンダーアイコンから選択)</label>
+        <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 10px;">
+            <input type="text" id="db-edit-date" class="form-input" style="margin-bottom:0;" placeholder="例: 2026年3月21日(土)〜22日(日)">
+            
+            <div style="position: relative; width: 45px; height: 45px; flex-shrink: 0; background: rgba(128,128,128,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid rgba(128,128,128,0.2);">
+                <span style="font-size: 1.5rem; pointer-events: none;">📅</span>
+                <input type="date" id="db-edit-date-picker" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;" onchange="appendDateFromPicker(this.value)">
+            </div>
+        </div>
         
         <label style="font-weight:900; font-size:0.95rem; color: var(--text-color);">📍 予定先の住所 (ルート検索用)</label>
         <input type="text" id="db-edit-destination" class="form-input" placeholder="例：東京ビッグサイト、〇〇デパート">
@@ -380,44 +387,11 @@
     let noteData = { 
         theme: 'cute',
         appMode: 'daily',
-        userLocation: '',
+        userLocation: '', 
         catalogColumns: 2, 
         shoppingCatalog: null,
         checklists: { event_schedule: [], event_belonging: [], daily_todo: [], daily_shopping: [] },
-        events: [
-            {
-                id: 4,
-                title: "コミックマーケット108 (C108)",
-                date: "8月15日(土)・16日(日)",
-                destination: "東京ビッグサイト（東京国際展示場）",
-                tags: "",
-                memo: "オールジャンル即売会で、オリジナル・二次創作問わず参加可。サークル参加申込を行い、抽選に当選すると出店できる。出店料は1スペース約8,000円（机半分・椅子2脚付き）。\n日本最大級の同人イベントで数十万人が来場する。頒布物のジャンル制限が少なく、イラスト集・オリジナル漫画・グッズなど自由に販売可能。"
-            },
-            {
-                id: 3,
-                title: "デザインフェスタ vol.63",
-                date: "2026年5月23日（土）10:00 〜 18:00 2026年5月24日（日）10:00 〜 18:00",
-                destination: "東京ビッグサイト 西＆南ホール全館",
-                tags: "",
-                memo: "オリジナル作品なら審査なしで参加可能。プロ・アマ問わず、イラストやアート作品、パフォーマンスまでジャンル自由。ブースサイズにより費用は異なり、Sブース1日で1万円台〜。"
-            },
-            {
-                id: 2,
-                title: "M3-2026春",
-                date: "2026年 4月26日(日) 10:30～15:30 [予定]",
-                destination: "東京流通センター(TRC)第一・第二展示場 東京都大田区平和島6-1-1",
-                tags: "",
-                memo: "自主制作音系作品の展示即売会"
-            },
-            {
-                id: 1,
-                title: "FANTASIA 2026春",
-                date: "2026年3月21日(土)、22日(日)",
-                destination: "東京流通センター（TRC）第一展示場 Bホール 東京都大田区平和島6-1-1",
-                tags: "グッズ イラスト 漫画 小説 ゲーム 音楽",
-                memo: "入口のスタッフに電子チケットFANTASIA2026春をお見せください。スタッフがチケットをもぎり、リストバンドをお渡しいたします。\n再入場する際は、入口にてリストバンドのご提示をお願いいたします。"
-            }
-        ],
+        events: [],
         dailyNotes: []
     };
 
@@ -474,27 +448,14 @@
         if(!noteData.shoppingCatalog) noteData.shoppingCatalog = JSON.parse(JSON.stringify(defaultCatalog));
         if(noteData.userLocation === undefined) noteData.userLocation = '';
         
-        // 以前のバージョンを使っていてeventsが空配列のままのユーザーのため、もし空なら初期イベントを補完する
-        if (noteData.events && noteData.events.length === 0 && !localStorage.getItem('hazuki_default_events_loaded')) {
-             noteData.events = [
-                {
-                    id: 4, title: "コミックマーケット108 (C108)", date: "8月15日(土)・16日(日)", destination: "東京ビッグサイト（東京国際展示場）", tags: "",
-                    memo: "オールジャンル即売会で、オリジナル・二次創作問わず参加可。サークル参加申込を行い、抽選に当選すると出店できる。出店料は1スペース約8,000円（机半分・椅子2脚付き）。\n日本最大級の同人イベントで数十万人が来場する。頒布物のジャンル制限が少なく、イラスト集・オリジナル漫画・グッズなど自由に販売可能。"
-                },
-                {
-                    id: 3, title: "デザインフェスタ vol.63", date: "2026年5月23日（土）10:00 〜 18:00 2026年5月24日（日）10:00 〜 18:00", destination: "東京ビッグサイト 西＆南ホール全館", tags: "",
-                    memo: "オリジナル作品なら審査なしで参加可能。プロ・アマ問わず、イラストやアート作品、パフォーマンスまでジャンル自由。ブースサイズにより費用は異なり、Sブース1日で1万円台〜。"
-                },
-                {
-                    id: 2, title: "M3-2026春", date: "2026年 4月26日(日) 10:30～15:30 [予定]", destination: "東京流通センター(TRC)第一・第二展示場 東京都大田区平和島6-1-1", tags: "",
-                    memo: "自主制作音系作品の展示即売会"
-                },
-                {
-                    id: 1, title: "FANTASIA 2026春", date: "2026年3月21日(土)、22日(日)", destination: "東京流通センター（TRC）第一展示場 Bホール 東京都大田区平和島6-1-1", tags: "グッズ イラスト 漫画 小説 ゲーム 音楽",
-                    memo: "入口のスタッフに電子チケットFANTASIA2026春をお見せください。スタッフがチケットをもぎり、リストバンドをお渡しいたします。\n再入場する際は、入口にてリストバンドのご提示をお願いいたします。"
-                }
+        // --- 🌟 デフォルトのイベントデータをセット ---
+        if (!noteData.events || noteData.events.length === 0) {
+            noteData.events = [
+                { id: Date.now() + 1, title: 'FANTASIA 2026春', date: '2026年3月21日(土)、22日(日)', tags: 'グッズ イラスト 漫画 小説 ゲーム 音楽', destination: '東京流通センター（TRC）第一展示場 Bホール 東京都大田区平和島6-1-1', memo: '入口のスタッフに電子チケットFANTASIA2026春をお見せください。スタッフがチケットをもぎり、リストバンドをお渡しいたします。\n再入場する際は、入口にてリストバンドのご提示をお願いいたします。' },
+                { id: Date.now() + 2, title: 'M3-2026春', date: '2026年 4月26日(日) 10:30～15:30 [予定]', tags: '音楽', destination: '東京流通センター(TRC)第一・第二展示場 東京都大田区平和島6-1-1', memo: '自主制作音系作品の展示即売会' },
+                { id: Date.now() + 3, title: 'デザインフェスタ vol.63', date: '2026年5月23日（土）10:00 〜 18:00 2026年5月24日（日）10:00 〜 18:00', tags: 'アート パフォーマンス', destination: '東京ビッグサイト 西＆南ホール全館', memo: 'オリジナル作品なら審査なしで参加可能。プロ・アマ問わず、イラストやアート作品、パフォーマンスまでジャンル自由。ブースサイズにより費用は異なり、Sブース1日で1万円台～。' },
+                { id: Date.now() + 4, title: 'コミックマーケット108 (C108)', date: '2026年8月15日(土)・16日(日)', tags: '同人誌 グッズ コスプレ', destination: '東京ビッグサイト（東京国際展示場）', memo: 'オールジャンル即売会で、オリジナル・二次創作問わず参加可。サークル参加申込を行い、抽選に当選すると出店できる。出店料は1スペース約8,000円（机半分・椅子2脚付き）。\n日本最大級の同人イベントで数十万人が来場する。頒布物のジャンル制限が少なく、イラスト集・オリジナル漫画・グッズなど自由に販売可能。' }
             ];
-            localStorage.setItem('hazuki_default_events_loaded', 'true');
             saveData();
         }
 
@@ -769,7 +730,6 @@
 
         if (activeItems.length === 0) { alert('買い物リストにアイテムがありません。'); return; }
 
-        // 地域情報が設定されていればプロンプトに含める
         const locText = noteData.userLocation ? `\n【地域情報】\nユーザーの居住地周辺: ${noteData.userLocation}\n※可能であれば、この地域の一般的なスーパーの価格相場を考慮してください。` : '';
 
         const promptText = `以下の買い物リストの現在（日本のスーパー）の一般的な相場価格を調べ、概算を計算してください。${locText}
@@ -1118,18 +1078,54 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
     // ==========================================
     function getDbArray() { return noteData.appMode === 'daily' ? noteData.dailyNotes : noteData.events; }
 
+    // 日付文字列からソート用の数値(タイムスタンプ)を抽出するAI的な関数
+    function parseDateForSort(dateStr) {
+        if (!dateStr) return 0;
+        // 例: "2026年3月21日", "2026/03/21", "2026-3-21"
+        let m = dateStr.match(/(20\d\d)[年\/\-]\s*(\d{1,2})[月\/\-]\s*(\d{1,2})/);
+        if (m) {
+            return new Date(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3])).getTime();
+        }
+        // 年が省略されている場合（例: "8月15日"）は現在の年を推測
+        m = dateStr.match(/(\d{1,2})[月\/\-]\s*(\d{1,2})/);
+        if (m) {
+            const year = new Date().getFullYear();
+            return new Date(year, parseInt(m[1]) - 1, parseInt(m[2])).getTime();
+        }
+        return 0; // 日付が見つからない場合は0
+    }
+
     function renderDbItems() {
-        const container = document.getElementById('db-container'); container.innerHTML = ''; const items = getDbArray();
-        if (items.length === 0) { container.innerHTML = `<p style="color:#888; font-size:1.1rem; text-align:center; font-weight:bold; padding:30px;">${noteData.appMode === 'daily' ? '📓 日記・メモはありません' : '📚 イベントが登録されていません'}</p>`; return; }
+        const container = document.getElementById('db-container'); container.innerHTML = ''; 
+        let items = getDbArray(); 
         
-        items.forEach(item => {
-            // タグのパース（全角・半角スペース、カンマで分割）
+        if (items.length === 0) { 
+            container.innerHTML = `<p style="color:#888; font-size:1.1rem; text-align:center; font-weight:bold; padding:30px;">${noteData.appMode === 'daily' ? '📓 日記・メモはありません' : '📚 イベントが登録されていません'}</p>`; 
+            return; 
+        }
+        
+        // --- 🌟 日付で自動ソート ---
+        const isDaily = noteData.appMode === 'daily';
+        let sortedItems = [...items];
+        sortedItems.sort((a, b) => {
+            const timeA = parseDateForSort(a.date) || a.id; 
+            const timeB = parseDateForSort(b.date) || b.id;
+            
+            if (isDaily) {
+                // 日常（日記・メモ）は新しい順（降順）
+                return timeB - timeA;
+            } else {
+                // イベントは開催日が近い順（昇順）
+                return timeA - timeB;
+            }
+        });
+        
+        sortedItems.forEach(item => {
             const tagArray = (item.tags || '').split(/[\s,]+/).filter(t => t.trim() !== '');
             const tagsHTML = tagArray.map(tag => `<span class="event-tag">${tag}</span>`).join('');
-            
             const memoHTML = (item.memo || '').replace(/\n/g, '<br>');
             
-            // ルート検索ボタンの生成
+            // ルート検索ボタン
             let routeBtnHTML = '';
             if (item.destination && item.destination.trim() !== '') {
                 routeBtnHTML = `
@@ -1138,7 +1134,6 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
                 </div>`;
             }
 
-            // カード全体に onclick を設定して直接編集できるように
             container.innerHTML += `
             <div class="glass-card event-card" onclick="openDbEditModal(${item.id})">
                 <button class="delete-icon-btn" onclick="deleteDbItem(${item.id}, event)">🗑️</button>
@@ -1152,6 +1147,19 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         });
     }
 
+    // --- 日付ピッカーからテキストボックスへの追記 ---
+    function appendDateFromPicker(val) {
+        if(!val) return;
+        const formatted = val.replace(/-/g, '/');
+        const input = document.getElementById('db-edit-date');
+        if (input.value.trim() === '') {
+            input.value = formatted;
+        } else {
+            // 既に文字があれば「～」で繋ぐ
+            input.value += ' 〜 ' + formatted;
+        }
+    }
+
     // --- 編集モーダルの開閉と保存 ---
     function openDbEditModal(id = null) {
         const isDaily = noteData.appMode === 'daily';
@@ -1163,22 +1171,13 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
             item = getDbArray().find(e => e.id === id);
         }
 
-        // 今日の日付文字列作成 (YYYY-MM-DD形式)
         const d = new Date();
-        const todayStr = `${d.getFullYear()}-${('0'+(d.getMonth()+1)).slice(-2)}-${('0'+d.getDate()).slice(-2)}`;
+        const todayStr = `${d.getFullYear()}/${('0'+(d.getMonth()+1)).slice(-2)}/${('0'+d.getDate()).slice(-2)}`;
 
         // 値のセット
         document.getElementById('db-edit-id').value = id || '';
         document.getElementById('db-edit-title').value = item ? item.title : '';
-        // input type="date" は YYYY-MM-DD 形式を要求するため、保存されている形式 (YYYY/MM/DD) を変換
-        let dateVal = todayStr;
-        if (item && item.date) {
-            // YYYY年MM月DD日などの表記もあるため、簡易的に置換（完全互換ではないため注意）
-            dateVal = item.date.replace(/\//g, '-').replace(/[年月]/g, '-').replace(/日.*/, '');
-            // YYYY-MM-DD 形式に満たない場合はクリアしておく
-            if(!/^\d{4}-\d{2}-\d{2}$/.test(dateVal)) dateVal = ''; 
-        }
-        document.getElementById('db-edit-date').value = dateVal;
+        document.getElementById('db-edit-date').value = item && item.date ? item.date : (id ? '' : todayStr);
         document.getElementById('db-edit-destination').value = item && item.destination ? item.destination : '';
         document.getElementById('db-edit-tags').value = item ? item.tags : '';
         document.getElementById('db-edit-memo').value = item ? item.memo : '';
@@ -1199,8 +1198,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         }
 
         const id = document.getElementById('db-edit-id').value;
-        const rawDate = document.getElementById('db-edit-date').value; // YYYY-MM-DD
-        const dateStr = rawDate ? rawDate.replace(/-/g, '/') : '未定'; // YYYY/MM/DD に戻す
+        const dateStr = document.getElementById('db-edit-date').value.trim() || '未定';
         const destination = document.getElementById('db-edit-destination').value.trim();
         const tags = document.getElementById('db-edit-tags').value.trim();
         const memo = document.getElementById('db-edit-memo').value;
@@ -1236,7 +1234,6 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
 
     // --- 削除とルート検索 ---
     function deleteDbItem(id, event) {
-        // カード自体のクリックイベント（編集画面を開く）を止める
         event.stopPropagation();
         
         if(confirm('本当に削除しますか？')) {
@@ -1247,11 +1244,8 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
     }
 
     function openRouteSearch(destination, event) {
-        // カード自体のクリックイベントを止める
         event.stopPropagation();
-        
         const origin = noteData.userLocation || "";
-        // Google Maps Directions API
         let url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}&travelmode=transit`;
         if (origin) {
             url += `&origin=${encodeURIComponent(origin)}`;
@@ -1263,7 +1257,6 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         if(confirm("【⚠️警告】\nすべてのデータを完全に消去します。本当によろしいですか？")) {
             if(db) indexedDB.deleteDatabase(DB_NAME);
             localStorage.removeItem('hazuki_noto_data_backup');
-            localStorage.removeItem('hazuki_default_events_loaded');
             location.reload();
         }
     }

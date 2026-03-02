@@ -93,15 +93,34 @@
         .chat-user { background: var(--accent-color); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
         .chat-ai { background: rgba(255,255,255,0.9); color: #333; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid rgba(128,128,128,0.2); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
 
-        /* --- データベース用 --- */
+        /* --- データベース用 (リスト表示時) --- */
         .event-card { padding: 18px; margin-bottom: 15px; position: relative; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
         .event-card:active { transform: scale(0.98); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .event-card-title { font-size: 1.3rem; font-weight: 900; margin-bottom: 6px; padding-right: 30px; }
+        .event-card-title { font-size: 1.3rem; font-weight: 900; margin-bottom: 6px; padding-right: 30px; word-break: break-all;}
         .event-card-date { font-size: 0.9rem; color: var(--accent-color); font-weight: 900; margin-bottom: 12px; display: flex; align-items: center; gap: 5px;}
         .event-tags { margin-bottom: 12px; }
         .event-tag { display: inline-block; padding: 6px 10px; border-radius: 10px; font-size: 0.8rem; font-weight: 900; background: rgba(128,128,128,0.1); margin-right: 6px; margin-bottom: 6px;}
         .delete-icon-btn { position: absolute; top: 15px; right: 15px; background: transparent; border: none; font-size: 1.4rem; cursor: pointer; padding: 5px; border-radius: 50%; transition: background 0.2s; z-index: 10; }
         .delete-icon-btn:active { background: rgba(244,67,54,0.1); transform: scale(0.9); }
+
+        /* ✨【新規】カレンダーUI専用スタイル ✨ */
+        .calendar-wrapper { background: var(--card-bg); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.08); margin-bottom: 20px; animation: popIn 0.6s ease forwards; }
+        .calendar-toolbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: rgba(255,255,255,0.4); border-bottom: 1px solid rgba(128,128,128,0.2); }
+        .calendar-toolbar h2 { margin: 0; font-size: 1.25rem; color: var(--accent-color); font-weight: 900; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); background: rgba(128,128,128,0.15); gap: 1px; }
+        .cal-header-day { text-align: center; font-size: 0.7rem; font-weight: 900; padding: 6px 0; background: rgba(255,255,255,0.7); color: #555; }
+        .cal-header-day.sun { color: #f44336; }
+        .cal-header-day.sat { color: #2196f3; }
+        .cal-day { background: rgba(255,255,255,0.6); min-height: 85px; padding: 2px; display: flex; flex-direction: column; cursor: pointer; transition: background 0.2s; }
+        .cal-day:active { background: rgba(0,122,255,0.1); }
+        .cal-day-empty { background: rgba(255,255,255,0.2); cursor: default; }
+        .cal-date { font-size: 0.8rem; font-weight: 900; text-align: center; margin-bottom: 2px; color: var(--text-color); width: 22px; height: 22px; line-height: 22px; border-radius: 50%; align-self: center; }
+        .cal-date.today { background: var(--accent-color); color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .cal-event { padding: 3px 4px; font-size: 0.7rem; border-radius: 6px; background: var(--accent-color); color: #fff; margin-bottom: 3px; display: flex; flex-direction: column; box-shadow: 0 2px 4px rgba(0,0,0,0.15); transition: transform 0.2s; }
+        .cal-event:active { transform: scale(0.95); }
+        .cal-event-title { font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .cal-event-memo { font-size: 0.6rem; opacity: 0.95; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; white-space: normal; line-height: 1.2; margin-top: 2px; word-break: break-all; }
+
 
         /* === 買い物カタログ & DB編集モーダル === */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: flex-end; animation: fadeIn 0.4s;}
@@ -206,9 +225,10 @@
 
 <div id="tab-database" class="tab-content">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <button class="primary-btn" id="db-add-btn" style="margin: 0; flex: 1; font-size: 1.1rem;" onclick="openDbEditModal()">✏️ 新しい日記・メモを書く</button>
+        <button class="primary-btn" id="db-add-btn" style="margin: 0; flex: 1; font-size: 1.1rem;" onclick="openDbEditModal()">✏️ 新規作成</button>
         <button onclick="toggleDbDeleteMode()" id="db-delete-mode-btn" style="background: rgba(128,128,128,0.15); font-weight: 900; padding: 15px 12px; margin-left: 10px; font-size: 0.85rem; border-radius: 16px; color: var(--text-color); white-space: nowrap;">🧹 一括削除</button>
     </div>
+    
     <div id="db-container"></div>
 </div>
 
@@ -216,12 +236,12 @@
     
     <div class="glass-card" style="padding: 20px; margin-bottom: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h2 style="margin:0; font-size: 1.2rem; color:var(--accent-color); font-weight: 900;">💬 AIアシアシスタント</h2>
+            <h2 style="margin:0; font-size: 1.2rem; color:var(--accent-color); font-weight: 900;">💬 AIアシスタント</h2>
             <button onclick="clearAiChat()" style="background: rgba(244,67,54,0.1); color: #f44336; padding: 6px 12px; border-radius: 10px; font-weight: 900; font-size: 0.85rem;">🗑️ ログ消去</button>
         </div>
         <div class="chat-container" id="ai-chat-box"></div>
         <div style="display: flex; gap: 10px; align-items: flex-end;">
-            <textarea id="ai-chat-input" class="form-input" style="margin-bottom: 0; resize: none; overflow-y: hidden; min-height: 52px; line-height: 1.5; padding: 14px; flex-grow: 1;" rows="1" placeholder="メッセージを入力..." oninput="autoResizeChat(this)"></textarea>
+            <textarea id="ai-chat-input" class="form-input" style="margin-bottom: 0; resize: none; overflow-y: hidden; min-height: 52px; line-height: 1.5; padding: 14px; flex-grow: 1;" rows="1" placeholder="メッセージを入力..." oninput="autoResizeChat(this)" onkeydown="handleChatEnter(event)"></textarea>
             <button class="primary-btn" style="width: auto; margin-bottom: 0; padding: 14px 20px; font-size: 1.4rem; height: 52px; display: flex; align-items: center;" onclick="sendAiChat()">✈️</button>
         </div>
     </div>
@@ -605,7 +625,7 @@
         const aiBtn = document.getElementById('ai-calc-btn');
         if(aiBtn) aiBtn.style.display = isDaily ? 'flex' : 'none';
 
-        document.getElementById('db-add-btn').innerText = isDaily ? '✏️ 新しい日記・メモを書く' : '✏️ 新しいイベント情報を登録';
+        document.getElementById('db-add-btn').innerText = isDaily ? '✏️ 新規作成' : '✏️ 新規作成';
         
         if(isDeleteMode) toggleDeleteMode();
         if(isDbDeleteMode) toggleDbDeleteMode();
@@ -1159,47 +1179,185 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
     }
 
     // ==========================================
-    // 📓 データベース (イベント/日常 共通) & モーダル編集
+    // 📓 データベース (カレンダー ＆ リスト)
     // ==========================================
     let isDbDeleteMode = false;
     let dbBulkDeleteSelection = new Set();
+    
+    // カレンダーの現在表示している年月
+    let currentCalYear = new Date().getFullYear();
+    let currentCalMonth = new Date().getMonth();
 
     function getDbArray() { return noteData.appMode === 'daily' ? noteData.dailyNotes : noteData.events; }
 
-    function parseDateForSort(dateStr) {
-        if (!dateStr) return 0;
-        let m = dateStr.match(/(20\d\d)[年\/\-]\s*(\d{1,2})[月\/\-]\s*(\d{1,2})/);
-        if (m) {
-            return new Date(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3])).getTime();
+    function parseDatesFromText(text) {
+        let dates = [];
+        if (!text) return dates;
+        const regex = /(?:(20\d{2})[\/\-年])?(\d{1,2})[\/\-月](\d{1,2})/g;
+        let match;
+        let currentYear = currentCalYear;
+        
+        while ((match = regex.exec(text)) !== null) {
+            let y = match[1] ? parseInt(match[1]) : currentYear;
+            let m = parseInt(match[2]) - 1;
+            let d = parseInt(match[3]);
+            dates.push(new Date(y, m, d));
         }
-        m = dateStr.match(/(\d{1,2})[月\/\-]\s*(\d{1,2})/);
-        if (m) {
-            const year = new Date().getFullYear();
-            return new Date(year, parseInt(m[1]) - 1, parseInt(m[2])).getTime();
-        }
-        return 0; 
+        return dates;
     }
 
+    function changeMonth(offset) {
+        currentCalMonth += offset;
+        if (currentCalMonth > 11) {
+            currentCalMonth = 0; currentCalYear++;
+        } else if (currentCalMonth < 0) {
+            currentCalMonth = 11; currentCalYear--;
+        }
+        renderDbItems();
+    }
+
+    // メインの描画分岐
     function renderDbItems() {
-        const container = document.getElementById('db-container'); container.innerHTML = ''; 
+        const container = document.getElementById('db-container');
+        container.innerHTML = '';
+        if (isDbDeleteMode) {
+            renderDbListView(container); // 一括削除モード時はリスト表示
+        } else {
+            renderDbCalendarView(container); // 通常時はカレンダー表示
+        }
+    }
+
+    // ✨ カレンダー表示処理 (Googleカレンダー風)
+    function renderDbCalendarView(container) {
+        let items = getDbArray();
+        let calData = {};
+        let undatedItems = [];
+
+        // 予定を日付ごとに振り分け
+        items.forEach(item => {
+            let parsedDates = parseDatesFromText(item.date);
+            if (parsedDates.length === 0) {
+                undatedItems.push(item);
+            } else {
+                parsedDates.sort((a,b) => a - b);
+                let start = parsedDates[0];
+                let end = parsedDates[parsedDates.length - 1];
+                
+                let cur = new Date(start);
+                let safe = 0;
+                while (cur <= end && safe < 366) {
+                    let dStr = `${cur.getFullYear()}-${cur.getMonth()+1}-${cur.getDate()}`;
+                    if(!calData[dStr]) calData[dStr] = [];
+                    calData[dStr].push(item);
+                    cur.setDate(cur.getDate() + 1);
+                    safe++;
+                }
+            }
+        });
+
+        const firstDay = new Date(currentCalYear, currentCalMonth, 1);
+        const lastDay = new Date(currentCalYear, currentCalMonth + 1, 0);
+        const startOffset = firstDay.getDay(); // 0(Sun) - 6(Sat)
+        const daysInMonth = lastDay.getDate();
+
+        let gridHTML = `<div class="calendar-grid">`;
+        ['日','月','火','水','木','金','土'].forEach((day, i) => {
+            let cls = i===0 ? 'sun' : (i===6 ? 'sat' : '');
+            gridHTML += `<div class="cal-header-day ${cls}">${day}</div>`;
+        });
+
+        let today = new Date();
+        let todayStr = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
+
+        // 前月の余白
+        for (let i = 0; i < startOffset; i++) {
+            gridHTML += `<div class="cal-day cal-day-empty"></div>`;
+        }
+
+        // カレンダーのセル生成
+        for (let d = 1; d <= daysInMonth; d++) {
+            let dStr = `${currentCalYear}-${currentCalMonth+1}-${d}`;
+            let isToday = (dStr === todayStr);
+            let dateClass = isToday ? 'cal-date today' : 'cal-date';
+            
+            // 新規追加用にフォーマットされた日付
+            let presetDate = `${currentCalYear}/${('0'+(currentCalMonth+1)).slice(-2)}/${('0'+d).slice(-2)}`;
+
+            let eventsHTML = '';
+            if (calData[dStr]) {
+                calData[dStr].forEach(ev => {
+                    eventsHTML += `
+                    <div class="cal-event" onclick="event.stopPropagation(); openDbEditModal('${ev.id}')">
+                        <div class="cal-event-title">${ev.title}</div>
+                        ${ev.memo ? `<div class="cal-event-memo">${ev.memo.replace(/<[^>]*>?/gm, '')}</div>` : ''}
+                    </div>`;
+                });
+            }
+
+            gridHTML += `
+            <div class="cal-day" onclick="openDbEditModal(null, '${presetDate}')">
+                <div class="${dateClass}">${d}</div>
+                ${eventsHTML}
+            </div>`;
+        }
+
+        // 翌月の余白
+        let totalCells = startOffset + daysInMonth;
+        let remainder = totalCells % 7;
+        if (remainder > 0) {
+            for (let i = 0; i < (7 - remainder); i++) {
+                gridHTML += `<div class="cal-day cal-day-empty"></div>`;
+            }
+        }
+        gridHTML += `</div>`;
+
+        let calHTML = `
+        <div class="calendar-wrapper">
+            <div class="calendar-toolbar">
+                <button class="secondary-btn" style="width:auto; margin:0; padding:10px 18px; font-size:1.1rem; border-radius:12px;" onclick="changeMonth(-1)">◀</button>
+                <div style="text-align:center;">
+                    <h2 id="calendar-title">${currentCalYear}年 ${currentCalMonth+1}月</h2>
+                    <button onclick="currentCalYear = new Date().getFullYear(); currentCalMonth = new Date().getMonth(); renderDbItems();" style="background:transparent; color:var(--text-color); font-size:0.8rem; font-weight:bold; opacity:0.7; padding:2px; margin-top:2px;">今日に戻る</button>
+                </div>
+                <button class="secondary-btn" style="width:auto; margin:0; padding:10px 18px; font-size:1.1rem; border-radius:12px;" onclick="changeMonth(1)">▶</button>
+            </div>
+            ${gridHTML}
+        </div>
+        `;
+
+        container.innerHTML = calHTML;
+
+        // 日付未定のアイテムを下部にリスト表示
+        if (undatedItems.length > 0) {
+            container.innerHTML += `<div class="section-title" style="margin-top: 30px;">📅 日付未定の項目</div>`;
+            undatedItems.forEach(item => {
+                const memoHTML = (item.memo || '').replace(/\n/g, '<br>');
+                container.innerHTML += `
+                <div class="glass-card event-card" onclick="openDbEditModal('${item.id}')" style="display:flex; gap:15px; align-items:flex-start;">
+                    <div style="flex:1;">
+                        <button class="delete-icon-btn" onclick="deleteDbItem('${item.id}', event)">🗑️</button>
+                        <div class="event-card-title" style="padding-right: 30px;">${item.title}</div>
+                        <p style="font-size: 0.9rem; margin-top: 5px; line-height: 1.6; font-weight:700;">${memoHTML}</p>
+                    </div>
+                </div>`;
+            });
+        }
+    }
+
+    // 従来のリスト表示処理 (一括削除モード用)
+    function renderDbListView(container) {
         let items = getDbArray(); 
-        
         if (items.length === 0) { 
-            container.innerHTML = `<p style="color:#888; font-size:1.1rem; text-align:center; font-weight:bold; padding:30px;">${noteData.appMode === 'daily' ? '📓 日記・メモはありません' : '📚 イベントが登録されていません'}</p>`; 
+            container.innerHTML = `<p style="color:#888; font-size:1.1rem; text-align:center; font-weight:bold; padding:30px;">データはありません</p>`; 
             return; 
         }
         
-        const isDaily = noteData.appMode === 'daily';
         let sortedItems = [...items];
+        // 簡易ソート
         sortedItems.sort((a, b) => {
-            const timeA = parseDateForSort(a.date) || a.id; 
-            const timeB = parseDateForSort(b.date) || b.id;
-            
-            if (isDaily) {
-                return timeB - timeA;
-            } else {
-                return timeA - timeB;
-            }
+            const timeA = new Date(a.date.replace(/[^0-9\/]/g,'').split('/')[0]||0).getTime() || a.id; 
+            const timeB = new Date(b.date.replace(/[^0-9\/]/g,'').split('/')[0]||0).getTime() || b.id;
+            return noteData.appMode === 'daily' ? timeB - timeA : timeA - timeB;
         });
         
         sortedItems.forEach(item => {
@@ -1207,39 +1365,19 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
             const tagsHTML = tagArray.map(tag => `<span class="event-tag">${tag}</span>`).join('');
             const memoHTML = (item.memo || '').replace(/\n/g, '<br>');
             
-            let onClickAction, checkboxHTML, trashBtnHTML, cardStyle, routeBtnHTML = '';
+            const isSelected = dbBulkDeleteSelection.has(String(item.id));
+            const cardStyle = isSelected ? "background: rgba(244,67,54,0.05); border: 2px solid rgba(244,67,54,0.3);" : "";
             
-            if (isDbDeleteMode) {
-                const isSelected = dbBulkDeleteSelection.has(String(item.id));
-                onClickAction = `toggleDbBulkSelect('${item.id}')`;
-                checkboxHTML = `<input type="checkbox" style="width:24px; height:24px; accent-color:#f44336; pointer-events:none; flex-shrink:0;" ${isSelected ? 'checked' : ''}>`;
-                trashBtnHTML = '';
-                cardStyle = isSelected ? "background: rgba(244,67,54,0.05); border: 2px solid rgba(244,67,54,0.3);" : "";
-            } else {
-                onClickAction = `openDbEditModal('${item.id}')`;
-                checkboxHTML = '';
-                trashBtnHTML = `<button class="delete-icon-btn" onclick="deleteDbItem('${item.id}', event)">🗑️</button>`;
-                cardStyle = "";
-                
-                if (item.destination && item.destination.trim() !== '') {
-                    routeBtnHTML = `
-                    <div style="margin-top: 15px;">
-                        <button class="secondary-btn" style="margin: 0; padding: 10px; font-size: 0.9rem; background: rgba(0, 122, 255, 0.1); color: #007aff; border: 1px solid rgba(0, 122, 255, 0.2);" onclick="openRouteSearch('${item.destination}', event)">🗺️ 経路を検索</button>
-                    </div>`;
-                }
-            }
-
             container.innerHTML += `
-            <div class="glass-card event-card" onclick="${onClickAction}" style="display:flex; gap:15px; align-items:flex-start; ${cardStyle}">
-                ${isDbDeleteMode ? `<div style="padding-top:2px;">${checkboxHTML}</div>` : ''}
+            <div class="glass-card event-card" onclick="toggleDbBulkSelect('${item.id}')" style="display:flex; gap:15px; align-items:flex-start; ${cardStyle}">
+                <div style="padding-top:2px;">
+                    <input type="checkbox" style="width:24px; height:24px; accent-color:#f44336; pointer-events:none; flex-shrink:0;" ${isSelected ? 'checked' : ''}>
+                </div>
                 <div style="flex:1;">
-                    ${trashBtnHTML}
                     <div class="event-card-date">📅 ${item.date}</div>
-                    <div class="event-card-title" style="padding-right: ${isDbDeleteMode ? '0' : '30px'};">${item.title}</div>
+                    <div class="event-card-title" style="padding-right: 0;">${item.title}</div>
                     <div class="event-tags">${tagsHTML}</div>
                     <p style="font-size: 0.95rem; margin-top: 10px; line-height: 1.6; font-weight:700;">${memoHTML}</p>
-                    ${item.destination ? `<div style="font-size: 0.85rem; color: #666; font-weight: bold; margin-top: 10px;">📍 ${item.destination}</div>` : ''}
-                    ${routeBtnHTML}
                 </div>
             </div>`;
         });
@@ -1352,7 +1490,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         document.getElementById('db-edit-date').value = '';
     }
 
-    function openDbEditModal(id = null) {
+    function openDbEditModal(id = null, presetDateStr = null) {
         const isDaily = noteData.appMode === 'daily';
         const titleEl = document.getElementById('db-modal-title');
         titleEl.innerText = id ? '項目を編集' : (isDaily ? '新しい日記・メモ' : '新しいイベント情報');
@@ -1365,7 +1503,8 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         const d = new Date();
         const todayStr = `${d.getFullYear()}/${('0'+(d.getMonth()+1)).slice(-2)}/${('0'+d.getDate()).slice(-2)}`;
 
-        const initialDate = item && item.date ? item.date : (id ? '' : todayStr);
+        // presetDateStrが渡された場合はそれを優先
+        const initialDate = item && item.date ? item.date : (presetDateStr ? presetDateStr : (id ? '' : todayStr));
 
         document.getElementById('db-edit-id').value = id || '';
         document.getElementById('db-edit-title').value = item ? item.title : '';
@@ -1398,7 +1537,6 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         document.getElementById('db-edit-modal').style.display = 'none';
     }
 
-    // 💡【重要】保存時のID照合バグを修正
     function saveDbItem() {
         const title = document.getElementById('db-edit-title').value;
         if (!title || !title.trim()) {
@@ -1452,6 +1590,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
     function openRouteSearch(destination, event) {
         event.stopPropagation();
         const origin = noteData.userLocation || "";
+        // 💡 Googleマップ経路検索のURLを修正！
         let url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}&travelmode=transit`;
         if (origin) {
             url += `&origin=${encodeURIComponent(origin)}`;
@@ -1510,10 +1649,16 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         }
     }
 
-    // --- ① チャット入力欄の自動リサイズ ---
     function autoResizeChat(el) {
         el.style.height = 'auto';
         el.style.height = (el.scrollHeight) + 'px';
+    }
+
+    function handleChatEnter(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendAiChat();
+        }
     }
 
     function renderAiChatHistory() {
@@ -1527,8 +1672,8 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
             if (isUser) {
                 box.innerHTML += `<div class="chat-msg chat-user">${safeText}</div>`;
             } else {
-                // 💡 文法エラーの原因となっていたダブルクォーテーションのエスケープを安全な形(&quot;)に修正
-                const escapedForArg = msg.content.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, "\\n");
+                // 💡 バグの元だった部分を安全な形に修正！
+                const escapedForArg = msg.content.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, "\\n");
                 box.innerHTML += `
                     <div class="chat-msg chat-ai">
                         <div style="margin-bottom: 8px;">${safeText.replace(/\n/g, '<br>')}</div>
@@ -1740,13 +1885,11 @@ ${text}`;
         btn.disabled = false;
     }
 
-    // 💡【新機能】プレビュー画面で直接編集できるように入力欄（input/textarea）で表示
     function showSchedulePreview(result) {
         const container = document.getElementById('schedule-preview-container');
         container.innerHTML = '';
         let hasItems = false;
         
-        // 新規追加
         if (result.new_items && result.new_items.length > 0) {
             hasItems = true;
             container.innerHTML += `<h3 style="font-size:1.1rem; color:#4CAF50; margin-bottom:8px;">🆕 新規登録</h3>`;
@@ -1769,7 +1912,6 @@ ${text}`;
             });
         }
         
-        // 更新
         if (result.updates && result.updates.length > 0) {
             hasItems = true;
             container.innerHTML += `<h3 style="font-size:1.1rem; color:#FF9800; margin-bottom:8px; margin-top:20px;">🔄 情報の追記</h3>`;
@@ -1785,7 +1927,6 @@ ${text}`;
             });
         }
         
-        // 削除
         if (result.deleted_ids && result.deleted_ids.length > 0) {
             hasItems = true;
             container.innerHTML += `<h3 style="font-size:1.1rem; color:#f44336; margin-bottom:8px; margin-top:20px;">🗑 重複の削除</h3>`;
@@ -1812,7 +1953,6 @@ ${text}`;
         pendingScheduleData = null;
     }
 
-    // 💡編集された値を取得して保存
     function commitSchedulePreview() {
         if (!pendingScheduleData) return;
         const result = pendingScheduleData;

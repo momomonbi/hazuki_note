@@ -27,21 +27,12 @@
         @keyframes popIn { 0% { opacity: 0; transform: scale(0.7) translateY(40px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
         @keyframes bounceInRight { 0% { opacity: 0; transform: translateX(-80px); } 60% { opacity: 1; transform: translateX(15px); } 100% { transform: translateX(0); } }
         @keyframes fadeOutDown { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(40px) scale(0.9); } }
-        @keyframes jellyPop { 
-            0% { transform: scale(1, 1); } 
-            30% { transform: scale(1.25, 0.75); } 
-            40% { transform: scale(0.75, 1.25); } 
-            50% { transform: scale(1.15, 0.85); } 
-            65% { transform: scale(0.95, 1.05); } 
-            75% { transform: scale(1.05, 0.95); } 
-            100% { transform: scale(1, 1); } 
-        }
+        @keyframes jellyPop { 0% { transform: scale(1, 1); } 30% { transform: scale(1.25, 0.75); } 40% { transform: scale(0.75, 1.25); } 50% { transform: scale(1.15, 0.85); } 65% { transform: scale(0.95, 1.05); } 75% { transform: scale(1.05, 0.95); } 100% { transform: scale(1, 1); } }
 
         /* === 基本スタイル === */
         body { font-family: var(--app-font); margin: 0; padding: 0; background-color: transparent; color: var(--text-color); padding-bottom: 100px; touch-action: manipulation; }
         #bg-color-layer { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -2; background-color: var(--bg-color); transition: background-color 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
         .glass-card { background: var(--card-bg); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; animation: popIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-        
         button { touch-action: manipulation; font-family: inherit; cursor: pointer; border: none; border-radius: 14px; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
         button:active { transform: scale(0.85) !important; box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important; }
         input, select, textarea { font-family: inherit; }
@@ -70,15 +61,12 @@
         .check-item { display: flex; align-items: center; padding: 8px 10px; border-bottom: 1px dashed rgba(128,128,128,0.2); gap: 10px; animation: bounceInRight 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); background: transparent; border-radius: 10px;}
         .check-item.removing { animation: fadeOutDown 0.5s forwards; }
         .check-item.delete-mode { background: rgba(244,67,54,0.05); border: 1px solid rgba(244,67,54,0.2); margin-bottom: 4px; border-bottom: none;}
-        
         .check-item input[type="checkbox"] { width: 24px; height: 24px; accent-color: var(--accent-color); cursor: pointer; flex-shrink: 0; transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);}
         .check-item.delete-mode input[type="checkbox"] { accent-color: #f44336; transform: scale(1.3); }
         .check-item input[type="checkbox"]:active { transform: scale(0.5); }
         .check-item label { flex-grow: 1; font-weight: 700; font-size: 1.05rem; cursor: pointer; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); line-height: 1.3; word-break: break-all;}
-        
         .check-item.done label { text-decoration: line-through; opacity: 0.3; transform: scale(0.98); }
         .check-item.anim-jelly label { animation: jellyPop 0.8s cubic-bezier(0.25, 1, 0.5, 1); color: var(--accent-color); font-weight: 900;}
-        
         .item-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0;}
         .search-btn { background: rgba(0, 122, 255, 0.1); color: #007aff; font-size: 0.8rem; padding: 6px 8px; border-radius: 8px; font-weight: 900; white-space: nowrap; border: 1px solid rgba(0, 122, 255, 0.2);}
         .del-check-btn { background: rgba(244,67,54,0.1); color: #f44336; font-size: 0.85rem; padding: 6px 10px; border-radius: 8px; font-weight: 900;}
@@ -93,42 +81,47 @@
         .chat-user { background: var(--accent-color); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
         .chat-ai { background: rgba(255,255,255,0.9); color: #333; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid rgba(128,128,128,0.2); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
 
-        /* --- データベース用 (リスト表示時) --- */
-        .event-card { padding: 18px; margin-bottom: 15px; position: relative; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+        /* ✨【新規】厳格なカレンダーUI ✨ */
+        .calendar-wrapper { background: var(--card-bg); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; animation: popIn 0.6s ease forwards; }
+        .calendar-toolbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: rgba(255,255,255,0.6); border-bottom: 1px solid rgba(128,128,128,0.2); }
+        .calendar-toolbar h2 { margin: 0; font-size: 1.25rem; color: var(--accent-color); font-weight: 900; }
+        
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); background: rgba(128,128,128,0.15); border-top: 1px solid rgba(128,128,128,0.1); }
+        .cal-header-day { text-align: center; font-size: 0.75rem; font-weight: 900; padding: 6px 0; background: rgba(255,255,255,0.8); color: #555; border-right: 1px solid rgba(128,128,128,0.1); border-bottom: 1px solid rgba(128,128,128,0.1); }
+        .cal-header-day:last-child { border-right: none; }
+        .cal-header-day.sun { color: #f44336; }
+        .cal-header-day.sat { color: #2196f3; }
+        
+        .cal-day { background: rgba(255,255,255,0.7); height: 95px; max-height: 95px; overflow: hidden; padding: 2px; display: flex; flex-direction: column; gap: 2px; cursor: pointer; transition: background 0.2s; border-right: 1px solid rgba(128,128,128,0.1); border-bottom: 1px solid rgba(128,128,128,0.1); box-sizing: border-box; }
+        .cal-day:nth-child(7n) { border-right: none; }
+        .cal-day:active { background: rgba(0,122,255,0.1); }
+        .cal-day.selected { background: rgba(0,122,255,0.15); box-shadow: inset 0 0 0 2px var(--accent-color); }
+        .cal-day-empty { background: rgba(255,255,255,0.3); cursor: default; }
+        
+        .cal-date { font-size: 0.75rem; font-weight: 900; text-align: center; margin-bottom: 2px; color: var(--text-color); width: 20px; height: 20px; line-height: 20px; border-radius: 50%; align-self: center; flex-shrink: 0;}
+        .cal-date.today { background: var(--accent-color); color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        
+        .cal-event { font-size: 0.65rem; padding: 2px 4px; border-radius: 4px; color: #fff; line-height: 1.2; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); word-break: break-all;}
+        .cal-event.daily { background: #4CAF50; } /* 日常は緑 */
+        .cal-event.event { background: var(--accent-color); } /* イベントはテーマ色 */
+
+        /* --- データベース用 (詳細・リスト表示時) --- */
+        .event-card { padding: 18px; margin-bottom: 15px; position: relative; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border-left: 6px solid #ccc; }
+        .event-card.daily { border-left-color: #4CAF50; }
+        .event-card.event { border-left-color: var(--accent-color); }
         .event-card:active { transform: scale(0.98); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .event-card-title { font-size: 1.3rem; font-weight: 900; margin-bottom: 6px; padding-right: 30px; word-break: break-all;}
-        .event-card-date { font-size: 0.9rem; color: var(--accent-color); font-weight: 900; margin-bottom: 12px; display: flex; align-items: center; gap: 5px;}
+        .event-card-date { font-size: 0.9rem; color: #666; font-weight: 900; margin-bottom: 12px; display: flex; align-items: center; gap: 5px;}
         .event-tags { margin-bottom: 12px; }
         .event-tag { display: inline-block; padding: 6px 10px; border-radius: 10px; font-size: 0.8rem; font-weight: 900; background: rgba(128,128,128,0.1); margin-right: 6px; margin-bottom: 6px;}
         .delete-icon-btn { position: absolute; top: 15px; right: 15px; background: transparent; border: none; font-size: 1.4rem; cursor: pointer; padding: 5px; border-radius: 50%; transition: background 0.2s; z-index: 10; }
         .delete-icon-btn:active { background: rgba(244,67,54,0.1); transform: scale(0.9); }
 
-        /* ✨【新規】カレンダーUI専用スタイル ✨ */
-        .calendar-wrapper { background: var(--card-bg); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.08); margin-bottom: 20px; animation: popIn 0.6s ease forwards; }
-        .calendar-toolbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: rgba(255,255,255,0.4); border-bottom: 1px solid rgba(128,128,128,0.2); }
-        .calendar-toolbar h2 { margin: 0; font-size: 1.25rem; color: var(--accent-color); font-weight: 900; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); background: rgba(128,128,128,0.15); gap: 1px; }
-        .cal-header-day { text-align: center; font-size: 0.7rem; font-weight: 900; padding: 6px 0; background: rgba(255,255,255,0.7); color: #555; }
-        .cal-header-day.sun { color: #f44336; }
-        .cal-header-day.sat { color: #2196f3; }
-        .cal-day { background: rgba(255,255,255,0.6); min-height: 85px; padding: 2px; display: flex; flex-direction: column; cursor: pointer; transition: background 0.2s; }
-        .cal-day:active { background: rgba(0,122,255,0.1); }
-        .cal-day-empty { background: rgba(255,255,255,0.2); cursor: default; }
-        .cal-date { font-size: 0.8rem; font-weight: 900; text-align: center; margin-bottom: 2px; color: var(--text-color); width: 22px; height: 22px; line-height: 22px; border-radius: 50%; align-self: center; }
-        .cal-date.today { background: var(--accent-color); color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .cal-event { padding: 3px 4px; font-size: 0.7rem; border-radius: 6px; background: var(--accent-color); color: #fff; margin-bottom: 3px; display: flex; flex-direction: column; box-shadow: 0 2px 4px rgba(0,0,0,0.15); transition: transform 0.2s; }
-        .cal-event:active { transform: scale(0.95); }
-        .cal-event-title { font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .cal-event-memo { font-size: 0.6rem; opacity: 0.95; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; white-space: normal; line-height: 1.2; margin-top: 2px; word-break: break-all; }
-
-
-        /* === 買い物カタログ & DB編集モーダル === */
+        /* === モーダル関連 === */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: flex-end; animation: fadeIn 0.4s;}
         @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
-        
         .modal-content { background: var(--bg-color); width: 100%; max-width: 600px; height: 100%; max-height: 100dvh; border-top-left-radius: 30px; border-top-right-radius: 30px; padding: 0; box-sizing: border-box; overflow: hidden; animation: slideUpModal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 -10px 40px rgba(0,0,0,0.2); position: relative; display: flex; flex-direction: column;}
         @keyframes slideUpModal { from{transform: translateY(100%);} to{transform: translateY(0);} }
-        
         .modal-sticky-header { flex-shrink: 0; background: var(--bg-color); padding: 25px 20px 10px 20px; z-index: 2005; border-bottom: 2px solid rgba(128,128,128,0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.05);}
         .modal-scroll-area { flex-grow: 1; overflow-y: auto; padding: 15px 20px 140px 20px; }
 
@@ -154,19 +147,16 @@
         
         .sortable-ghost { opacity: 0.4; transform: scale(0.95); border: 2px dashed var(--accent-color); background: rgba(128,128,128,0.1); }
         .sortable-drag { cursor: grabbing !important; }
-
         .category-header { display: flex; align-items: center; justify-content: space-between; width: 100%; pointer-events: auto; }
         .del-cat-btn { background: rgba(244,67,54,0.15); color: #f44336; border: none; border-radius: 8px; padding: 6px 10px; font-size: 0.8rem; font-weight: 900; margin-left: 10px; z-index: 10; }
-
         .modal-footer { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--bg-color); padding: 15px 20px 45px 20px; box-sizing: border-box; display: flex; gap: 10px; border-top: 1px solid rgba(128,128,128,0.1); z-index: 2010;}
 
-        /* === 🔢 超特化型 電卓モーダル用 === */
+        /* === 🔢 電卓モーダル用 === */
         .calc-btn { background: #fff; border: 2px solid rgba(128,128,128,0.2); border-radius: 12px; font-size: 1.4rem; font-weight: 900; padding: 10px 0; color: #333; box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; touch-action: manipulation;}
         .calc-btn:active { transform: scale(0.9); box-shadow: none; }
         .calc-btn.op-btn { background: #e3f2fd; color: #007aff; border-color: rgba(0,122,255,0.2); }
         .calc-btn.clear-btn { background: #ffebee; color: #f44336; border-color: rgba(244,67,54,0.2); }
         .calc-btn.eq-btn { background: var(--accent-color); color: white; border-color: var(--accent-color); }
-        
         .unit-chip { background: #fff; border: 2px solid rgba(128,128,128,0.3); border-radius: 8px; font-size: 0.9rem; font-weight: 900; padding: 6px 10px; color: #555; transition: all 0.2s;}
         .unit-chip.active { background: var(--accent-color); color: white; border-color: var(--accent-color); transform: scale(1.05); box-shadow: 0 2px 8px rgba(0,122,255,0.3);}
 
@@ -187,7 +177,7 @@
 <div class="tabs" id="main-tabs">
     <div class="tab-highlight" id="tab-highlight"></div>
     <div class="tab active" onclick="switchTab('tab-checklist', this)" id="tab-btn-checklist">✅ 買物・やる事</div>
-    <div class="tab" onclick="switchTab('tab-database', this)" id="tab-btn-database">📓 日記・メモ</div>
+    <div class="tab" onclick="switchTab('tab-database', this)" id="tab-btn-database">📅 スケジュール</div>
     <div class="tab" onclick="switchTab('tab-ai', this)">🤖 AI</div>
     <div class="tab" onclick="switchTab('tab-settings', this)">⚙️ 設定</div>
 </div>
@@ -229,7 +219,9 @@
         <button onclick="toggleDbDeleteMode()" id="db-delete-mode-btn" style="background: rgba(128,128,128,0.15); font-weight: 900; padding: 15px 12px; margin-left: 10px; font-size: 0.85rem; border-radius: 16px; color: var(--text-color); white-space: nowrap;">🧹 一括削除</button>
     </div>
     
-    <div id="db-container"></div>
+    <div id="calendar-render-area"></div>
+    
+    <div id="calendar-detail-area"></div>
 </div>
 
 <div id="tab-ai" class="tab-content">
@@ -265,19 +257,16 @@
 </div>
 
 <div id="tab-settings" class="tab-content">
-    
     <div class="glass-card" style="padding: 20px; margin-bottom: 20px; border: 2px solid var(--accent-color);">
         <h2 style="margin-top:0; font-size: 1.2rem; color:var(--accent-color); font-weight: 900;">🔑 OpenAI APIキー設定</h2>
         <p style="font-size:0.9rem; color:var(--text-color); opacity:0.8; font-weight:700;">AI機能（自動登録やチャット）を使用するために必要です。端末内に安全に保存されます。</p>
         <input type="password" id="api-key-input" class="form-input" placeholder="sk-..." onchange="saveApiKey(this.value)">
     </div>
-
     <div class="glass-card" style="padding: 20px; margin-bottom: 20px;">
         <h2 style="margin-top:0; font-size: 1.2rem; color:var(--accent-color); font-weight: 900;">🏠 お住まいの地域</h2>
         <p style="font-size:0.9rem; color:var(--text-color); opacity:0.8; font-weight:700;">AIでの正確な相場計算や、ルート検索の「出発地」に使います。（〇〇県〇〇市など大まかでOKです）</p>
         <input type="text" id="user-location-input" class="form-input" placeholder="例：東京都渋谷区" onchange="saveUserLocation(this.value)">
     </div>
-
     <div class="glass-card" style="padding: 20px; margin-bottom: 20px;">
         <h2 style="margin-top:0; font-size: 1.2rem; color:var(--accent-color); font-weight: 900;">🎨 テーマのカスタマイズ</h2>
         <p style="font-size:0.9rem; color:var(--text-color); opacity:0.8; font-weight:700;">気分に合わせてデザインを変更できます。</p>
@@ -296,7 +285,6 @@
             <option value="vivid">ビビッド（ネオン高コントラスト）</option>
         </select>
     </div>
-
     <div class="glass-card" style="padding: 20px; border: 3px dashed rgba(244,67,54,0.4);">
         <h2 style="margin-top:0; font-size: 1.2rem; color:#f44336; font-weight: 900;">⚠️ 危険領域</h2>
         <button onclick="hardResetApp()" style="background:rgba(244,67,54,0.1); color:#f44336; padding:15px; width:100%; font-weight:900; border-radius:16px; font-size:1.1rem;">データを完全にリセットする</button>
@@ -308,23 +296,16 @@
         <div class="modal-sticky-header">
             <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; gap: 10px;">
                 <h2 style="margin: 0; font-size: 1.4rem; font-weight: 900; color: var(--accent-color); white-space: nowrap;">🛒 カタログ</h2>
-                
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <select id="catalog-cols-select" onchange="changeCatalogColumns(this.value)" style="padding: 8px; border-radius: 10px; border: 1px solid rgba(128,128,128,0.2); font-weight: 900; font-size: 0.85rem; background: rgba(128,128,128,0.1); color: var(--text-color);">
-                        <option value="1">1列</option>
-                        <option value="2">2列</option>
-                        <option value="3">3列</option>
-                        <option value="4">4列</option>
-                        <option value="5">5列</option>
+                        <option value="1">1列</option><option value="2">2列</option><option value="3">3列</option><option value="4">4列</option><option value="5">5列</option>
                     </select>
                     <button id="catalog-edit-btn" onclick="toggleCatalogEditMode()" style="background: rgba(128,128,128,0.15); font-weight: 900; padding: 8px 12px; border-radius: 12px; transition: all 0.3s; white-space: nowrap; font-size: 0.85rem;">✏️ 編集</button>
                 </div>
             </div>
             <p id="catalog-desc" style="text-align: center; font-size: 0.85rem; font-weight: bold; opacity: 0.7; margin: 5px 0 0 0; transition: color 0.3s;">ポンポン押して複数選べます！</p>
         </div>
-        
         <div class="modal-scroll-area" id="catalog-container"></div>
-
         <div class="modal-footer" id="catalog-normal-footer">
             <button class="secondary-btn" style="flex: 1; margin: 0; background: rgba(128,128,128,0.2);" onclick="closeShoppingModal()">やめる</button>
             <button class="primary-btn" style="flex: 2; margin: 0;" onclick="commitShoppingModal()">✨ 選んだものを追加</button>
@@ -341,41 +322,25 @@
 
 <div class="modal-overlay" id="calc-modal" style="z-index: 3000;">
     <div class="modal-content" style="max-width: 420px; height: auto; max-height: 100%; border-radius: 24px; padding: 18px; overflow-y: auto;">
-        
         <div style="margin-bottom: 6px; font-size: 0.9rem; font-weight: 900; color: var(--accent-color); display: flex; align-items: center; gap: 4px;">
             <span>🛒 選択中：</span><span id="calc-item-name">商品名</span>
         </div>
-        
         <div style="background: #f8f9fa; border-radius: 12px; padding: 8px 15px; text-align: right; color: #333; margin-bottom: 10px; display: flex; justify-content: flex-end; align-items: baseline; gap: 8px; border: 2px solid rgba(128,128,128,0.2); box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);">
             <span id="calc-display-value" style="font-size: 2.2rem; font-weight: 900; line-height: 1; letter-spacing: -1px;">1</span>
             <span id="calc-display-unit" style="font-size: 1.1rem; color: var(--accent-color); font-weight: 900;">個</span>
         </div>
-
         <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; justify-content: center;" id="calc-unit-container"></div>
-
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 15px;">
             <button class="calc-btn clear-btn" onclick="calcClear()">C</button>
             <button class="calc-btn op-btn" onclick="calcOp('×')">×</button>
             <button class="calc-btn op-btn" onclick="calcOp('-')">－</button>
             <button class="calc-btn op-btn" onclick="calcOp('+')">＋</button>
-
-            <button class="calc-btn" onclick="calcInput('7')">7</button>
-            <button class="calc-btn" onclick="calcInput('8')">8</button>
-            <button class="calc-btn" onclick="calcInput('9')">9</button>
+            <button class="calc-btn" onclick="calcInput('7')">7</button><button class="calc-btn" onclick="calcInput('8')">8</button><button class="calc-btn" onclick="calcInput('9')">9</button>
             <button class="calc-btn eq-btn" style="grid-row: span 3;" onclick="calcEq()">＝</button>
-
-            <button class="calc-btn" onclick="calcInput('4')">4</button>
-            <button class="calc-btn" onclick="calcInput('5')">5</button>
-            <button class="calc-btn" onclick="calcInput('6')">6</button>
-
-            <button class="calc-btn" onclick="calcInput('1')">1</button>
-            <button class="calc-btn" onclick="calcInput('2')">2</button>
-            <button class="calc-btn" onclick="calcInput('3')">3</button>
-
-            <button class="calc-btn" style="grid-column: span 2;" onclick="calcInput('0')">0</button>
-            <button class="calc-btn" onclick="calcInput('.')">.</button>
+            <button class="calc-btn" onclick="calcInput('4')">4</button><button class="calc-btn" onclick="calcInput('5')">5</button><button class="calc-btn" onclick="calcInput('6')">6</button>
+            <button class="calc-btn" onclick="calcInput('1')">1</button><button class="calc-btn" onclick="calcInput('2')">2</button><button class="calc-btn" onclick="calcInput('3')">3</button>
+            <button class="calc-btn" style="grid-column: span 2;" onclick="calcInput('0')">0</button><button class="calc-btn" onclick="calcInput('.')">.</button>
         </div>
-
         <div style="display: flex; gap: 8px;">
             <button class="secondary-btn" style="flex: 1; margin: 0; padding: 14px; font-size: 1.1rem; border-radius: 12px;" onclick="closeCalcModal()">やめる</button>
             <button class="primary-btn" style="flex: 2; margin: 0; padding: 14px; font-size: 1.2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,122,255,0.3);" onclick="commitCalcModal()">決定</button>
@@ -391,9 +356,14 @@
         <label style="font-weight:900; font-size:0.95rem; color: var(--text-color);">📝 タイトル / イベント名</label>
         <input type="text" id="db-edit-title" class="form-input" placeholder="タイトルを入力">
         
+        <label style="font-weight:900; font-size:0.95rem; color: var(--text-color);">📂 種類</label>
+        <select id="db-edit-type" class="form-input" style="padding:10px; font-weight:bold;">
+            <option value="daily">📓 日常・メモ</option>
+            <option value="event">📚 イベント</option>
+        </select>
+
         <label style="font-weight:900; font-size:0.95rem; color: var(--text-color);">📅 日付 (自由に書けます)</label>
         <input type="text" id="db-edit-date" class="form-input" style="margin-bottom:8px;" placeholder="例: 2026年3月21日(土)〜22日(日)">
-        
         <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px; background: rgba(128,128,128,0.05); padding: 10px; border-radius: 12px; border: 1px dashed rgba(128,128,128,0.2);">
             <div style="position: relative; overflow: hidden; flex: 1;">
                 <button type="button" class="secondary-btn" style="margin:0; padding: 8px 5px; font-size: 0.85rem; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">📅 開始日</button>
@@ -430,9 +400,10 @@
         
         <div id="schedule-preview-container" style="margin-top: 15px;"></div>
         
-        <div style="display: flex; gap: 10px; margin-top: 20px;">
-            <button class="secondary-btn" style="flex: 1; margin: 0;" onclick="closeSchedulePreview()">キャンセル</button>
-            <button class="primary-btn" style="flex: 2; margin: 0; box-shadow: 0 4px 15px rgba(0,122,255,0.3);" onclick="commitSchedulePreview()">保存して確定</button>
+        <div style="display: flex; gap: 8px; margin-top: 20px; align-items: center;">
+            <button class="secondary-btn" style="flex: 1; margin: 0; padding:12px; font-size:0.95rem;" onclick="closeSchedulePreview()">キャンセル</button>
+            <button class="secondary-btn" id="btn-resummarize" style="flex: 1.5; margin: 0; padding:12px; font-size:0.95rem; background:rgba(0,122,255,0.1); color:#007aff; border:1px solid rgba(0,122,255,0.2);" onclick="reSummarizeSchedule()">🤖 さらに短く要約</button>
+            <button class="primary-btn" style="flex: 1.5; margin: 0; padding:12px; font-size:1rem; box-shadow: 0 4px 15px rgba(0,122,255,0.3);" onclick="commitSchedulePreview()">保存して確定</button>
         </div>
     </div>
 </div>
@@ -465,7 +436,7 @@
     // 🚀 IndexedDB ＆ データ構造
     // ==========================================
     const DB_NAME = 'HazukiNotoDB';
-    const DB_VERSION = 15; 
+    const DB_VERSION = 16; 
     let db;
     
     // 主婦向け 超・膨大なデフォルト買い物カタログ
@@ -489,8 +460,7 @@
         catalogColumns: 2, 
         shoppingCatalog: null,
         checklists: { event_schedule: [], event_belonging: [], daily_todo: [], daily_shopping: [] },
-        events: [],
-        dailyNotes: [],
+        calendarItems: [], // ✨ 日常とイベントを統合
         aiChatHistory: []
     };
 
@@ -541,12 +511,25 @@
         localStorage.setItem('hazuki_noto_data_backup', JSON.stringify(noteData));
     }
 
-    // IDを整数で発行するための補助関数（小数点のバグを防ぐ）
     function generateSafeId() {
         return Date.now() + Math.floor(Math.random() * 10000);
     }
 
     function finalizeLoad() {
+        // ✨ 旧データのマイグレーション（dailyNotes と events を calendarItems に統合）
+        if (!noteData.calendarItems) {
+            noteData.calendarItems = [];
+            if (noteData.dailyNotes) {
+                noteData.calendarItems.push(...noteData.dailyNotes.map(n => ({...n, type: 'daily'})));
+                delete noteData.dailyNotes;
+            }
+            if (noteData.events) {
+                noteData.calendarItems.push(...noteData.events.map(e => ({...e, type: 'event'})));
+                delete noteData.events;
+            }
+            saveData();
+        }
+
         if(!noteData.appMode) noteData.appMode = 'daily';
         if(!noteData.catalogColumns) noteData.catalogColumns = 2;
         if(!noteData.shoppingCatalog) noteData.shoppingCatalog = JSON.parse(JSON.stringify(defaultCatalog));
@@ -554,22 +537,18 @@
         if(noteData.apiKey === undefined) noteData.apiKey = '';
         if(!noteData.aiChatHistory) noteData.aiChatHistory = [];
         
-        if (!noteData.events || noteData.events.length === 0) {
-            noteData.events = [
-                { id: generateSafeId(), title: 'FANTASIA 2026春', date: '2026/03/21 〜 2026/03/22', tags: 'グッズ イラスト 漫画 小説 ゲーム 音楽', destination: '東京流通センター（TRC）第一展示場 Bホール 東京都大田区平和島6-1-1', memo: '入口のスタッフに電子チケットFANTASIA2026春をお見せください。スタッフがチケットをもぎり、リストバンドをお渡しいたします。\n再入場する際は、入口にてリストバンドのご提示をお願いいたします。' },
-                { id: generateSafeId() + 1, title: 'M3-2026春', date: '2026/04/26', tags: '音楽', destination: '東京流通センター(TRC)第一・第二展示場 東京都大田区平和島6-1-1', memo: '自主制作音系作品の展示即売会' },
-                { id: generateSafeId() + 2, title: 'デザインフェスタ vol.63', date: '2026/05/23 〜 2026/05/24', tags: 'アート パフォーマンス', destination: '東京ビッグサイト 西＆南ホール全館', memo: 'オリジナル作品なら審査なしで参加可能。プロ・アマ問わず、イラストやアート作品、パフォーマンスまでジャンル自由。ブースサイズにより費用は異なり、Sブース1日で1万円台～。' },
-                { id: generateSafeId() + 3, title: 'コミックマーケット108 (C108)', date: '2026/08/15 〜 2026/08/16', tags: '同人誌 グッズ コスプレ', destination: '東京ビッグサイト（東京国際展示場）', memo: 'オールジャンル即売会で、オリジナル・二次創作問わず参加可。サークル参加申込を行い、抽選に当選すると出店できる。出店料は1スペース約8,000円（机半分・椅子2脚付き）。\n日本最大級の同人イベントで数十万人が来場する。頒布物のジャンル制限が少なく、イラスト集・オリジナル漫画・グッズなど自由に販売可能。' }
+        if (!noteData.calendarItems || noteData.calendarItems.length === 0) {
+            noteData.calendarItems = [
+                { id: generateSafeId(), title: 'FANTASIA 2026春', date: '2026/03/21 〜 2026/03/22', tags: 'グッズ イラスト', destination: '東京流通センター', memo: 'チケットを見せる', type: 'event' },
+                { id: generateSafeId() + 1, title: '耳鼻科', date: '2026/03/25', tags: '病院', destination: '〇〇クリニック', memo: '15時に予約', type: 'daily' }
             ];
             saveData();
         }
 
         document.body.setAttribute('data-theme', noteData.theme || 'cute');
         document.getElementById('theme-selector').value = noteData.theme || 'cute';
-        
         document.documentElement.style.setProperty('--catalog-cols', noteData.catalogColumns);
         document.getElementById('catalog-cols-select').value = noteData.catalogColumns;
-
         document.getElementById('user-location-input').value = noteData.userLocation;
         document.getElementById('api-key-input').value = noteData.apiKey;
         
@@ -578,9 +557,7 @@
         renderAiChatHistory();
         
         const activeTab = document.querySelector('.tab.active');
-        if(activeTab) {
-            switchTab(activeTab.getAttribute('onclick').match(/'([^']+)'/)[1], activeTab);
-        }
+        if(activeTab) { switchTab(activeTab.getAttribute('onclick').match(/'([^']+)'/)[1], activeTab); }
     }
 
     window.onload = () => { initDB(); };
@@ -608,14 +585,13 @@
         toggleBtn.innerText = isDaily ? '🌸 日常中 (切替)' : '🎪 イベント (切替)';
         toggleBtn.style.background = isDaily ? '#4CAF50' : 'var(--accent-color)';
         
-        document.getElementById('tab-btn-checklist').innerText = isDaily ? '✅ 買物やる事' : '✅ 準備持物';
-        document.getElementById('tab-btn-database').innerText = isDaily ? '📓 日記メモ' : '📚 イベント管理';
+        document.getElementById('tab-btn-checklist').innerText = isDaily ? '✅ 買物・やる事' : '✅ 準備・持物';
+        // カレンダーは統合されたのでタイトルを統一
+        document.getElementById('tab-btn-database').innerText = '📅 スケジュール';
 
         document.getElementById('checklist-main-title').innerHTML = isDaily ? '<span style="font-size: 1.6rem;">☀️</span> 買い物と今日のタスク' : '<span style="font-size: 1.6rem;">📝</span> 次のイベントに向けて';
-        
         document.getElementById('checklist-sub1-title').innerText = isDaily ? '🛒 買い物リスト' : '📅 進行・入稿スケジュール';
         document.getElementById('checklist-sub2-title').innerText = isDaily ? '☑️ やること (ToDo)' : '👜 当日の持ち物（ディスプレイ等）';
-        
         document.getElementById('checklist-add1-btn').innerText = isDaily ? '📖 カタログ' : '✏️ 手動入力';
         document.getElementById('checklist-add2-btn').innerText = '✏️ 手動入力';
 
@@ -625,14 +601,12 @@
         const aiBtn = document.getElementById('ai-calc-btn');
         if(aiBtn) aiBtn.style.display = isDaily ? 'flex' : 'none';
 
-        document.getElementById('db-add-btn').innerText = isDaily ? '✏️ 新規作成' : '✏️ 新規作成';
-        
         if(isDeleteMode) toggleDeleteMode();
         if(isDbDeleteMode) toggleDbDeleteMode();
 
         renderChecklist(1, 'list-1');
         renderChecklist(2, 'list-2');
-        renderDbItems();
+        renderDbItems(); // 📅 カレンダー再描画
     }
 
     function switchTab(id, tabElement) {
@@ -645,77 +619,43 @@
         highlight.style.transform = `translateX(${tabElement.offsetLeft - 6}px)`;
         
         document.getElementById(id).classList.add('active');
+        
+        if (id === 'tab-database') renderDbItems(); // カレンダータブを開いた時に再描画して日付リセット
+        
         window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
     function changeTheme(name) { noteData.theme = name; document.body.setAttribute('data-theme', name); saveData(); }
+    function changeCatalogColumns(val) { document.documentElement.style.setProperty('--catalog-cols', val); noteData.catalogColumns = parseInt(val); saveData(); }
+
+    /* （中略）チェックリストとカタログ、電卓のコードはそのまま維持 */
     
-    function changeCatalogColumns(val) {
-        document.documentElement.style.setProperty('--catalog-cols', val);
-        noteData.catalogColumns = parseInt(val);
-        saveData();
-    }
-
-    // --- チェックリスト機能 ---
-    let isDeleteMode = false;
-    let bulkDeleteSelection = new Set();
-
+    let isDeleteMode = false; let bulkDeleteSelection = new Set();
     function renderChecklist(listNum, containerId) {
-        const container = document.getElementById(containerId);
-        container.innerHTML = '';
-        const keys = getListKeysForMode();
-        const listKey = listNum === 1 ? keys.top : keys.bottom;
+        const container = document.getElementById(containerId); container.innerHTML = '';
+        const keys = getListKeysForMode(); const listKey = listNum === 1 ? keys.top : keys.bottom;
         const list = noteData.checklists[listKey] || [];
-        
-        if (list.length === 0) {
-            container.innerHTML = '<p style="color:#888; font-size:0.95rem; text-align:center; font-weight:bold; padding:20px 0;">スッキリ！項目はありません ✨</p>';
-            return;
-        }
-
+        if (list.length === 0) { container.innerHTML = '<p style="color:#888; font-size:0.95rem; text-align:center; font-weight:bold; padding:20px 0;">スッキリ！項目はありません ✨</p>'; return; }
         list.forEach((item, index) => {
-            const div = document.createElement('div');
-            div.className = `check-item ${item.done ? 'done' : ''} ${isDeleteMode ? 'delete-mode' : ''}`;
-            div.id = `item-row-${item.id}`;
-            div.style.animationDelay = `${index * 0.03}s`; 
-            
+            const div = document.createElement('div'); div.className = `check-item ${item.done ? 'done' : ''} ${isDeleteMode ? 'delete-mode' : ''}`; div.id = `item-row-${item.id}`; div.style.animationDelay = `${index * 0.03}s`; 
             const isSelectedForDelete = bulkDeleteSelection.has(String(item.id));
-            
             let searchBtnHTML = '';
             if(listKey === 'daily_shopping' && !isDeleteMode) {
-                const cleanName = item.text.replace(/\s*\(.*\)$/, '');
-                const query = encodeURIComponent(cleanName + " スーパー 価格 相場");
+                const cleanName = item.text.replace(/\s*\(.*\)$/, ''); const query = encodeURIComponent(cleanName + " スーパー 価格 相場");
                 searchBtnHTML = `<button class="search-btn" onclick="window.open('https://www.google.com/search?q=${query}', '_blank')">🔍 相場</button>`;
             }
-
             if (isDeleteMode) {
-                div.innerHTML = `
-                    <input type="checkbox" ${isSelectedForDelete ? 'checked' : ''} onchange="toggleBulkSelect('${item.id}', this.checked)">
-                    <label onclick="document.getElementById('check-del-${item.id}').click()">${item.text}</label>
-                `;
+                div.innerHTML = `<input type="checkbox" ${isSelectedForDelete ? 'checked' : ''} onchange="toggleBulkSelect('${item.id}', this.checked)"><label onclick="document.getElementById('check-del-${item.id}').click()">${item.text}</label>`;
                 div.querySelector('input').id = `check-del-${item.id}`;
             } else {
-                div.innerHTML = `
-                    <input type="checkbox" id="check-${item.id}" ${item.done ? 'checked' : ''} onchange="toggleCheck('${listKey}', '${item.id}', this.checked)">
-                    <label for="check-${item.id}">${item.text}</label>
-                    <div class="item-actions">
-                        ${searchBtnHTML}
-                        <button class="del-check-btn" onclick="deleteCheckItem('${listKey}', '${item.id}', ${listNum})">消去</button>
-                    </div>
-                `;
+                div.innerHTML = `<input type="checkbox" id="check-${item.id}" ${item.done ? 'checked' : ''} onchange="toggleCheck('${listKey}', '${item.id}', this.checked)"><label for="check-${item.id}">${item.text}</label><div class="item-actions">${searchBtnHTML}<button class="del-check-btn" onclick="deleteCheckItem('${listKey}', '${item.id}', ${listNum})">消去</button></div>`;
             }
             container.appendChild(div);
         });
     }
-
     function addCheckItem(listNum, useCatalog = false) {
-        const keys = getListKeysForMode();
-        const listKey = listNum === 1 ? keys.top : keys.bottom;
-        
-        if(useCatalog && listKey === 'daily_shopping') {
-            openShoppingModal();
-            return;
-        }
-
+        const keys = getListKeysForMode(); const listKey = listNum === 1 ? keys.top : keys.bottom;
+        if(useCatalog && listKey === 'daily_shopping') { openShoppingModal(); return; }
         const text = prompt('新しい項目を入力してください:');
         if (text && text.trim()) {
             if(!noteData.checklists[listKey]) noteData.checklists[listKey] = [];
@@ -723,463 +663,47 @@
             saveData(); renderChecklist(listNum, `list-${listNum}`);
         }
     }
-
     function toggleCheck(listKey, id, isDone) {
-        if(isDeleteMode) return; 
-        const item = noteData.checklists[listKey].find(i => String(i.id) === String(id));
-        if (item) {
-            item.done = isDone; saveData();
-            const wrapper = document.getElementById(`item-row-${id}`);
-            if(isDone) {
-                wrapper.classList.add('done');
-                wrapper.classList.remove('anim-jelly');
-                void wrapper.offsetWidth;
-                wrapper.classList.add('anim-jelly');
-            } else {
-                wrapper.classList.remove('done');
-                wrapper.classList.remove('anim-jelly');
-            }
-        }
+        if(isDeleteMode) return;  const item = noteData.checklists[listKey].find(i => String(i.id) === String(id));
+        if (item) { item.done = isDone; saveData(); const wrapper = document.getElementById(`item-row-${id}`); if(isDone) { wrapper.classList.add('done'); wrapper.classList.remove('anim-jelly'); void wrapper.offsetWidth; wrapper.classList.add('anim-jelly'); } else { wrapper.classList.remove('done'); wrapper.classList.remove('anim-jelly'); } }
     }
+    function deleteCheckItem(listKey, id, listNum) { const row = document.getElementById(`item-row-${id}`); row.classList.add('removing'); setTimeout(() => { noteData.checklists[listKey] = noteData.checklists[listKey].filter(i => String(i.id) !== String(id)); saveData(); renderChecklist(listNum, `list-${listNum}`); }, 500); }
+    function toggleDeleteMode() { isDeleteMode = !isDeleteMode; bulkDeleteSelection.clear(); const btn = document.getElementById('delete-mode-btn'); const bar = document.getElementById('bulk-delete-bar'); if (isDeleteMode) { btn.innerText = "❌ やめる"; btn.style.background = "rgba(244,67,54,0.1)"; btn.style.color = "#f44336"; bar.classList.add('active'); } else { btn.innerText = "🧹 一括削除"; btn.style.background = "rgba(128,128,128,0.15)"; btn.style.color = "var(--text-color)"; bar.classList.remove('active'); } updateBulkDeleteText(); renderChecklist(1, 'list-1'); renderChecklist(2, 'list-2'); }
+    function toggleBulkSelect(id, isChecked) { if (isChecked) bulkDeleteSelection.add(String(id)); else bulkDeleteSelection.delete(String(id)); updateBulkDeleteText(); }
+    function updateBulkDeleteText() { document.getElementById('bulk-delete-text').innerText = `${bulkDeleteSelection.size}件 選択中`; const keys = getListKeysForMode(); const list1 = noteData.checklists[keys.top] || []; const list2 = noteData.checklists[keys.bottom] || []; const totalItems = list1.length + list2.length; const selectAllBtn = document.getElementById('bulk-select-all-btn'); if (selectAllBtn) { if (totalItems > 0 && bulkDeleteSelection.size === totalItems) { selectAllBtn.innerText = "全解除"; } else { selectAllBtn.innerText = "全選択"; } } }
+    function toggleSelectAllBulk() { const keys = getListKeysForMode(); const list1 = noteData.checklists[keys.top] || []; const list2 = noteData.checklists[keys.bottom] || []; const totalItems = list1.length + list2.length; if (totalItems === 0) return; if (bulkDeleteSelection.size === totalItems) { bulkDeleteSelection.clear(); } else { list1.forEach(i => bulkDeleteSelection.add(String(i.id))); list2.forEach(i => bulkDeleteSelection.add(String(i.id))); } updateBulkDeleteText(); renderChecklist(1, 'list-1'); renderChecklist(2, 'list-2'); }
+    function executeBulkDelete() { if (bulkDeleteSelection.size === 0) return alert("削除する項目が選択されていません。"); if(confirm(`選択した ${bulkDeleteSelection.size}件 を一気に削除しますか？`)) { const keys = getListKeysForMode(); bulkDeleteSelection.forEach(id => { const row = document.getElementById(`item-row-${id}`); if(row) row.classList.add('removing'); }); setTimeout(() => { noteData.checklists[keys.top] = (noteData.checklists[keys.top] || []).filter(i => !bulkDeleteSelection.has(String(i.id))); noteData.checklists[keys.bottom] = (noteData.checklists[keys.bottom] || []).filter(i => !bulkDeleteSelection.has(String(i.id))); saveData(); toggleDeleteMode(); }, 500); } }
+    function openAIEstimate() { const list = noteData.checklists['daily_shopping'] || []; const activeItems = list.filter(i => !i.done).map(i => i.text); if (activeItems.length === 0) { alert('買い物リストにアイテムがありません。'); return; } const locText = noteData.userLocation ? `\n【地域情報】\nユーザーの居住地周辺: ${noteData.userLocation}\n※可能であれば、この地域の一般的なスーパーの価格相場を考慮してください。` : ''; const promptText = `以下の買い物リストの現在（日本のスーパー）の一般的な相場価格を調べ、概算を計算してください。${locText}\n\n【出力形式の指定】\n1. 何よりも先に一番最初に、まず「合計の概算金額（税込）」を非常に大きく分かりやすく表示してください。\n2. その下に、見やすい表形式で各商品の詳細を出力してください（列：商品名、想定単価、備考）。\n3. 指定した単位がない場合は、一般的な販売単位（1パック、100gなど）を想定して計算してください。\n\n【買い物リスト】\n${activeItems.map(i => '・' + i).join('\n')}`.trim(); const query = encodeURIComponent(promptText); navigator.clipboard.writeText(promptText).then(() => { if(confirm('AIへの指示（プロンプト）をコピーしました！\n\nOKを押すとGoogle検索が開きます。\n検索窓に貼り付けておくので、送信するとAIが綺麗な表で相場を計算してくれます！')) { window.open(`https://www.google.com/search?q=${query}`, '_blank'); } }).catch(err => { window.open(`https://www.google.com/search?q=${query}`, '_blank'); }); }
 
-    function deleteCheckItem(listKey, id, listNum) {
-        const row = document.getElementById(`item-row-${id}`);
-        row.classList.add('removing');
-        setTimeout(() => {
-            noteData.checklists[listKey] = noteData.checklists[listKey].filter(i => String(i.id) !== String(id));
-            saveData(); renderChecklist(listNum, `list-${listNum}`);
-        }, 500); 
-    }
-
-    function toggleDeleteMode() {
-        isDeleteMode = !isDeleteMode;
-        bulkDeleteSelection.clear();
-        
-        const btn = document.getElementById('delete-mode-btn');
-        const bar = document.getElementById('bulk-delete-bar');
-        
-        if (isDeleteMode) {
-            btn.innerText = "❌ やめる";
-            btn.style.background = "rgba(244,67,54,0.1)"; btn.style.color = "#f44336";
-            bar.classList.add('active');
-        } else {
-            btn.innerText = "🧹 一括削除";
-            btn.style.background = "rgba(128,128,128,0.15)"; btn.style.color = "var(--text-color)";
-            bar.classList.remove('active');
-        }
-        updateBulkDeleteText(); renderChecklist(1, 'list-1'); renderChecklist(2, 'list-2');
-    }
-
-    function toggleBulkSelect(id, isChecked) {
-        if (isChecked) bulkDeleteSelection.add(String(id)); else bulkDeleteSelection.delete(String(id));
-        updateBulkDeleteText();
-    }
-    
-    function updateBulkDeleteText() { 
-        document.getElementById('bulk-delete-text').innerText = `${bulkDeleteSelection.size}件 選択中`; 
-        
-        const keys = getListKeysForMode();
-        const list1 = noteData.checklists[keys.top] || [];
-        const list2 = noteData.checklists[keys.bottom] || [];
-        const totalItems = list1.length + list2.length;
-        
-        const selectAllBtn = document.getElementById('bulk-select-all-btn');
-        if (selectAllBtn) {
-            if (totalItems > 0 && bulkDeleteSelection.size === totalItems) {
-                selectAllBtn.innerText = "全解除";
-            } else {
-                selectAllBtn.innerText = "全選択";
-            }
-        }
-    }
-
-    function toggleSelectAllBulk() {
-        const keys = getListKeysForMode();
-        const list1 = noteData.checklists[keys.top] || [];
-        const list2 = noteData.checklists[keys.bottom] || [];
-        const totalItems = list1.length + list2.length;
-        
-        if (totalItems === 0) return;
-        
-        if (bulkDeleteSelection.size === totalItems) {
-            bulkDeleteSelection.clear();
-        } else {
-            list1.forEach(i => bulkDeleteSelection.add(String(i.id)));
-            list2.forEach(i => bulkDeleteSelection.add(String(i.id)));
-        }
-        
-        updateBulkDeleteText();
-        renderChecklist(1, 'list-1');
-        renderChecklist(2, 'list-2');
-    }
-
-    function executeBulkDelete() {
-        if (bulkDeleteSelection.size === 0) return alert("削除する項目が選択されていません。");
-        if(confirm(`選択した ${bulkDeleteSelection.size}件 を一気に削除しますか？`)) {
-            const keys = getListKeysForMode();
-            bulkDeleteSelection.forEach(id => {
-                const row = document.getElementById(`item-row-${id}`);
-                if(row) row.classList.add('removing');
-            });
-            setTimeout(() => {
-                noteData.checklists[keys.top] = (noteData.checklists[keys.top] || []).filter(i => !bulkDeleteSelection.has(String(i.id)));
-                noteData.checklists[keys.bottom] = (noteData.checklists[keys.bottom] || []).filter(i => !bulkDeleteSelection.has(String(i.id)));
-                saveData(); toggleDeleteMode();
-            }, 500);
-        }
-    }
-
-    function openAIEstimate() {
-        const list = noteData.checklists['daily_shopping'] || [];
-        const activeItems = list.filter(i => !i.done).map(i => i.text);
-
-        if (activeItems.length === 0) { alert('買い物リストにアイテムがありません。'); return; }
-
-        const locText = noteData.userLocation ? `\n【地域情報】\nユーザーの居住地周辺: ${noteData.userLocation}\n※可能であれば、この地域の一般的なスーパーの価格相場を考慮してください。` : '';
-
-        const promptText = `以下の買い物リストの現在（日本のスーパー）の一般的な相場価格を調べ、概算を計算してください。${locText}
-
-【出力形式の指定】
-1. 何よりも先に一番最初に、まず「合計の概算金額（税込）」を非常に大きく分かりやすく表示してください。
-2. その下に、見やすい表形式で各商品の詳細を出力してください（列：商品名、想定単価、備考）。
-3. 指定した単位がない場合は、一般的な販売単位（1パック、100gなど）を想定して計算してください。
-
-【買い物リスト】
-${activeItems.map(i => '・' + i).join('\n')}`.trim();
-
-        const query = encodeURIComponent(promptText);
-        
-        navigator.clipboard.writeText(promptText).then(() => {
-            if(confirm('AIへの指示（プロンプト）をコピーしました！\n\nOKを押すとGoogle検索が開きます。\n検索窓に貼り付けておくので、送信するとAIが綺麗な表で相場を計算してくれます！')) {
-                window.open(`https://www.google.com/search?q=${query}`, '_blank');
-            }
-        }).catch(err => {
-            window.open(`https://www.google.com/search?q=${query}`, '_blank');
-        });
-    }
-
-    // --- 🛒 買い物カタログ機能 ---
-    let selectedShoppingItems = new Map(); 
-    let isCatalogEditMode = false;
-    let catalogDeleteSelection = new Set();
-    let sortableInstances = []; 
-
-    function guessDefaultUnit(itemName) {
-        if(itemName.includes('肉') || itemName.includes('バラ') || itemName.includes('レバー')) return '300g';
-        if(itemName.includes('牛乳') || itemName.includes('ジュース')) return '1本';
-        if(itemName.includes('卵')) return '1パック';
-        if(itemName.includes('キャベツ') || itemName.includes('白菜') || itemName.includes('大根') || itemName.includes('レタス')) return '1玉';
-        if(itemName.includes('ネギ') || itemName.includes('ニラ') || itemName.includes('ほうれん草') || itemName.includes('小松菜')) return '1束';
-        if(itemName.includes('米')) return '5kg';
-        if(itemName.includes('袋') || itemName.includes('ゴミ袋')) return '1袋';
-        return '1個';
-    }
-
-    function buildShoppingCatalog() {
-        const container = document.getElementById('catalog-container');
-        container.innerHTML = '';
-        sortableInstances.forEach(inst => inst.destroy()); sortableInstances = [];
-        if(!noteData.shoppingCatalog) return;
-
-        for(const [category, items] of Object.entries(noteData.shoppingCatalog)) {
-            const details = document.createElement('details');
-            details.open = true; 
-            const summary = document.createElement('summary');
-            
-            const headerDiv = document.createElement('div');
-            headerDiv.className = 'category-header';
-            
-            let titleHTML = `<span>${category}</span>`;
-            if(isCatalogEditMode) {
-                titleHTML = `<span>${category} <small style="font-size:0.7rem; color:var(--accent-color); font-weight:normal;">👆長押しで並び替え</small></span>`;
-                const delBtn = document.createElement('button');
-                delBtn.className = 'del-cat-btn';
-                delBtn.innerText = '🗑️ カテゴリーを削除';
-                delBtn.onclick = (e) => {
-                    e.preventDefault(); e.stopPropagation();
-                    deleteCustomCategory(category);
-                };
-                headerDiv.innerHTML = titleHTML;
-                headerDiv.appendChild(delBtn);
-            } else {
-                headerDiv.innerHTML = titleHTML;
-            }
-            
-            summary.appendChild(headerDiv);
-            details.appendChild(summary);
-            
-            const contentDiv = document.createElement('div'); contentDiv.className = 'catalog-content';
-            const grid = document.createElement('div'); grid.className = 'catalog-grid';
-            
-            items.forEach(itemText => {
-                const card = document.createElement('div');
-                card.className = 'catalog-item-card';
-                card.dataset.itemName = itemText;
-                
-                const btn = document.createElement('button');
-                btn.className = 'catalog-item-btn'; btn.innerText = itemText;
-                
-                if(isCatalogEditMode) {
-                    if(catalogDeleteSelection.has(itemText)) card.classList.add('delete-selected');
-                    card.onclick = () => toggleCatalogDeleteSelect(itemText, card);
-                    card.appendChild(btn);
-                } else {
-                    if(selectedShoppingItems.has(itemText)) card.classList.add('selected');
-                    
-                    const defaultUnit = selectedShoppingItems.has(itemText) ? selectedShoppingItems.get(itemText) : guessDefaultUnit(itemText);
-                    
-                    btn.onclick = (e) => { e.stopPropagation(); toggleCatalogItem(itemText, card); };
-                    card.onclick = () => toggleCatalogItem(itemText, card);
-                    
-                    const unitBtn = document.createElement('button');
-                    unitBtn.className = 'catalog-unit-btn ignore-drag';
-                    unitBtn.innerText = defaultUnit;
-                    unitBtn.onclick = (e) => { e.stopPropagation(); openCalcModal(itemText); };
-
-                    card.appendChild(btn);
-                    card.appendChild(unitBtn);
-                }
-                grid.appendChild(card);
-            });
-            
-            if(isCatalogEditMode) {
-                const addCard = document.createElement('div');
-                addCard.className = 'catalog-item-card ignore-drag';
-                addCard.style.background = 'rgba(0,122,255,0.05)'; addCard.style.borderStyle = 'dashed'; addCard.style.borderColor = 'var(--accent-color)'; addCard.style.cursor = 'pointer';
-                addCard.onclick = () => addCustomItemToCatalog(category);
-                const addBtn = document.createElement('button'); addBtn.className = 'catalog-item-btn'; addBtn.style.color = 'var(--accent-color)'; addBtn.innerText = '＋ 追加する';
-                addCard.appendChild(addBtn); grid.appendChild(addCard);
-            }
-            
-            contentDiv.appendChild(grid); details.appendChild(contentDiv); container.appendChild(details);
-            
-            if (typeof Sortable !== 'undefined') {
-                const sortable = new Sortable(grid, {
-                    animation: 400, easing: "cubic-bezier(0.25, 1, 0.5, 1)", disabled: !isCatalogEditMode, filter: '.ignore-drag', preventOnFilter: false, draggable: '.catalog-item-card:not(.ignore-drag)', ghostClass: 'sortable-ghost', delay: 150, delayOnTouchOnly: true,
-                    onEnd: function () {
-                        const itemEls = Array.from(grid.querySelectorAll('.catalog-item-card:not(.ignore-drag)'));
-                        noteData.shoppingCatalog[category] = itemEls.map(el => el.dataset.itemName);
-                        saveData();
-                    }
-                });
-                sortableInstances.push(sortable);
-            }
-        }
-    }
-
-    function toggleCatalogItem(itemText, cardEl) {
-        if(selectedShoppingItems.has(itemText)) {
-            selectedShoppingItems.delete(itemText);
-            cardEl.classList.remove('selected');
-        } else {
-            const unitBtn = cardEl.querySelector('.catalog-unit-btn');
-            const unit = unitBtn ? unitBtn.innerText : guessDefaultUnit(itemText);
-            selectedShoppingItems.set(itemText, unit);
-            cardEl.classList.add('selected');
-            cardEl.style.animation = 'none'; void cardEl.offsetWidth; cardEl.style.animation = 'jellyPop 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
-        }
-        if(navigator.vibrate) navigator.vibrate(20);
-    }
-
-    function toggleCatalogDeleteSelect(itemText, cardEl) {
-        if(catalogDeleteSelection.has(itemText)) {
-            catalogDeleteSelection.delete(itemText); cardEl.classList.remove('delete-selected');
-        } else {
-            catalogDeleteSelection.add(itemText); cardEl.classList.add('delete-selected');
-        }
-    }
-
-    function toggleCatalogEditMode() {
-        isCatalogEditMode = !isCatalogEditMode; catalogDeleteSelection.clear();
-        document.getElementById('catalog-normal-footer').style.display = isCatalogEditMode ? 'none' : 'flex';
-        document.getElementById('catalog-edit-footer').style.display = isCatalogEditMode ? 'flex' : 'none';
-        document.getElementById('catalog-edit-btn').innerText = isCatalogEditMode ? "戻る" : "✏️ 編集";
-        document.getElementById('catalog-desc').innerText = isCatalogEditMode ? "消したい項目をタップ、または長押しで並び替えできます。" : "ポンポン押して複数選べます！";
-        document.getElementById('catalog-desc').style.color = isCatalogEditMode ? "#f44336" : "inherit";
-        buildShoppingCatalog();
-    }
-
-    function addCustomCategory() {
-        const text = prompt('新しいカテゴリー名を入力してください:\n（例：📱 電化製品、🏥 薬局 など）');
-        if(text && text.trim()) {
-            if(!noteData.shoppingCatalog[text.trim()]) {
-                noteData.shoppingCatalog[text.trim()] = []; 
-                saveData(); buildShoppingCatalog();
-            } else {
-                alert('既にそのカテゴリーは存在します！');
-            }
-        }
-    }
-
-    function deleteCustomCategory(category) {
-        if(confirm(`カテゴリー「${category}」を、中身の商品ごとすべてカタログから削除しますか？`)) {
-            delete noteData.shoppingCatalog[category];
-            saveData();
-            buildShoppingCatalog();
-        }
-    }
-
-    function addCustomItemToCatalog(category) {
-        const text = prompt(`「${category}」に追加するアイテム名:`);
-        if(text && text.trim()) {
-            if(!noteData.shoppingCatalog[category].includes(text.trim())) {
-                noteData.shoppingCatalog[category].push(text.trim()); saveData(); buildShoppingCatalog();
-            } else { alert('既に登録されています！'); }
-        }
-    }
-
-    function deleteSelectedFromCatalog() {
-        if(catalogDeleteSelection.size === 0) return;
-        if(confirm(`選択した ${catalogDeleteSelection.size}個の項目 をカタログから完全に消去しますか？`)) {
-            for(const category in noteData.shoppingCatalog) { noteData.shoppingCatalog[category] = noteData.shoppingCatalog[category].filter(item => !catalogDeleteSelection.has(item)); }
-            saveData(); catalogDeleteSelection.clear(); buildShoppingCatalog();
-        }
-    }
-
-    function openShoppingModal() {
-        selectedShoppingItems.clear();
-        const currentList = noteData.checklists['daily_shopping'] || [];
-        currentList.forEach(item => {
-            const match = item.text.match(/^(.+?)(?:\s*\((.+?)\))?$/);
-            if(match) {
-                const name = match[1].trim();
-                const unit = match[2] ? match[2].trim() : 'なし';
-                selectedShoppingItems.set(name, unit);
-            }
-        });
-
-        isCatalogEditMode = false;
-        document.getElementById('catalog-normal-footer').style.display = 'flex'; document.getElementById('catalog-edit-footer').style.display = 'none';
-        document.getElementById('catalog-edit-btn').innerText = "✏️ 編集"; document.getElementById('catalog-desc').innerText = "ポンポン押して複数選べます！"; document.getElementById('catalog-desc').style.color = "inherit";
-        buildShoppingCatalog(); document.getElementById('shopping-modal').style.display = 'flex';
-    }
-
+    let selectedShoppingItems = new Map(); let isCatalogEditMode = false; let catalogDeleteSelection = new Set(); let sortableInstances = []; 
+    function guessDefaultUnit(itemName) { if(itemName.includes('肉') || itemName.includes('バラ') || itemName.includes('レバー')) return '300g'; if(itemName.includes('牛乳') || itemName.includes('ジュース')) return '1本'; if(itemName.includes('卵')) return '1パック'; if(itemName.includes('キャベツ') || itemName.includes('白菜') || itemName.includes('大根') || itemName.includes('レタス')) return '1玉'; if(itemName.includes('ネギ') || itemName.includes('ニラ') || itemName.includes('ほうれん草') || itemName.includes('小松菜')) return '1束'; if(itemName.includes('米')) return '5kg'; if(itemName.includes('袋') || itemName.includes('ゴミ袋')) return '1袋'; return '1個'; }
+    function buildShoppingCatalog() { const container = document.getElementById('catalog-container'); container.innerHTML = ''; sortableInstances.forEach(inst => inst.destroy()); sortableInstances = []; if(!noteData.shoppingCatalog) return; for(const [category, items] of Object.entries(noteData.shoppingCatalog)) { const details = document.createElement('details'); details.open = true;  const summary = document.createElement('summary'); const headerDiv = document.createElement('div'); headerDiv.className = 'category-header'; let titleHTML = `<span>${category}</span>`; if(isCatalogEditMode) { titleHTML = `<span>${category} <small style="font-size:0.7rem; color:var(--accent-color); font-weight:normal;">👆長押しで並び替え</small></span>`; const delBtn = document.createElement('button'); delBtn.className = 'del-cat-btn'; delBtn.innerText = '🗑️ カテゴリーを削除'; delBtn.onclick = (e) => { e.preventDefault(); e.stopPropagation(); deleteCustomCategory(category); }; headerDiv.innerHTML = titleHTML; headerDiv.appendChild(delBtn); } else { headerDiv.innerHTML = titleHTML; } summary.appendChild(headerDiv); details.appendChild(summary); const contentDiv = document.createElement('div'); contentDiv.className = 'catalog-content'; const grid = document.createElement('div'); grid.className = 'catalog-grid'; items.forEach(itemText => { const card = document.createElement('div'); card.className = 'catalog-item-card'; card.dataset.itemName = itemText; const btn = document.createElement('button'); btn.className = 'catalog-item-btn'; btn.innerText = itemText; if(isCatalogEditMode) { if(catalogDeleteSelection.has(itemText)) card.classList.add('delete-selected'); card.onclick = () => toggleCatalogDeleteSelect(itemText, card); card.appendChild(btn); } else { if(selectedShoppingItems.has(itemText)) card.classList.add('selected'); const defaultUnit = selectedShoppingItems.has(itemText) ? selectedShoppingItems.get(itemText) : guessDefaultUnit(itemText); btn.onclick = (e) => { e.stopPropagation(); toggleCatalogItem(itemText, card); }; card.onclick = () => toggleCatalogItem(itemText, card); const unitBtn = document.createElement('button'); unitBtn.className = 'catalog-unit-btn ignore-drag'; unitBtn.innerText = defaultUnit; unitBtn.onclick = (e) => { e.stopPropagation(); openCalcModal(itemText); }; card.appendChild(btn); card.appendChild(unitBtn); } grid.appendChild(card); }); if(isCatalogEditMode) { const addCard = document.createElement('div'); addCard.className = 'catalog-item-card ignore-drag'; addCard.style.background = 'rgba(0,122,255,0.05)'; addCard.style.borderStyle = 'dashed'; addCard.style.borderColor = 'var(--accent-color)'; addCard.style.cursor = 'pointer'; addCard.onclick = () => addCustomItemToCatalog(category); const addBtn = document.createElement('button'); addBtn.className = 'catalog-item-btn'; addBtn.style.color = 'var(--accent-color)'; addBtn.innerText = '＋ 追加する'; addCard.appendChild(addBtn); grid.appendChild(addCard); } contentDiv.appendChild(grid); details.appendChild(contentDiv); container.appendChild(details); if (typeof Sortable !== 'undefined') { const sortable = new Sortable(grid, { animation: 400, easing: "cubic-bezier(0.25, 1, 0.5, 1)", disabled: !isCatalogEditMode, filter: '.ignore-drag', preventOnFilter: false, draggable: '.catalog-item-card:not(.ignore-drag)', ghostClass: 'sortable-ghost', delay: 150, delayOnTouchOnly: true, onEnd: function () { const itemEls = Array.from(grid.querySelectorAll('.catalog-item-card:not(.ignore-drag)')); noteData.shoppingCatalog[category] = itemEls.map(el => el.dataset.itemName); saveData(); } }); sortableInstances.push(sortable); } } }
+    function toggleCatalogItem(itemText, cardEl) { if(selectedShoppingItems.has(itemText)) { selectedShoppingItems.delete(itemText); cardEl.classList.remove('selected'); } else { const unitBtn = cardEl.querySelector('.catalog-unit-btn'); const unit = unitBtn ? unitBtn.innerText : guessDefaultUnit(itemText); selectedShoppingItems.set(itemText, unit); cardEl.classList.add('selected'); cardEl.style.animation = 'none'; void cardEl.offsetWidth; cardEl.style.animation = 'jellyPop 0.8s cubic-bezier(0.25, 1, 0.5, 1)'; } if(navigator.vibrate) navigator.vibrate(20); }
+    function toggleCatalogDeleteSelect(itemText, cardEl) { if(catalogDeleteSelection.has(itemText)) { catalogDeleteSelection.delete(itemText); cardEl.classList.remove('delete-selected'); } else { catalogDeleteSelection.add(itemText); cardEl.classList.add('delete-selected'); } }
+    function toggleCatalogEditMode() { isCatalogEditMode = !isCatalogEditMode; catalogDeleteSelection.clear(); document.getElementById('catalog-normal-footer').style.display = isCatalogEditMode ? 'none' : 'flex'; document.getElementById('catalog-edit-footer').style.display = isCatalogEditMode ? 'flex' : 'none'; document.getElementById('catalog-edit-btn').innerText = isCatalogEditMode ? "戻る" : "✏️ 編集"; document.getElementById('catalog-desc').innerText = isCatalogEditMode ? "消したい項目をタップ、または長押しで並び替えできます。" : "ポンポン押して複数選べます！"; document.getElementById('catalog-desc').style.color = isCatalogEditMode ? "#f44336" : "inherit"; buildShoppingCatalog(); }
+    function addCustomCategory() { const text = prompt('新しいカテゴリー名を入力してください:\n（例：📱 電化製品、🏥 薬局 など）'); if(text && text.trim()) { if(!noteData.shoppingCatalog[text.trim()]) { noteData.shoppingCatalog[text.trim()] = [];  saveData(); buildShoppingCatalog(); } else { alert('既にそのカテゴリーは存在します！'); } } }
+    function deleteCustomCategory(category) { if(confirm(`カテゴリー「${category}」を、中身の商品ごとすべてカタログから削除しますか？`)) { delete noteData.shoppingCatalog[category]; saveData(); buildShoppingCatalog(); } }
+    function addCustomItemToCatalog(category) { const text = prompt(`「${category}」に追加するアイテム名:`); if(text && text.trim()) { if(!noteData.shoppingCatalog[category].includes(text.trim())) { noteData.shoppingCatalog[category].push(text.trim()); saveData(); buildShoppingCatalog(); } else { alert('既に登録されています！'); } } }
+    function deleteSelectedFromCatalog() { if(catalogDeleteSelection.size === 0) return; if(confirm(`選択した ${catalogDeleteSelection.size}個の項目 をカタログから完全に消去しますか？`)) { for(const category in noteData.shoppingCatalog) { noteData.shoppingCatalog[category] = noteData.shoppingCatalog[category].filter(item => !catalogDeleteSelection.has(item)); } saveData(); catalogDeleteSelection.clear(); buildShoppingCatalog(); } }
+    function openShoppingModal() { selectedShoppingItems.clear(); const currentList = noteData.checklists['daily_shopping'] || []; currentList.forEach(item => { const match = item.text.match(/^(.+?)(?:\s*\((.+?)\))?$/); if(match) { const name = match[1].trim(); const unit = match[2] ? match[2].trim() : 'なし'; selectedShoppingItems.set(name, unit); } }); isCatalogEditMode = false; document.getElementById('catalog-normal-footer').style.display = 'flex'; document.getElementById('catalog-edit-footer').style.display = 'none'; document.getElementById('catalog-edit-btn').innerText = "✏️ 編集"; document.getElementById('catalog-desc').innerText = "ポンポン押して複数選べます！"; document.getElementById('catalog-desc').style.color = "inherit"; buildShoppingCatalog(); document.getElementById('shopping-modal').style.display = 'flex'; }
     function closeShoppingModal() { document.getElementById('shopping-modal').style.display = 'none'; }
+    function commitShoppingModal() { let currentList = noteData.checklists['daily_shopping'] || []; let allCatalogItems = new Set(); if(noteData.shoppingCatalog) { Object.values(noteData.shoppingCatalog).forEach(items => { items.forEach(i => allCatalogItems.add(i)); }); } let newList = []; currentList.forEach(item => { const match = item.text.match(/^(.+?)(?:\s*\((.+?)\))?$/); const name = match ? match[1].trim() : item.text; if (allCatalogItems.has(name)) { if (selectedShoppingItems.has(name)) { const unit = selectedShoppingItems.get(name); const finalString = unit === 'なし' ? name : `${name} (${unit})`; item.text = finalString;  newList.push(item); selectedShoppingItems.delete(name);  } } else { newList.push(item); } }); selectedShoppingItems.forEach((unitStr, text) => { const finalString = unitStr === 'なし' ? text : `${text} (${unitStr})`; newList.push({ id: generateSafeId(), text: finalString, done: false }); }); noteData.checklists['daily_shopping'] = newList; saveData(); const keys = getListKeysForMode(); if(keys.top === 'daily_shopping') renderChecklist(1, 'list-1'); else renderChecklist(2, 'list-2'); closeShoppingModal(); }
 
-    function commitShoppingModal() {
-        let currentList = noteData.checklists['daily_shopping'] || [];
-        let allCatalogItems = new Set();
-        if(noteData.shoppingCatalog) {
-            Object.values(noteData.shoppingCatalog).forEach(items => { items.forEach(i => allCatalogItems.add(i)); });
-        }
-
-        let newList = [];
-        currentList.forEach(item => {
-            const match = item.text.match(/^(.+?)(?:\s*\((.+?)\))?$/);
-            const name = match ? match[1].trim() : item.text;
-            
-            if (allCatalogItems.has(name)) {
-                if (selectedShoppingItems.has(name)) {
-                    const unit = selectedShoppingItems.get(name);
-                    const finalString = unit === 'なし' ? name : `${name} (${unit})`;
-                    item.text = finalString; 
-                    newList.push(item);      
-                    selectedShoppingItems.delete(name); 
-                }
-            } else {
-                newList.push(item);
-            }
-        });
-
-        selectedShoppingItems.forEach((unitStr, text) => {
-            const finalString = unitStr === 'なし' ? text : `${text} (${unitStr})`;
-            newList.push({ id: generateSafeId(), text: finalString, done: false });
-        });
-        
-        noteData.checklists['daily_shopping'] = newList; saveData();
-        const keys = getListKeysForMode();
-        if(keys.top === 'daily_shopping') renderChecklist(1, 'list-1'); else renderChecklist(2, 'list-2');
-        closeShoppingModal();
-    }
-
-    // ==========================================
-    // 🔢 超特化型 電卓機能
-    // ==========================================
     let calcState = { itemText: "", value: "0", prevValue: "0", op: null, unit: "個", isNewInput: true };
-
-    function parseUnitString(str) {
-        if(str === 'なし') return { num: "0", unit: 'なし' };
-        const m = str.match(/^([0-9.]+)(.*)$/);
-        if(m) return { num: m[1], unit: m[2] };
-        return { num: "1", unit: str }; 
-    }
-
-    function openCalcModal(itemText) {
-        calcState.itemText = itemText;
-        let currentStr = selectedShoppingItems.has(itemText) ? selectedShoppingItems.get(itemText) : guessDefaultUnit(itemText);
-        let parsed = parseUnitString(currentStr);
-        
-        calcState.value = parsed.num;
-        calcState.unit = parsed.unit;
-        calcState.prevValue = "0";
-        calcState.op = null;
-        calcState.isNewInput = true; 
-        
-        document.getElementById('calc-item-name').innerText = itemText;
-        updateCalcDisplay(); renderCalcUnits(); document.getElementById('calc-modal').style.display = 'flex';
-    }
-
-    function updateCalcDisplay() {
-        let displayVal = calcState.value;
-        if(displayVal === "0" && calcState.unit === 'なし') displayVal = '';
-        document.getElementById('calc-display-value').innerText = displayVal;
-        document.getElementById('calc-display-unit').innerText = calcState.unit === 'なし' ? '' : calcState.unit;
-    }
-
-    function renderCalcUnits() {
-        const container = document.getElementById('calc-unit-container'); container.innerHTML = '';
-        allUnits.forEach(u => {
-            const btn = document.createElement('button');
-            btn.className = `unit-chip ${calcState.unit === u ? 'active' : ''}`; btn.innerText = u;
-            btn.onclick = () => { calcState.unit = u; if(u === 'なし') calcState.value = "0"; renderCalcUnits(); updateCalcDisplay(); };
-            container.appendChild(btn);
-        });
-    }
-
-    function calcInput(charStr) {
-        if(calcState.unit === 'なし') { calcState.unit = '個'; renderCalcUnits(); }
-        if (calcState.isNewInput) {
-            calcState.value = charStr === '.' ? "0." : charStr; calcState.isNewInput = false;
-        } else {
-            if (charStr === '.' && calcState.value.includes('.')) return;
-            calcState.value += charStr;
-        }
-        updateCalcDisplay();
-    }
-
-    function calcOp(op) {
-        if (calcState.op && !calcState.isNewInput) calcEq();
-        calcState.prevValue = calcState.value; calcState.op = op; calcState.isNewInput = true;
-    }
-
-    function calcEq() {
-        if (!calcState.op) return;
-        let prev = parseFloat(calcState.prevValue); let curr = parseFloat(calcState.value);
-        if(isNaN(prev)) prev = 0; if(isNaN(curr)) curr = 0;
-        let result = 0;
-        if (calcState.op === '+') result = prev + curr;
-        else if (calcState.op === '-') result = Math.max(0, prev - curr);
-        else if (calcState.op === '×') result = prev * curr;
-        calcState.value = parseFloat(result.toFixed(2)).toString();
-        calcState.op = null; calcState.isNewInput = true; updateCalcDisplay();
-    }
-
+    function parseUnitString(str) { if(str === 'なし') return { num: "0", unit: 'なし' }; const m = str.match(/^([0-9.]+)(.*)$/); if(m) return { num: m[1], unit: m[2] }; return { num: "1", unit: str };  }
+    function openCalcModal(itemText) { calcState.itemText = itemText; let currentStr = selectedShoppingItems.has(itemText) ? selectedShoppingItems.get(itemText) : guessDefaultUnit(itemText); let parsed = parseUnitString(currentStr); calcState.value = parsed.num; calcState.unit = parsed.unit; calcState.prevValue = "0"; calcState.op = null; calcState.isNewInput = true;  document.getElementById('calc-item-name').innerText = itemText; updateCalcDisplay(); renderCalcUnits(); document.getElementById('calc-modal').style.display = 'flex'; }
+    function updateCalcDisplay() { let displayVal = calcState.value; if(displayVal === "0" && calcState.unit === 'なし') displayVal = ''; document.getElementById('calc-display-value').innerText = displayVal; document.getElementById('calc-display-unit').innerText = calcState.unit === 'なし' ? '' : calcState.unit; }
+    function renderCalcUnits() { const container = document.getElementById('calc-unit-container'); container.innerHTML = ''; allUnits.forEach(u => { const btn = document.createElement('button'); btn.className = `unit-chip ${calcState.unit === u ? 'active' : ''}`; btn.innerText = u; btn.onclick = () => { calcState.unit = u; if(u === 'なし') calcState.value = "0"; renderCalcUnits(); updateCalcDisplay(); }; container.appendChild(btn); }); }
+    function calcInput(charStr) { if(calcState.unit === 'なし') { calcState.unit = '個'; renderCalcUnits(); } if (calcState.isNewInput) { calcState.value = charStr === '.' ? "0." : charStr; calcState.isNewInput = false; } else { if (charStr === '.' && calcState.value.includes('.')) return; calcState.value += charStr; } updateCalcDisplay(); }
+    function calcOp(op) { if (calcState.op && !calcState.isNewInput) calcEq(); calcState.prevValue = calcState.value; calcState.op = op; calcState.isNewInput = true; }
+    function calcEq() { if (!calcState.op) return; let prev = parseFloat(calcState.prevValue); let curr = parseFloat(calcState.value); if(isNaN(prev)) prev = 0; if(isNaN(curr)) curr = 0; let result = 0; if (calcState.op === '+') result = prev + curr; else if (calcState.op === '-') result = Math.max(0, prev - curr); else if (calcState.op === '×') result = prev * curr; calcState.value = parseFloat(result.toFixed(2)).toString(); calcState.op = null; calcState.isNewInput = true; updateCalcDisplay(); }
     function calcClear() { calcState.value = "0"; calcState.prevValue = "0"; calcState.op = null; calcState.isNewInput = true; updateCalcDisplay(); }
     function closeCalcModal() { document.getElementById('calc-modal').style.display = 'none'; }
-    function commitCalcModal() {
-        calcEq(); let finalStr = calcState.unit === 'なし' ? 'なし' : `${calcState.value}${calcState.unit}`;
-        selectedShoppingItems.set(calcState.itemText, finalStr);
-        const card = document.querySelector(`.catalog-item-card[data-item-name="${calcState.itemText}"]`);
-        if(card) {
-            const unitBtn = card.querySelector('.catalog-unit-btn'); if(unitBtn) unitBtn.innerText = finalStr;
-            if(!card.classList.contains('selected')) { card.classList.add('selected'); }
-            card.style.animation = 'none'; void card.offsetWidth; card.style.animation = 'jellyPop 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
-        }
-        closeCalcModal();
-    }
+    function commitCalcModal() { calcEq(); let finalStr = calcState.unit === 'なし' ? 'なし' : `${calcState.value}${calcState.unit}`; selectedShoppingItems.set(calcState.itemText, finalStr); const card = document.querySelector(`.catalog-item-card[data-item-name="${calcState.itemText}"]`); if(card) { const unitBtn = card.querySelector('.catalog-unit-btn'); if(unitBtn) unitBtn.innerText = finalStr; if(!card.classList.contains('selected')) { card.classList.add('selected'); } card.style.animation = 'none'; void card.offsetWidth; card.style.animation = 'jellyPop 0.8s cubic-bezier(0.25, 1, 0.5, 1)'; } closeCalcModal(); }
+
 
     // ==========================================
-    // 📓 データベース (カレンダー ＆ リスト)
+    // 📅 統合データベース & カレンダー (新機能✨)
     // ==========================================
     let isDbDeleteMode = false;
     let dbBulkDeleteSelection = new Set();
@@ -1187,13 +711,17 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
     // カレンダーの現在表示している年月
     let currentCalYear = new Date().getFullYear();
     let currentCalMonth = new Date().getMonth();
+    
+    // カレンダーで現在選択している日付(詳細表示用)
+    let selectedDateForDetail = null;
 
-    function getDbArray() { return noteData.appMode === 'daily' ? noteData.dailyNotes : noteData.events; }
+    // 常に統合されたデータを返す
+    function getDbArray() { return noteData.calendarItems || []; }
 
     function parseDatesFromText(text) {
         let dates = [];
         if (!text) return dates;
-        const regex = /(?:(20\d{2})[\/\-年])?(\d{1,2})[\/\-月](\d{1,2})/g;
+        const regex = /(?:(20\d{2})[\/\-年])?\s*(\d{1,2})[\/\-月]\s*(\d{1,2})/g;
         let match;
         let currentYear = currentCalYear;
         
@@ -1213,17 +741,20 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         } else if (currentCalMonth < 0) {
             currentCalMonth = 11; currentCalYear--;
         }
+        selectedDateForDetail = null; // 月移動したら詳細表示をリセット
         renderDbItems();
     }
 
-    // メインの描画分岐
+    // カレンダーと詳細エリアのメイン描画関数
     function renderDbItems() {
-        const container = document.getElementById('db-container');
-        container.innerHTML = '';
+        const renderArea = document.getElementById('calendar-render-area');
+        
         if (isDbDeleteMode) {
-            renderDbListView(container); // 一括削除モード時はリスト表示
+            renderDbListView(renderArea); // 🧹一括削除モードの時はリスト表示
+            document.getElementById('calendar-detail-area').innerHTML = ''; // 詳細表示は隠す
         } else {
-            renderDbCalendarView(container); // 通常時はカレンダー表示
+            renderDbCalendarView(renderArea); // 通常時はカレンダー表示
+            renderCalendarDetails(); // 下部に詳細を表示
         }
     }
 
@@ -1231,14 +762,11 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
     function renderDbCalendarView(container) {
         let items = getDbArray();
         let calData = {};
-        let undatedItems = [];
 
-        // 予定を日付ごとに振り分け
+        // 予定を日付ごとに振り分け (期間対応)
         items.forEach(item => {
             let parsedDates = parseDatesFromText(item.date);
-            if (parsedDates.length === 0) {
-                undatedItems.push(item);
-            } else {
+            if (parsedDates.length > 0) {
                 parsedDates.sort((a,b) => a - b);
                 let start = parsedDates[0];
                 let end = parsedDates[parsedDates.length - 1];
@@ -1257,7 +785,7 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
 
         const firstDay = new Date(currentCalYear, currentCalMonth, 1);
         const lastDay = new Date(currentCalYear, currentCalMonth + 1, 0);
-        const startOffset = firstDay.getDay(); // 0(Sun) - 6(Sat)
+        const startOffset = firstDay.getDay(); 
         const daysInMonth = lastDay.getDate();
 
         let gridHTML = `<div class="calendar-grid">`;
@@ -1278,24 +806,26 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         for (let d = 1; d <= daysInMonth; d++) {
             let dStr = `${currentCalYear}-${currentCalMonth+1}-${d}`;
             let isToday = (dStr === todayStr);
+            let isSelected = (dStr === selectedDateForDetail);
             let dateClass = isToday ? 'cal-date today' : 'cal-date';
+            let dayClass = `cal-day ${isSelected ? 'selected' : ''}`;
             
-            // 新規追加用にフォーマットされた日付
             let presetDate = `${currentCalYear}/${('0'+(currentCalMonth+1)).slice(-2)}/${('0'+d).slice(-2)}`;
 
             let eventsHTML = '';
             if (calData[dStr]) {
                 calData[dStr].forEach(ev => {
                     eventsHTML += `
-                    <div class="cal-event" onclick="event.stopPropagation(); openDbEditModal('${ev.id}')">
-                        <div class="cal-event-title">${ev.title}</div>
-                        ${ev.memo ? `<div class="cal-event-memo">${ev.memo.replace(/<[^>]*>?/gm, '')}</div>` : ''}
+                    <div class="cal-event ${ev.type || 'daily'}" onclick="event.stopPropagation(); openDbEditModal('${ev.id}')">
+                        <div style="font-weight:900;">${ev.title}</div>
+                        ${ev.memo ? `<div style="opacity:0.9; margin-top:1px;">${ev.memo.replace(/<[^>]*>?/gm, '')}</div>` : ''}
                     </div>`;
                 });
             }
 
+            // 日付枠全体をクリックで「その日を選択」
             gridHTML += `
-            <div class="cal-day" onclick="openDbEditModal(null, '${presetDate}')">
+            <div class="${dayClass}" onclick="selectDateForDetail('${dStr}')">
                 <div class="${dateClass}">${d}</div>
                 ${eventsHTML}
             </div>`;
@@ -1314,37 +844,120 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         let calHTML = `
         <div class="calendar-wrapper">
             <div class="calendar-toolbar">
-                <button class="secondary-btn" style="width:auto; margin:0; padding:10px 18px; font-size:1.1rem; border-radius:12px;" onclick="changeMonth(-1)">◀</button>
+                <button class="secondary-btn" style="width:auto; margin:0; padding:10px 18px; font-size:1.1rem; border-radius:12px; background:rgba(0,0,0,0.05);" onclick="changeMonth(-1)">◀</button>
                 <div style="text-align:center;">
                     <h2 id="calendar-title">${currentCalYear}年 ${currentCalMonth+1}月</h2>
-                    <button onclick="currentCalYear = new Date().getFullYear(); currentCalMonth = new Date().getMonth(); renderDbItems();" style="background:transparent; color:var(--text-color); font-size:0.8rem; font-weight:bold; opacity:0.7; padding:2px; margin-top:2px;">今日に戻る</button>
+                    <button onclick="currentCalYear = new Date().getFullYear(); currentCalMonth = new Date().getMonth(); selectedDateForDetail = null; renderDbItems();" style="background:transparent; color:var(--text-color); font-size:0.8rem; font-weight:bold; opacity:0.7; padding:4px; margin-top:2px;">今日に戻る</button>
                 </div>
-                <button class="secondary-btn" style="width:auto; margin:0; padding:10px 18px; font-size:1.1rem; border-radius:12px;" onclick="changeMonth(1)">▶</button>
+                <button class="secondary-btn" style="width:auto; margin:0; padding:10px 18px; font-size:1.1rem; border-radius:12px; background:rgba(0,0,0,0.05);" onclick="changeMonth(1)">▶</button>
             </div>
             ${gridHTML}
         </div>
         `;
 
         container.innerHTML = calHTML;
+    }
 
-        // 日付未定のアイテムを下部にリスト表示
-        if (undatedItems.length > 0) {
-            container.innerHTML += `<div class="section-title" style="margin-top: 30px;">📅 日付未定の項目</div>`;
-            undatedItems.forEach(item => {
-                const memoHTML = (item.memo || '').replace(/\n/g, '<br>');
-                container.innerHTML += `
-                <div class="glass-card event-card" onclick="openDbEditModal('${item.id}')" style="display:flex; gap:15px; align-items:flex-start;">
-                    <div style="flex:1;">
-                        <button class="delete-icon-btn" onclick="deleteDbItem('${item.id}', event)">🗑️</button>
-                        <div class="event-card-title" style="padding-right: 30px;">${item.title}</div>
-                        <p style="font-size: 0.9rem; margin-top: 5px; line-height: 1.6; font-weight:700;">${memoHTML}</p>
-                    </div>
-                </div>`;
-            });
+    // カレンダーの日付タップ時
+    function selectDateForDetail(dStr) {
+        if (selectedDateForDetail === dStr) {
+            // もう一度同じ日を押したら新規作成を開く（ショートカット）
+            let [y, m, d] = dStr.split('-');
+            let presetDate = `${y}/${('0'+m).slice(-2)}/${('0'+d).slice(-2)}`;
+            openDbEditModal(null, presetDate);
+        } else {
+            selectedDateForDetail = dStr;
+            renderDbItems(); // 選択状態の色を反映するため再描画
         }
     }
 
-    // 従来のリスト表示処理 (一括削除モード用)
+    // ✨ カレンダー下部の詳細リスト表示
+    function renderCalendarDetails() {
+        const detailArea = document.getElementById('calendar-detail-area');
+        detailArea.innerHTML = '';
+        let items = getDbArray();
+
+        // 未選択時: 日付未定のメモ・予定をすべて表示
+        if (!selectedDateForDetail) {
+            let undatedItems = items.filter(i => parseDatesFromText(i.date).length === 0);
+            let html = `<div class="section-title">📝 日付未定のメモ・予定</div>`;
+            
+            if (undatedItems.length === 0) {
+                html += `<p style="text-align:center; color:#888; font-weight:bold; margin-top:20px;">日付未定のメモはありません</p>`;
+            } else {
+                undatedItems.forEach(item => { html += createEventCardHTML(item); });
+            }
+            detailArea.innerHTML = html;
+            return;
+        }
+
+        // 日付選択時: その日の予定を時系列表示
+        let targetItems = items.filter(i => {
+            let dates = parseDatesFromText(i.date).map(d => `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`);
+            return dates.includes(selectedDateForDetail);
+        });
+
+        // 簡易的に時間順ソート (メモやタイトルに含まれる時間を無理やり抽出してソート)
+        targetItems.sort((a, b) => {
+            let timeA = (a.title + a.memo).match(/(\d{1,2})[:：](\d{2})/);
+            let timeB = (b.title + b.memo).match(/(\d{1,2})[:：](\d{2})/);
+            let valA = timeA ? parseInt(timeA[1])*60 + parseInt(timeA[2]) : 9999;
+            let valB = timeB ? parseInt(timeB[1])*60 + parseInt(timeB[2]) : 9999;
+            return valA - valB;
+        });
+
+        let [y, m, d] = selectedDateForDetail.split('-');
+        let presetDate = `${y}/${('0'+m).slice(-2)}/${('0'+d).slice(-2)}`;
+
+        let html = `
+        <div class="section-title" style="color:var(--accent-color); font-size:1.3rem;">
+            📅 ${y}年${m}月${d}日の予定
+            <button class="secondary-btn" style="width:auto; margin:0; padding:8px 12px; font-size:0.85rem;" onclick="selectedDateForDetail=null; renderDbItems();">❌ 閉じる</button>
+        </div>`;
+
+        if (targetItems.length === 0) {
+            html += `<p style="text-align:center; color:#888; font-weight:bold; margin:20px 0;">この日の予定はありません</p>`;
+        } else {
+            targetItems.forEach(item => { html += createEventCardHTML(item); });
+        }
+
+        // その日の予定追加ボタン
+        html += `<button class="secondary-btn" style="margin-top:15px; border:2px dashed var(--accent-color); color:var(--accent-color); background:rgba(0,122,255,0.05);" onclick="openDbEditModal(null, '${presetDate}')">➕ この日に新規作成</button>`;
+        
+        detailArea.innerHTML = html;
+    }
+
+    // イベントカードのHTML生成ヘルパー
+    function createEventCardHTML(item) {
+        const typeClass = item.type || 'daily';
+        const typeName = typeClass === 'daily' ? '日常・メモ' : 'イベント';
+        const typeColor = typeClass === 'daily' ? '#4CAF50' : 'var(--accent-color)';
+        
+        const tagArray = (item.tags || '').split(/[\s,]+/).filter(t => t.trim() !== '');
+        const tagsHTML = tagArray.map(tag => `<span class="event-tag">${tag}</span>`).join('');
+        const memoHTML = (item.memo || '').replace(/\n/g, '<br>');
+        
+        let routeBtnHTML = '';
+        if (item.destination && item.destination.trim() !== '') {
+            routeBtnHTML = `<div style="margin-top: 15px;"><button class="secondary-btn" style="margin: 0; padding: 10px; font-size: 0.9rem; background: rgba(0, 122, 255, 0.1); color: #007aff; border: 1px solid rgba(0, 122, 255, 0.2);" onclick="openRouteSearch('${item.destination}', event)">🗺️ 経路を検索</button></div>`;
+        }
+
+        return `
+        <div class="glass-card event-card ${typeClass}" onclick="openDbEditModal('${item.id}')">
+            <button class="delete-icon-btn" onclick="deleteDbItem('${item.id}', event)">🗑️</button>
+            <div class="event-card-date">
+                📅 ${item.date || '未定'} 
+                <span style="background:${typeColor}; color:#fff; font-size:0.7rem; padding:3px 6px; border-radius:8px; margin-left:5px;">${typeName}</span>
+            </div>
+            <div class="event-card-title">${item.title}</div>
+            <div class="event-tags">${tagsHTML}</div>
+            <p style="font-size: 0.95rem; margin-top: 10px; line-height: 1.6; font-weight:700;">${memoHTML}</p>
+            ${item.destination ? `<div style="font-size: 0.85rem; color: #666; font-weight: bold; margin-top: 10px;">📍 ${item.destination}</div>` : ''}
+            ${routeBtnHTML}
+        </div>`;
+    }
+
+    // 従来のリスト表示処理 (一括削除モード時のみ使用)
     function renderDbListView(container) {
         let items = getDbArray(); 
         if (items.length === 0) { 
@@ -1353,14 +966,17 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         }
         
         let sortedItems = [...items];
-        // 簡易ソート
         sortedItems.sort((a, b) => {
             const timeA = new Date(a.date.replace(/[^0-9\/]/g,'').split('/')[0]||0).getTime() || a.id; 
             const timeB = new Date(b.date.replace(/[^0-9\/]/g,'').split('/')[0]||0).getTime() || b.id;
-            return noteData.appMode === 'daily' ? timeB - timeA : timeA - timeB;
+            return timeB - timeA;
         });
         
         sortedItems.forEach(item => {
+            const typeClass = item.type || 'daily';
+            const typeName = typeClass === 'daily' ? '日常' : 'イベント';
+            const typeColor = typeClass === 'daily' ? '#4CAF50' : 'var(--accent-color)';
+
             const tagArray = (item.tags || '').split(/[\s,]+/).filter(t => t.trim() !== '');
             const tagsHTML = tagArray.map(tag => `<span class="event-tag">${tag}</span>`).join('');
             const memoHTML = (item.memo || '').replace(/\n/g, '<br>');
@@ -1369,12 +985,15 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
             const cardStyle = isSelected ? "background: rgba(244,67,54,0.05); border: 2px solid rgba(244,67,54,0.3);" : "";
             
             container.innerHTML += `
-            <div class="glass-card event-card" onclick="toggleDbBulkSelect('${item.id}')" style="display:flex; gap:15px; align-items:flex-start; ${cardStyle}">
+            <div class="glass-card event-card ${typeClass}" onclick="toggleDbBulkSelect('${item.id}')" style="display:flex; gap:15px; align-items:flex-start; ${cardStyle}">
                 <div style="padding-top:2px;">
                     <input type="checkbox" style="width:24px; height:24px; accent-color:#f44336; pointer-events:none; flex-shrink:0;" ${isSelected ? 'checked' : ''}>
                 </div>
                 <div style="flex:1;">
-                    <div class="event-card-date">📅 ${item.date}</div>
+                    <div class="event-card-date">
+                        📅 ${item.date || '未定'}
+                        <span style="background:${typeColor}; color:#fff; font-size:0.7rem; padding:3px 6px; border-radius:8px; margin-left:5px;">${typeName}</span>
+                    </div>
                     <div class="event-card-title" style="padding-right: 0;">${item.title}</div>
                     <div class="event-tags">${tagsHTML}</div>
                     <p style="font-size: 0.95rem; margin-top: 10px; line-height: 1.6; font-weight:700;">${memoHTML}</p>
@@ -1392,13 +1011,11 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         
         if (isDbDeleteMode) {
             btn.innerText = "❌ やめる"; 
-            btn.style.background = "rgba(244,67,54,0.1)"; 
-            btn.style.color = "#f44336"; 
+            btn.style.background = "rgba(244,67,54,0.1)"; btn.style.color = "#f44336"; 
             bar.classList.add('active');
         } else {
             btn.innerText = "🧹 一括削除"; 
-            btn.style.background = "rgba(128,128,128,0.15)"; 
-            btn.style.color = "var(--text-color)"; 
+            btn.style.background = "rgba(128,128,128,0.15)"; btn.style.color = "var(--text-color)"; 
             bar.classList.remove('active');
         }
         updateDbBulkDeleteText(); 
@@ -1416,94 +1033,50 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         document.getElementById('db-bulk-delete-text').innerText = `${dbBulkDeleteSelection.size}件 選択中`; 
         const items = getDbArray();
         const selectAllBtn = document.getElementById('db-bulk-select-all-btn');
-        if (selectAllBtn) { 
-            selectAllBtn.innerText = (items.length > 0 && dbBulkDeleteSelection.size === items.length) ? "全解除" : "全選択"; 
-        }
+        if (selectAllBtn) { selectAllBtn.innerText = (items.length > 0 && dbBulkDeleteSelection.size === items.length) ? "全解除" : "全選択"; }
     }
 
     function toggleSelectAllDbBulk() { 
         const items = getDbArray();
         if (items.length === 0) return;
-        if (dbBulkDeleteSelection.size === items.length) { 
-            dbBulkDeleteSelection.clear(); 
-        } else { 
-            items.forEach(i => dbBulkDeleteSelection.add(String(i.id))); 
-        }
-        updateDbBulkDeleteText(); 
-        renderDbItems();
+        if (dbBulkDeleteSelection.size === items.length) { dbBulkDeleteSelection.clear(); } 
+        else { items.forEach(i => dbBulkDeleteSelection.add(String(i.id))); }
+        updateDbBulkDeleteText(); renderDbItems();
     }
 
     function executeDbBulkDelete() { 
         if (dbBulkDeleteSelection.size === 0) return alert("削除する項目が選択されていません。");
         if(confirm(`選択した ${dbBulkDeleteSelection.size}件 を一気に削除しますか？`)) {
-            let items = getDbArray();
-            items = items.filter(i => !dbBulkDeleteSelection.has(String(i.id)));
-            if (noteData.appMode === 'daily') {
-                noteData.dailyNotes = items;
-            } else {
-                noteData.events = items;
-            }
-            saveData(); 
-            toggleDbDeleteMode();
+            noteData.calendarItems = noteData.calendarItems.filter(i => !dbBulkDeleteSelection.has(String(i.id)));
+            saveData(); toggleDbDeleteMode();
         }
     }
 
-    // --- 安全なカレンダー入力ロジック ---
+    // --- カレンダー入力ロジック ---
     function updateDateRange() {
-        const startPicker = document.getElementById('db-edit-date-start');
-        const endPicker = document.getElementById('db-edit-date-end');
-        let startVal = startPicker.value;
-        let endVal = endPicker.value;
-
-        if (startVal && endVal) {
-            if (new Date(startVal) > new Date(endVal)) {
-                const temp = startVal;
-                startVal = endVal;
-                endVal = temp;
-                startPicker.value = startVal;
-                endPicker.value = endVal;
-            }
-        }
-
-        let startStr = startVal ? startVal.replace(/-/g, '/') : '';
-        let endStr = endVal ? endVal.replace(/-/g, '/') : '';
-
+        const startPicker = document.getElementById('db-edit-date-start'); const endPicker = document.getElementById('db-edit-date-end');
+        let startVal = startPicker.value; let endVal = endPicker.value;
+        if (startVal && endVal) { if (new Date(startVal) > new Date(endVal)) { const temp = startVal; startVal = endVal; endVal = temp; startPicker.value = startVal; endPicker.value = endVal; } }
+        let startStr = startVal ? startVal.replace(/-/g, '/') : ''; let endStr = endVal ? endVal.replace(/-/g, '/') : '';
         let result = '';
-        if (startStr && endStr) {
-            if (startStr === endStr) {
-                result = startStr; 
-            } else {
-                result = startStr + ' 〜 ' + endStr;
-            }
-        } else if (startStr) {
-            result = startStr;
-        } else if (endStr) {
-            result = endStr;
-        }
-
+        if (startStr && endStr) { result = (startStr === endStr) ? startStr : startStr + ' 〜 ' + endStr; } 
+        else if (startStr) { result = startStr; } else if (endStr) { result = endStr; }
         document.getElementById('db-edit-date').value = result;
     }
 
     function clearDateRange() {
-        document.getElementById('db-edit-date-start').value = '';
-        document.getElementById('db-edit-date-end').value = '';
-        document.getElementById('db-edit-date').value = '';
+        document.getElementById('db-edit-date-start').value = ''; document.getElementById('db-edit-date-end').value = ''; document.getElementById('db-edit-date').value = '';
     }
 
     function openDbEditModal(id = null, presetDateStr = null) {
-        const isDaily = noteData.appMode === 'daily';
         const titleEl = document.getElementById('db-modal-title');
-        titleEl.innerText = id ? '項目を編集' : (isDaily ? '新しい日記・メモ' : '新しいイベント情報');
+        titleEl.innerText = id ? '項目を編集' : '予定を新規作成';
 
         let item = null;
-        if (id) {
-            item = getDbArray().find(e => String(e.id) === String(id));
-        }
+        if (id) item = getDbArray().find(e => String(e.id) === String(id));
 
         const d = new Date();
         const todayStr = `${d.getFullYear()}/${('0'+(d.getMonth()+1)).slice(-2)}/${('0'+d.getDate()).slice(-2)}`;
-
-        // presetDateStrが渡された場合はそれを優先
         const initialDate = item && item.date ? item.date : (presetDateStr ? presetDateStr : (id ? '' : todayStr));
 
         document.getElementById('db-edit-id').value = id || '';
@@ -1512,77 +1085,50 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
         document.getElementById('db-edit-destination').value = item && item.destination ? item.destination : '';
         document.getElementById('db-edit-tags').value = item ? item.tags : '';
         document.getElementById('db-edit-memo').value = item ? item.memo : '';
-
-        const startPicker = document.getElementById('db-edit-date-start');
-        const endPicker = document.getElementById('db-edit-date-end');
-        startPicker.value = '';
-        endPicker.value = '';
         
+        // 種類のセレクトボックス（新規時は現在のappModeに合わせる）
+        document.getElementById('db-edit-type').value = item ? (item.type || 'daily') : noteData.appMode;
+
+        const startPicker = document.getElementById('db-edit-date-start'); const endPicker = document.getElementById('db-edit-date-end');
+        startPicker.value = ''; endPicker.value = '';
         if (initialDate) {
             const matches = initialDate.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/g);
-            if (matches && matches.length >= 1) {
-                const parts = matches[0].split(/[\/\-]/);
-                startPicker.value = `${parts[0]}-${('0'+parts[1]).slice(-2)}-${('0'+parts[2]).slice(-2)}`;
-            }
-            if (matches && matches.length >= 2) {
-                const parts = matches[1].split(/[\/\-]/);
-                endPicker.value = `${parts[0]}-${('0'+parts[1]).slice(-2)}-${('0'+parts[2]).slice(-2)}`;
-            }
+            if (matches && matches.length >= 1) { const parts = matches[0].split(/[\/\-]/); startPicker.value = `${parts[0]}-${('0'+parts[1]).slice(-2)}-${('0'+parts[2]).slice(-2)}`; }
+            if (matches && matches.length >= 2) { const parts = matches[1].split(/[\/\-]/); endPicker.value = `${parts[0]}-${('0'+parts[1]).slice(-2)}-${('0'+parts[2]).slice(-2)}`; }
         }
 
         document.getElementById('db-edit-modal').style.display = 'flex';
     }
 
-    function closeDbEditModal() {
-        document.getElementById('db-edit-modal').style.display = 'none';
-    }
+    function closeDbEditModal() { document.getElementById('db-edit-modal').style.display = 'none'; }
 
     function saveDbItem() {
         const title = document.getElementById('db-edit-title').value;
-        if (!title || !title.trim()) {
-            alert('タイトルまたはイベント名を入力してください。');
-            return;
-        }
+        if (!title || !title.trim()) { alert('タイトルまたはイベント名を入力してください。'); return; }
 
         const id = document.getElementById('db-edit-id').value;
+        const type = document.getElementById('db-edit-type').value;
         const dateStr = document.getElementById('db-edit-date').value.trim() || '未定';
         const destination = document.getElementById('db-edit-destination').value.trim();
         const tags = document.getElementById('db-edit-tags').value.trim();
         const memo = document.getElementById('db-edit-memo').value;
 
-        const dataArray = getDbArray();
-
         if (id) {
-            const item = dataArray.find(e => String(e.id) === String(id));
+            const item = noteData.calendarItems.find(e => String(e.id) === String(id));
             if (item) {
-                item.title = title;
-                item.date = dateStr;
-                item.destination = destination;
-                item.tags = tags;
-                item.memo = memo;
+                item.title = title; item.type = type; item.date = dateStr; item.destination = destination; item.tags = tags; item.memo = memo;
             }
         } else {
-            dataArray.unshift({ 
-                id: generateSafeId(), 
-                title: title, 
-                date: dateStr, 
-                destination: destination,
-                tags: tags, 
-                memo: memo 
-            });
+            noteData.calendarItems.unshift({ id: generateSafeId(), title: title, type: type, date: dateStr, destination: destination, tags: tags, memo: memo });
         }
 
-        saveData();
-        renderDbItems();
-        closeDbEditModal();
+        saveData(); renderDbItems(); closeDbEditModal();
     }
 
     function deleteDbItem(id, event) {
         event.stopPropagation();
-        
         if(confirm('本当に削除しますか？')) {
-            if(noteData.appMode === 'daily') noteData.dailyNotes = noteData.dailyNotes.filter(e => String(e.id) !== String(id));
-            else noteData.events = noteData.events.filter(e => String(e.id) !== String(id));
+            noteData.calendarItems = noteData.calendarItems.filter(e => String(e.id) !== String(id));
             saveData(); renderDbItems();
         }
     }
@@ -1590,309 +1136,163 @@ ${activeItems.map(i => '・' + i).join('\n')}`.trim();
     function openRouteSearch(destination, event) {
         event.stopPropagation();
         const origin = noteData.userLocation || "";
-        // 💡 Googleマップ経路検索のURLを修正！
         let url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}&travelmode=transit`;
-        if (origin) {
-            url += `&origin=${encodeURIComponent(origin)}`;
-        }
+        if (origin) { url += `&origin=${encodeURIComponent(origin)}`; }
         window.open(url, '_blank');
     }
 
-    // ✨【完全データ消去処理を強力に修正】✨
     function hardResetApp() { 
         if(confirm("【⚠️警告】\nすべてのデータを完全に消去します。本当によろしいですか？\n※この操作は取り消せません。")) { 
             document.body.innerHTML = '<div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#fff; color:#333; font-size:1.5rem; font-weight:bold;">データを完全に消去しています...</div>';
-            
             localStorage.clear(); 
-            
             if(db) { 
-                db.close(); 
-                const req = indexedDB.deleteDatabase(DB_NAME);
-                req.onsuccess = () => forceReload();
-                req.onerror = () => forceReload();
-                req.onblocked = () => forceReload();
-            } else {
-                forceReload();
-            }
+                db.close(); const req = indexedDB.deleteDatabase(DB_NAME);
+                req.onsuccess = () => forceReload(); req.onerror = () => forceReload(); req.onblocked = () => forceReload();
+            } else { forceReload(); }
         } 
     }
+    function forceReload() { window.location.replace(window.location.pathname + '?reset=' + new Date().getTime()); }
 
-    function forceReload() {
-        window.location.replace(window.location.pathname + '?reset=' + new Date().getTime());
-    }
 
     // ==========================================
     // 🤖 AI機能連携ロジック (超強化版)
     // ==========================================
 
     async function callOpenAI(messages, expectJson = false) {
-        if (!noteData.apiKey) {
-            alert("⚙️設定タブからOpenAI APIキーを登録してください！");
-            return null;
-        }
+        if (!noteData.apiKey) { alert("⚙️設定タブからOpenAI APIキーを登録してください！"); return null; }
         const body = { model: AI_MODEL_ID, messages: messages, temperature: 0.7 };
         if (expectJson) body.response_format = { type: "json_object" };
 
         try {
             const response = await fetch("https://api.openai.com/v1/chat/completions", {
-                method: "POST",
-                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${noteData.apiKey}` },
-                body: JSON.stringify(body)
+                method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${noteData.apiKey}` }, body: JSON.stringify(body)
             });
             const data = await response.json();
             if (data.error) throw new Error(data.error.message);
             return data.choices[0].message.content;
-        } catch (error) {
-            alert("AI連携エラー: " + error.message + "\n※モデル(" + AI_MODEL_ID + ")が存在しないか、APIキーの誤りです。");
-            console.error(error);
-            return null;
-        }
+        } catch (error) { alert("AI連携エラー: " + error.message + "\n※モデル(" + AI_MODEL_ID + ")が存在しないか、APIキーの誤りです。"); console.error(error); return null; }
     }
 
-    function autoResizeChat(el) {
-        el.style.height = 'auto';
-        el.style.height = (el.scrollHeight) + 'px';
-    }
-
-    function handleChatEnter(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendAiChat();
-        }
-    }
+    function autoResizeChat(el) { el.style.height = 'auto'; el.style.height = (el.scrollHeight) + 'px'; }
+    function handleChatEnter(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendAiChat(); } }
 
     function renderAiChatHistory() {
-        const box = document.getElementById('ai-chat-box');
-        if(!box) return;
+        const box = document.getElementById('ai-chat-box'); if(!box) return;
         box.innerHTML = '<div class="chat-msg chat-ai">こんにちは！何でも相談してくださいね。スケジュールの登録も手伝いますよ！</div>';
         noteData.aiChatHistory.forEach(msg => {
-            const isUser = msg.role === 'user';
-            const safeText = msg.content.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-            
-            if (isUser) {
-                box.innerHTML += `<div class="chat-msg chat-user">${safeText}</div>`;
+            const isUser = msg.role === 'user'; const safeText = msg.content.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            if (isUser) { box.innerHTML += `<div class="chat-msg chat-user">${safeText}</div>`;
             } else {
-                // 💡 バグの元だった部分を安全な形に修正！
                 const escapedForArg = msg.content.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, "\\n");
                 box.innerHTML += `
                     <div class="chat-msg chat-ai">
                         <div style="margin-bottom: 8px;">${safeText.replace(/\n/g, '<br>')}</div>
-                        <div style="text-align: right;">
-                            <button onclick="saveChatToMemo('${escapedForArg}')" class="search-btn" style="padding: 4px 8px; font-size: 0.75rem;">📝 メモに残す</button>
-                        </div>
+                        <div style="text-align: right;"><button onclick="saveChatToMemo('${escapedForArg}')" class="search-btn" style="padding: 4px 8px; font-size: 0.75rem;">📝 メモに残す</button></div>
                     </div>`;
             }
         });
         box.scrollTop = box.scrollHeight;
     }
 
-    function clearAiChat() {
-        if(confirm("チャットの履歴をすべて消去しますか？")) {
-            noteData.aiChatHistory = [];
-            saveData();
-            renderAiChatHistory();
-        }
-    }
+    function clearAiChat() { if(confirm("チャットの履歴をすべて消去しますか？")) { noteData.aiChatHistory = []; saveData(); renderAiChatHistory(); } }
 
     function saveChatToMemo(text) {
-        // 安全にデコードして保存
         const decodedText = text.replace(/&quot;/g, '"');
-        const d = new Date();
-        const todayStr = `${d.getFullYear()}/${('0'+(d.getMonth()+1)).slice(-2)}/${('0'+d.getDate()).slice(-2)}`;
-        noteData.dailyNotes.unshift({
-            id: generateSafeId(),
-            title: `💬 AIからのメモ (${todayStr})`,
-            date: todayStr,
-            destination: '',
-            tags: 'AIメモ',
-            memo: decodedText
-        });
-        saveData();
-        renderDbItems();
-        alert("📓 日記・メモに保存しました！");
+        const d = new Date(); const todayStr = `${d.getFullYear()}/${('0'+(d.getMonth()+1)).slice(-2)}/${('0'+d.getDate()).slice(-2)}`;
+        noteData.calendarItems.unshift({ id: generateSafeId(), title: `💬 AIからのメモ (${todayStr})`, type: 'daily', date: todayStr, destination: '', tags: 'AIメモ', memo: decodedText });
+        saveData(); renderDbItems(); alert("📅 カレンダーに保存しました！");
     }
 
     async function sendAiChat() {
-        const inputEl = document.getElementById('ai-chat-input');
-        const text = inputEl.value.trim();
-        if (!text) return;
+        const inputEl = document.getElementById('ai-chat-input'); const text = inputEl.value.trim(); if (!text) return;
+        noteData.aiChatHistory.push({ role: 'user', content: text }); saveData(); renderAiChatHistory(); inputEl.value = ''; autoResizeChat(inputEl);
 
-        noteData.aiChatHistory.push({ role: 'user', content: text });
-        saveData();
-        renderAiChatHistory();
-        inputEl.value = '';
-        autoResizeChat(inputEl);
+        const box = document.getElementById('ai-chat-box'); const loadingId = "loading-" + Date.now();
+        box.innerHTML += `<div class="chat-msg chat-ai" id="${loadingId}">考え中...</div>`; box.scrollTop = box.scrollHeight;
 
-        const box = document.getElementById('ai-chat-box');
-        const loadingId = "loading-" + Date.now();
-        box.innerHTML += `<div class="chat-msg chat-ai" id="${loadingId}">考え中...</div>`;
-        box.scrollTop = box.scrollHeight;
+        const dbSummary = `\n【現在のデータ状況】\n・カレンダー予定一覧: ${JSON.stringify(noteData.calendarItems.map(n=>({id:n.id, title:n.title, type:n.type, date:n.date})))}`;
+        const systemPrompt = `あなたはユーザーをサポートする優秀なアシスタントです。
+【厳守】
+1. Markdown記号は使用不可。
+2. 予定の会話があれば「スケジュールに記録しますか？」と提案。
+3. ユーザーから明確に登録指示があれば、"action": {"type": "transfer_to_schedule", "data": {"text": "内容"}} でスケジュール入力欄に転送してください。
+出力はJSON: {"reply": "返答", "action": null または actionオブジェクト}`;
 
-        const dbSummary = `
-【あなたの持つ権限と現在のデータ状況】
-・日常メモ一覧: ${JSON.stringify(noteData.dailyNotes.map(n=>({id:n.id, title:n.title, date:n.date})))}
-・イベント一覧: ${JSON.stringify(noteData.events.map(n=>({id:n.id, title:n.title, date:n.date})))}
-`;
-
-        const systemPrompt = `あなたはユーザーをサポートする優秀で親切なアシスタントです。
-以下のルールを絶対に守ってJSON形式で返答してください。
-
-【厳守事項】
-1. 「**」などのMarkdown記号は一切使用しないでください（HTML側で非対応のため）。
-2. ユーザーの会話に日付やイベント、通院、買い物の予定などが含まれた場合、「スケジュールやリストに記録しましょうか？」と積極的に提案してください。
-3. ユーザーが「お願い」「登録して」等と明確にスケジュール登録を指示した場合、または予定情報を提供した場合、直接DBへ保存するのではなく、以下の "transfer_to_schedule" アクションを使ってください。
-
-【出力JSONフォーマット】
-{
-  "reply": "ユーザーへの返答メッセージ（Markdown不可）",
-  "action": null // 通常の会話や提案のみの場合は null
-}
-※スケジュール登録へ情報を送る場合は以下の形式
-"action": {
-  "type": "transfer_to_schedule",
-  "data": { "text": "明日の15時から耳鼻科。今度の土日は東京ビッグサイトでイベント" }
-}
-※買い物リストに追加する場合は従来通り
-"action": {
-  "type": "add_shopping",
-  "data": ["にんじん", "玉ねぎ"]
-}
-`;
-
-        const messages = [
-            { role: "system", content: systemPrompt + dbSummary },
-            ...noteData.aiChatHistory
-        ];
-
+        const messages = [ { role: "system", content: systemPrompt + dbSummary }, ...noteData.aiChatHistory ];
         const resultJsonStr = await callOpenAI(messages, true);
         const loadingEl = document.getElementById(loadingId);
         
         if (resultJsonStr) {
             try {
                 const responseObj = JSON.parse(resultJsonStr);
-                const replyText = responseObj.reply || "うまく理解できませんでした。";
-                
-                noteData.aiChatHistory.push({ role: 'assistant', content: replyText });
-                saveData();
-                renderAiChatHistory();
-
-                if (responseObj.action && responseObj.action.type) {
-                    executeAiAction(responseObj.action);
-                }
-            } catch (e) {
-                loadingEl.innerText = "エラー: データの解釈に失敗しました。";
-                console.error(e);
-            }
-        } else {
-            loadingEl.innerText = "エラーが発生しました。設定を確認してください。";
-        }
+                noteData.aiChatHistory.push({ role: 'assistant', content: responseObj.reply || "理解できませんでした。" }); saveData(); renderAiChatHistory();
+                if (responseObj.action && responseObj.action.type) { executeAiAction(responseObj.action); }
+            } catch (e) { loadingEl.innerText = "エラー: 解釈に失敗しました。"; console.error(e); }
+        } else { loadingEl.innerText = "エラーが発生しました。設定を確認してください。"; }
     }
 
     function executeAiAction(action) {
-        let acted = false;
         try {
             if (action.type === 'transfer_to_schedule') {
-                const scheduleInput = document.getElementById('ai-schedule-input');
-                const card = document.getElementById('ai-schedule-card');
-                
-                scheduleInput.value = action.data.text;
-                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                
-                card.style.animation = 'none';
-                setTimeout(() => { card.style.animation = 'jellyPop 0.8s'; }, 50);
-                
+                const scheduleInput = document.getElementById('ai-schedule-input'); const card = document.getElementById('ai-schedule-card');
+                scheduleInput.value = action.data.text; card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                card.style.animation = 'none'; setTimeout(() => { card.style.animation = 'jellyPop 0.8s'; }, 50);
                 alert("📝 スケジュール登録に予定のテキストを移動しました！\n「AIでスケジュール一括登録」ボタンを押して確認画面に進んでください。");
             } else if (action.type === 'add_shopping') {
                 if(!noteData.checklists['daily_shopping']) noteData.checklists['daily_shopping'] = [];
                 action.data.forEach(item => noteData.checklists['daily_shopping'].push({ id: generateSafeId(), text: item, done: false }));
-                acted = true;
+                saveData(); applyModeUI(); 
             }
-            
-            if (acted) {
-                saveData();
-                applyModeUI(); 
-            }
-        } catch(e) { console.error("Action execution failed", e); }
+        } catch(e) { console.error("Action fail", e); }
     }
 
-    // --- ✨ スケジュール丸投げと確認モーダル機能 ---
+    // --- ✨ スケジュール丸投げと確認モーダル ---
     let pendingScheduleData = null;
 
     async function aiParseSchedule() {
-        const inputEl = document.getElementById('ai-schedule-input');
-        const text = inputEl.value.trim();
+        const inputEl = document.getElementById('ai-schedule-input'); const text = inputEl.value.trim();
         if (!text) return alert("テキストを入力してください。");
-
-        const btn = document.getElementById('btn-ai-schedule');
-        const originalText = btn.innerText;
-        btn.innerText = "⏳ 超要約・賢く整理中...";
-        btn.disabled = true;
+        const btn = document.getElementById('btn-ai-schedule'); const originalText = btn.innerText;
+        btn.innerText = "⏳ 超要約・賢く整理中..."; btn.disabled = true;
 
         const prompt = `以下のテキストからスケジュール情報を抽出し、JSON形式で出力してください。
 
 【現在の登録済みデータ】
-・日常メモ: ${JSON.stringify(noteData.dailyNotes.map(n=>({id:n.id, title:n.title, date:n.date, memo:n.memo})))}
-・イベント: ${JSON.stringify(noteData.events.map(n=>({id:n.id, title:n.title, date:n.date, memo:n.memo})))}
+・カレンダー予定: ${JSON.stringify(noteData.calendarItems.map(n=>({id:n.id, title:n.title, type:n.type, date:n.date, memo:n.memo})))}
 
 【指示】
 1. 予定が「日常的なもの（通院、買い物、私用など）」か「イベント（同人誌即売会、ライブなど）」かを判断し、"target" を "daily" か "event" にしてください。
-2. 既存のデータと「完全に重複」している不要な予定があれば、"deleted_ids" の配列にそのIDを入れて消去の指示をしてください。
-3. 既存のデータ（例: 耳鼻科）に関する「追加情報」だと判断できる場合は、新規登録ではなく "updates" 配列に入れ、対象のIDと追加すべきメモテキストを指示してください。
-4. 全く新しい予定は "new_items" 配列に入れてください。
-5. 【重要】 "destination" (場所) には、住所だけでなく「施設名（例：東京ビッグサイト、〇〇病院）」もそのまま入力してください。Googleマップで検索できる名称であれば何でも構いません。
-6. 【超重要・要約ルール】 入力テキストが膨大な長文（サイト全体のコピー等）の場合、挨拶や無関係な文章を完全に削ぎ落とし、"memo" の内容は「当日の行動に必要な要点・時間・持ち物・注意事項など」を箇条書き等で極限まで要約して短く詰めてください。
+2. 既存データと「完全に重複」している不要な予定があれば、"deleted_ids" にIDを入れて消去の指示をしてください。
+3. 既存データに関する「追加情報」は、"updates" 配列に入れ、対象のIDと追加すべきメモテキストを指示してください。
+4. 全く新しい予定は "new_items" に入れてください。
+5. 【重要】 "destination" (場所) には、住所だけでなく「施設名」もそのまま入力してください。
+6. 【超重要・要約】 テキストが膨大な長文の場合、挨拶や無関係な文章を完全に削ぎ落とし、"memo" は「当日の行動に必要な要点・時間・持ち物・注意事項」を箇条書きで極限まで短く詰めてください。
 
 【出力フォーマット】
 {
-  "deleted_ids": [ {"target": "daily", "id": 1234} ],
-  "updates": [
-    { "target": "daily", "id": 5678, "added_memo": "15時からに変更" }
-  ],
-  "new_items": [
-    {
-      "target": "event",
-      "title": "予定のタイトル",
-      "date": "2026/03/21 〜 2026/03/22",
-      "destination": "場所や施設名",
-      "tags": "関連タグ",
-      "memo": "・13:00集合\\n・持ち物: チケット"
-    }
-  ]
+  "deleted_ids": [ 1234 ],
+  "updates": [ { "id": 5678, "added_memo": "15時からに変更" } ],
+  "new_items": [ { "target": "event", "title": "予定のタイトル", "date": "2026/03/21 〜 2026/03/22", "destination": "場所や施設名", "tags": "関連タグ", "memo": "・13:00集合\\n・持ち物: チケット" } ]
 }
+【入力テキスト】\n${text}`;
 
-【入力テキスト】
-${text}`;
-
-        const messages = [
-            { role: "system", content: "あなたは情報を極限まで要約し、既存データとのマージを行う優秀なアシスタントです。" },
-            { role: "user", content: prompt }
-        ];
-
+        const messages = [ { role: "system", content: "あなたは情報を極限まで要約し、既存データとのマージを行う優秀なアシスタントです。" }, { role: "user", content: prompt } ];
         const resultJsonStr = await callOpenAI(messages, true);
         
         if (resultJsonStr) {
             try {
-                const result = JSON.parse(resultJsonStr);
-                pendingScheduleData = result;
-                showSchedulePreview(result);
-            } catch (e) {
-                alert("データの解釈に失敗しました。");
-                console.error(e);
-            }
+                const result = JSON.parse(resultJsonStr); pendingScheduleData = result; showSchedulePreview(result);
+            } catch (e) { alert("データの解釈に失敗しました。"); console.error(e); }
         }
-
-        btn.innerText = originalText;
-        btn.disabled = false;
+        btn.innerText = originalText; btn.disabled = false;
     }
 
     function showSchedulePreview(result) {
-        const container = document.getElementById('schedule-preview-container');
-        container.innerHTML = '';
+        const container = document.getElementById('schedule-preview-container'); container.innerHTML = '';
         let hasItems = false;
         
         if (result.new_items && result.new_items.length > 0) {
-            hasItems = true;
-            container.innerHTML += `<h3 style="font-size:1.1rem; color:#4CAF50; margin-bottom:8px;">🆕 新規登録</h3>`;
+            hasItems = true; container.innerHTML += `<h3 style="font-size:1.1rem; color:#4CAF50; margin-bottom:8px;">🆕 新規登録</h3>`;
             result.new_items.forEach((item, idx) => {
                 container.innerHTML += `
                 <div style="background:rgba(128,128,128,0.1); padding:15px; border-radius:16px; margin-bottom:15px; border:1px solid rgba(128,128,128,0.2);">
@@ -1913,11 +1313,9 @@ ${text}`;
         }
         
         if (result.updates && result.updates.length > 0) {
-            hasItems = true;
-            container.innerHTML += `<h3 style="font-size:1.1rem; color:#FF9800; margin-bottom:8px; margin-top:20px;">🔄 情報の追記</h3>`;
+            hasItems = true; container.innerHTML += `<h3 style="font-size:1.1rem; color:#FF9800; margin-bottom:8px; margin-top:20px;">🔄 情報の追記</h3>`;
             result.updates.forEach(up => {
-                const list = up.target === 'event' ? noteData.events : noteData.dailyNotes;
-                const existing = list.find(n => String(n.id) === String(up.id));
+                const existing = noteData.calendarItems.find(n => String(n.id) === String(up.id));
                 const title = existing ? existing.title : '不明な項目';
                 container.innerHTML += `
                 <div style="background:rgba(255,152,0,0.1); padding:10px; border-radius:12px; margin-bottom:10px; border:1px solid rgba(255,152,0,0.3);">
@@ -1928,52 +1326,74 @@ ${text}`;
         }
         
         if (result.deleted_ids && result.deleted_ids.length > 0) {
-            hasItems = true;
-            container.innerHTML += `<h3 style="font-size:1.1rem; color:#f44336; margin-bottom:8px; margin-top:20px;">🗑 重複の削除</h3>`;
-            result.deleted_ids.forEach(del => {
-                const list = del.target === 'event' ? noteData.events : noteData.dailyNotes;
-                const existing = list.find(n => String(n.id) === String(del.id));
+            hasItems = true; container.innerHTML += `<h3 style="font-size:1.1rem; color:#f44336; margin-bottom:8px; margin-top:20px;">🗑 重複の削除</h3>`;
+            result.deleted_ids.forEach(delId => {
+                const existing = noteData.calendarItems.find(n => String(n.id) === String(delId));
                 const title = existing ? existing.title : '不明な項目';
-                container.innerHTML += `
-                <div style="background:rgba(244,67,54,0.1); padding:10px; border-radius:12px; margin-bottom:10px; color:#f44336; border:1px solid rgba(244,67,54,0.3);">
-                    <div style="font-weight:bold; text-decoration:line-through;">${title}</div>
-                </div>`;
+                container.innerHTML += `<div style="background:rgba(244,67,54,0.1); padding:10px; border-radius:12px; margin-bottom:10px; color:#f44336; border:1px solid rgba(244,67,54,0.3);"><div style="font-weight:bold; text-decoration:line-through;">${title}</div></div>`;
             });
         }
 
-        if (!hasItems) {
-            container.innerHTML = `<p style="font-weight:bold; color:#888;">変更すべき予定は見つかりませんでした。</p>`;
-        }
-        
+        if (!hasItems) { container.innerHTML = `<p style="font-weight:bold; color:#888;">変更すべき予定は見つかりませんでした。</p>`; }
         document.getElementById('schedule-preview-modal').style.display = 'flex';
     }
 
-    function closeSchedulePreview() {
-        document.getElementById('schedule-preview-modal').style.display = 'none';
-        pendingScheduleData = null;
+    function closeSchedulePreview() { document.getElementById('schedule-preview-modal').style.display = 'none'; pendingScheduleData = null; }
+
+    // 💡🤖 さらに短く再要約する新機能
+    async function reSummarizeSchedule() {
+        if (!pendingScheduleData || !pendingScheduleData.new_items || pendingScheduleData.new_items.length === 0) {
+            alert("再要約できる新規予定がありません。"); return;
+        }
+
+        // プレビュー画面でユーザーが手動でいじった値を取得しておく
+        pendingScheduleData.new_items.forEach((item, idx) => {
+            const memoEl = document.getElementById(`preview-memo-${idx}`);
+            if (memoEl) item.memo = memoEl.value;
+        });
+
+        const btn = document.getElementById('btn-resummarize');
+        const originalText = btn.innerText;
+        btn.innerText = "⏳ 要約中..."; btn.disabled = true;
+
+        const itemsToSummarize = pendingScheduleData.new_items.map(item => item.memo).join('\n---\n');
+        const prompt = `以下の予定のメモ内容を、AIの力で【さらに極限まで短く、箇条書きで】要約してください。情報量が多くても一目でわかるレベルまで削ぎ落としてください。\n\n${itemsToSummarize}\n\n出力はJSON形式のみで、{"summarized_memos": ["要約1", "要約2", ...] } のように、元のメモと同じ順番の配列で返してください。`;
+
+        const messages = [ { role: "system", content: "あなたは情報を極限まで短くする要約のプロです。" }, { role: "user", content: prompt } ];
+        const resultJsonStr = await callOpenAI(messages, true);
+        
+        if (resultJsonStr) {
+            try {
+                const result = JSON.parse(resultJsonStr);
+                if (result.summarized_memos && result.summarized_memos.length === pendingScheduleData.new_items.length) {
+                    pendingScheduleData.new_items.forEach((item, idx) => {
+                        item.memo = result.summarized_memos[idx]; // メモを上書き
+                    });
+                    showSchedulePreview(pendingScheduleData); // 再描画
+                }
+            } catch (e) { alert("要約の解釈に失敗しました。"); console.error(e); }
+        }
+        btn.innerText = originalText; btn.disabled = false;
     }
 
     function commitSchedulePreview() {
         if (!pendingScheduleData) return;
-        const result = pendingScheduleData;
-        let changesMade = 0;
+        const result = pendingScheduleData; let changesMade = 0;
 
         if (result.deleted_ids) {
-            result.deleted_ids.forEach(del => {
-                if (del.target === 'event') noteData.events = noteData.events.filter(e => String(e.id) !== String(del.id));
-                else noteData.dailyNotes = noteData.dailyNotes.filter(e => String(e.id) !== String(del.id));
+            result.deleted_ids.forEach(delId => {
+                noteData.calendarItems = noteData.calendarItems.filter(e => String(e.id) !== String(delId));
                 changesMade++;
             });
         }
 
         if (result.updates) {
             result.updates.forEach(up => {
-                const targetList = up.target === 'event' ? noteData.events : noteData.dailyNotes;
-                const idx = targetList.findIndex(n => String(n.id) === String(up.id));
+                const idx = noteData.calendarItems.findIndex(n => String(n.id) === String(up.id));
                 if (idx !== -1) {
                     const updateMemoEl = document.getElementById(`preview-update-${up.id}`);
                     const finalUpdate = updateMemoEl ? updateMemoEl.value : up.added_memo;
-                    targetList[idx].memo += `\n[追記] ${finalUpdate}`;
+                    noteData.calendarItems[idx].memo += `\n[追記] ${finalUpdate}`;
                     changesMade++;
                 }
             });
@@ -1987,117 +1407,52 @@ ${text}`;
                 const destEl = document.getElementById(`preview-dest-${idx}`);
                 const memoEl = document.getElementById(`preview-memo-${idx}`);
 
-                const finalTarget = selectEl ? selectEl.value : ev.target;
-                const finalTitle = titleEl ? titleEl.value : ev.title;
-                const finalDate = dateEl ? dateEl.value : ev.date;
-                const finalDest = destEl ? destEl.value : ev.destination;
-                const finalMemo = memoEl ? memoEl.value : ev.memo;
-
-                const targetList = finalTarget === 'event' ? noteData.events : noteData.dailyNotes;
-                targetList.unshift({
+                noteData.calendarItems.unshift({
                     id: generateSafeId(),
-                    title: finalTitle || '無題の予定',
-                    date: finalDate || '',
-                    destination: finalDest || '',
+                    title: titleEl ? titleEl.value : ev.title || '無題の予定',
+                    type: selectEl ? selectEl.value : ev.target || 'daily',
+                    date: dateEl ? dateEl.value : ev.date || '',
+                    destination: destEl ? destEl.value : ev.destination || '',
                     tags: ev.tags || '',
-                    memo: finalMemo || ''
+                    memo: memoEl ? memoEl.value : ev.memo || ''
                 });
                 changesMade++;
             });
         }
 
         if (changesMade > 0) {
-            saveData();
-            applyModeUI();
-            document.getElementById('ai-schedule-input').value = '';
-            alert("✨ スケジュールを登録・整理しました！");
+            saveData(); renderDbItems(); document.getElementById('ai-schedule-input').value = ''; alert("✨ スケジュールをカレンダーに登録しました！");
         }
-        
         closeSchedulePreview();
     }
 
-
     async function aiMakeRecipe() {
-        const inputEl = document.getElementById('ai-recipe-input');
-        const text = inputEl.value.trim();
+        const inputEl = document.getElementById('ai-recipe-input'); const text = inputEl.value.trim();
         if (!text) return alert("食べたいものや要望を入力してください。");
+        const btn = document.getElementById('btn-ai-recipe'); const originalText = btn.innerText; btn.innerText = "⏳ レシピ考案中..."; btn.disabled = true;
 
-        const btn = document.getElementById('btn-ai-recipe');
-        const originalText = btn.innerText;
-        btn.innerText = "⏳ レシピ考案中...";
-        btn.disabled = true;
-
-        const prompt = `以下の要望に基づき、必要な材料リストとレシピを考え、JSON形式で出力してください。
-
-【重要な指示】
-1. 複数のレシピで同じ材料（例：玉ねぎを使う料理が2つあるなど）が使われる場合、"ingredients" の配列内では【必ず合計数量を計算して1つの項目にまとめて】出力してください。（例: "玉ねぎ (3個)"）
-
-【フォーマット】
-{
-  "ingredients": ["豚肉 (300g)", "玉ねぎ (3個)"],
-  "recipes": [
-    {
-      "title": "ハンバーグ",
-      "memo": "作り方やポイントを簡潔に"
-    }
-  ]
-}
-【要望】
-${text}`;
-
-        const messages = [
-            { role: "system", content: "あなたは優秀な栄養士兼シェフです。JSONで出力してください。" },
-            { role: "user", content: prompt }
-        ];
-
+        const prompt = `以下の要望に基づき、必要な材料リストとレシピを考え、JSON形式で出力してください。\n\n【重要な指示】\n1. 複数のレシピで同じ材料（例：玉ねぎを使う料理が2つあるなど）が使われる場合、"ingredients" の配列内では【必ず合計数量を計算して1つの項目にまとめて】出力してください。（例: "玉ねぎ (3個)"）\n\n【フォーマット】\n{\n  "ingredients": ["豚肉 (300g)", "玉ねぎ (3個)"],\n  "recipes": [\n    {\n      "title": "ハンバーグ",\n      "memo": "作り方やポイントを簡潔に"\n    }\n  ]\n}\n【要望】\n${text}`;
+        const messages = [ { role: "system", content: "あなたは優秀な栄養士兼シェフです。JSONで出力してください。" }, { role: "user", content: prompt } ];
         const resultJsonStr = await callOpenAI(messages, true);
         
         if (resultJsonStr) {
             try {
                 const result = JSON.parse(resultJsonStr);
-                const ingredients = result.ingredients || [];
-                const recipes = result.recipes || [];
+                const ingredients = result.ingredients || []; const recipes = result.recipes || [];
                 
                 if (ingredients.length > 0) {
                     if(!noteData.checklists['daily_shopping']) noteData.checklists['daily_shopping'] = [];
-                    ingredients.forEach(ing => {
-                        noteData.checklists['daily_shopping'].push({
-                            id: generateSafeId(),
-                            text: ing,
-                            done: false
-                        });
-                    });
+                    ingredients.forEach(ing => { noteData.checklists['daily_shopping'].push({ id: generateSafeId(), text: ing, done: false }); });
                 }
                 
                 if (recipes.length > 0) {
-                    const d = new Date();
-                    const todayStr = `${d.getFullYear()}/${('0'+(d.getMonth()+1)).slice(-2)}/${('0'+d.getDate()).slice(-2)}`;
-                    
-                    recipes.forEach(r => {
-                        noteData.dailyNotes.unshift({
-                            id: generateSafeId(),
-                            title: `🍳 レシピ: ${r.title}`,
-                            date: todayStr,
-                            destination: '',
-                            tags: 'レシピ 料理',
-                            memo: r.memo || ''
-                        });
-                    });
+                    const d = new Date(); const todayStr = `${d.getFullYear()}/${('0'+(d.getMonth()+1)).slice(-2)}/${('0'+d.getDate()).slice(-2)}`;
+                    recipes.forEach(r => { noteData.calendarItems.unshift({ id: generateSafeId(), title: `🍳 レシピ: ${r.title}`, type: 'daily', date: todayStr, destination: '', tags: 'レシピ 料理', memo: r.memo || '' }); });
                 }
-                
-                saveData();
-                applyModeUI();
-                inputEl.value = '';
-                alert(`買い物リストに ${ingredients.length}品目追加し、レシピを ${recipes.length}件メモに登録しました！`);
-                
-            } catch (e) {
-                alert("データの解釈に失敗しました。");
-                console.error(e);
-            }
+                saveData(); applyModeUI(); inputEl.value = ''; alert(`買い物リストに ${ingredients.length}品目追加し、レシピを ${recipes.length}件カレンダーに登録しました！`);
+            } catch (e) { alert("データの解釈に失敗しました。"); console.error(e); }
         }
-
-        btn.innerText = originalText;
-        btn.disabled = false;
+        btn.innerText = originalText; btn.disabled = false;
     }
 
 </script>

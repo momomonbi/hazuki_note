@@ -27,16 +27,14 @@
         @keyframes fadeOutDown { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(40px) scale(0.9); } }
         @keyframes jellyPop { 0% { transform: scale(1, 1); } 30% { transform: scale(1.25, 0.75); } 40% { transform: scale(0.75, 1.25); } 50% { transform: scale(1.15, 0.85); } 65% { transform: scale(0.95, 1.05); } 75% { transform: scale(1.05, 0.95); } 100% { transform: scale(1, 1); } }
 
-        /* ✨ 変更点：モーダル展開時の背景スクロールを防止するためのクラス */
         body { font-family: var(--app-font); margin: 0; padding: 0; background-color: transparent; color: var(--text-color); padding-bottom: 100px; touch-action: manipulation; }
-        body.modal-open { overflow: hidden; }
-
         #bg-color-layer { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -2; background-color: var(--bg-color); transition: background-color 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
         .glass-card { background: var(--card-bg); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; animation: popIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
         button { touch-action: manipulation; font-family: inherit; cursor: pointer; border: none; border-radius: 14px; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
         button:active { transform: scale(0.85) !important; box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important; }
         input, select, textarea { font-family: inherit; }
 
+        /* タブ (一番上に固定) */
         .tabs { position: sticky; top: 0; display: flex; background-color: var(--tab-bg); z-index: 1000; box-shadow: 0 8px 32px rgba(0,0,0,0.08); margin: 0 0 15px 0; border-radius: 0 0 20px 20px; padding: 10px 5px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-bottom: 1px solid rgba(255,255,255,0.2); overflow-x: auto;}
         .tabs::-webkit-scrollbar { display: none; }
         .tab { flex: 1; text-align: center; padding: 12px 5px; color: var(--text-color); opacity: 0.6; font-weight: 900; font-size: 0.85rem; white-space: nowrap; border-radius: 18px; cursor: pointer; position: relative; z-index: 2; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
@@ -45,11 +43,13 @@
         .tab-content { display: none; padding: 0 15px; }
         .tab-content.active { display: block; animation: popIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
 
+        /* 汎用UIパーツ */
         .section-title { font-size: 1.15rem; border-bottom: 3px dashed rgba(128,128,128,0.2); padding-bottom: 8px; margin-top: 20px; margin-bottom: 8px; color: var(--accent-color); display: flex; align-items: center; justify-content: space-between; gap: 8px; font-weight: 900;}
         .primary-btn { background-color: var(--btn-primary); color: white; padding: 16px; font-size: 1.1rem; font-weight: 900; width: 100%; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin-bottom: 15px;}
         .secondary-btn { background: rgba(128,128,128,0.1); color: var(--text-color); padding: 14px; font-size: 0.95rem; font-weight: 900; width: 100%; border-radius: 14px; margin-top: 8px;}
         .form-input { width: 100%; padding: 15px; box-sizing: border-box; border: 1px solid rgba(128,128,128,0.2); border-radius: 16px; font-size: 1rem; color: #333; background: rgba(255,255,255,0.9); font-weight: 700; margin-bottom: 10px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);}
 
+        /* チェックリスト用 */
         .check-item { display: flex; align-items: center; padding: 8px 10px; border-bottom: 1px dashed rgba(128,128,128,0.2); gap: 10px; animation: bounceInRight 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); background: transparent; border-radius: 10px;}
         .check-item.removing { animation: fadeOutDown 0.5s forwards; }
         .check-item.delete-mode { background: rgba(244,67,54,0.05); border: 1px solid rgba(244,67,54,0.2); margin-bottom: 4px; border-bottom: none;}
@@ -63,14 +63,17 @@
         .search-btn { background: rgba(0, 122, 255, 0.1); color: #007aff; font-size: 0.8rem; padding: 6px 8px; border-radius: 8px; font-weight: 900; white-space: nowrap; border: 1px solid rgba(0, 122, 255, 0.2);}
         .del-check-btn { background: rgba(244,67,54,0.1); color: #f44336; font-size: 0.85rem; padding: 6px 10px; border-radius: 8px; font-weight: 900;}
 
+        /* AI関連ボタン */
         .ai-calc-btn { background: linear-gradient(135deg, #FFC107, #FF9800); color: white; padding: 15px; border-radius: 16px; font-weight: 900; font-size: 1.1rem; width: 100%; box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 15px;}
         .ai-magic-btn { background: linear-gradient(135deg, #9C27B0, #E040FB); color: white; padding: 15px; border-radius: 16px; font-weight: 900; font-size: 1.1rem; width: 100%; box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px;}
 
+        /* チャットUI */
         .chat-container { display: flex; flex-direction: column; gap: 10px; max-height: 350px; overflow-y: auto; padding: 15px 10px; background: rgba(255,255,255,0.4); border-radius: 16px; border: 1px solid rgba(128,128,128,0.2); margin-bottom: 10px; }
         .chat-msg { padding: 12px; border-radius: 16px; max-width: 85%; font-size: 0.95rem; font-weight: 700; word-break: break-all; position: relative; }
         .chat-user { background: var(--accent-color); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
         .chat-ai { background: rgba(255,255,255,0.9); color: #333; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid rgba(128,128,128,0.2); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
 
+        /* ✨ 厳格なカレンダーUI ✨ */
         .calendar-wrapper { background: var(--card-bg); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; animation: popIn 0.6s ease forwards; }
         .calendar-toolbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: rgba(255,255,255,0.6); border-bottom: 1px solid rgba(128,128,128,0.2); }
         .calendar-toolbar h2 { margin: 0; font-size: 1.25rem; color: var(--accent-color); font-weight: 900; }
@@ -94,6 +97,7 @@
         .cal-event.daily { background: #4CAF50; } 
         .cal-event.event { background: var(--accent-color); } 
 
+        /* 詳細・リスト表示時 */
         .event-card { padding: 18px; margin-bottom: 15px; position: relative; transition: transform 0.2s, box-shadow 0.2s; border-left: 6px solid #ccc; }
         .event-card.daily { border-left-color: #4CAF50; }
         .event-card.event { border-left-color: var(--accent-color); }
@@ -103,7 +107,6 @@
         /* モーダル関連 */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: flex-end; animation: fadeIn 0.4s;}
         .modal-content { background: var(--bg-color); width: 100%; max-width: 600px; height: 100%; max-height: 100dvh; border-top-left-radius: 30px; border-top-right-radius: 30px; padding: 0; box-sizing: border-box; overflow: hidden; animation: slideUpModal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 -10px 40px rgba(0,0,0,0.2); position: relative; display: flex; flex-direction: column;}
-        @keyframes slideUpModal { from{transform: translateY(100%);} to{transform: translateY(0);} }
         .modal-sticky-header { flex-shrink: 0; background: var(--bg-color); padding: 25px 20px 10px 20px; z-index: 2005; border-bottom: 2px solid rgba(128,128,128,0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.05);}
         .modal-scroll-area { flex-grow: 1; overflow-y: auto; padding: 15px 20px 140px 20px; }
 
@@ -196,7 +199,16 @@
             <button onclick="clearAiChat()" style="background: rgba(244,67,54,0.1); color: #f44336; padding: 6px 12px; border-radius: 10px; font-weight: 900; font-size: 0.85rem;">🗑️ ログ消去</button>
         </div>
         <div class="chat-container" id="ai-chat-box"></div>
+        
+        <div style="position: relative; display: inline-block;">
+            <img id="ai-image-preview" src="" style="display:none; max-height: 120px; border-radius: 8px; margin-bottom: 10px; border: 2px solid var(--accent-color);">
+            <button id="ai-image-clear-btn" style="display:none; position: absolute; top: -5px; right: -5px; background: #f44336; color: white; border-radius: 50%; width: 24px; height: 24px; font-weight: bold; font-size: 0.8rem; border: none; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);" onclick="clearAiImage()">×</button>
+        </div>
+        
         <div style="display: flex; gap: 10px; align-items: flex-end;">
+            <label for="ai-image-upload" class="secondary-btn" style="width: auto; margin-bottom: 0; padding: 14px; font-size: 1.4rem; height: 52px; display: flex; align-items: center; cursor: pointer; background: rgba(0,122,255,0.1); border: 1px solid rgba(0,122,255,0.2);">📷</label>
+            <input type="file" id="ai-image-upload" accept="image/*" style="display: none;" onchange="handleAiImageUpload(event)">
+            
             <textarea id="ai-chat-input" class="form-input" style="margin-bottom: 0; resize: none; overflow-y: hidden; min-height: 52px; line-height: 1.5; padding: 14px; flex-grow: 1;" rows="1" placeholder="メッセージを入力..." oninput="autoResizeTextarea(this)" onkeydown="handleChatEnter(event)"></textarea>
             <button class="primary-btn" style="width: auto; margin-bottom: 0; padding: 14px 20px; font-size: 1.4rem; height: 52px; display: flex; align-items: center;" onclick="sendAiChat()">✈️</button>
         </div>
@@ -205,7 +217,7 @@
     <div class="glass-card" style="padding: 20px; margin-bottom: 20px;" id="ai-schedule-card">
         <h2 style="margin-top:0; font-size: 1.2rem; color:var(--accent-color); font-weight: 900;">📅 スケジュール丸投げ登録</h2>
         <p style="font-size:0.9rem; font-weight:700; opacity:0.8; line-height: 1.4;">
-            LINE等の長文、あるいは<span style="color:var(--accent-color); font-weight:900;">複数イベントが載っているページ全体をそのまま丸ごとコピペ</span>してOK！<br>AIが内容を理解し、日常かイベントかを自動で振り分けます。
+            LINE等の長文、あるいは<span style="color:var(--accent-color); font-weight:900;">複数予定が載っているページ全体をそのまま丸ごとコピペ</span>してOK！<br>AIが内容を理解し、日常かイベントかを自動で振り分けます。
         </p>
         <textarea id="ai-schedule-input" class="form-input" rows="4" placeholder="例: 明日の15時から耳鼻科。今度の土日は東京でイベント参加。"></textarea>
         <button class="ai-magic-btn" id="btn-ai-schedule" onclick="aiParseSchedule()">✨ AIでスケジュール一括登録</button>
@@ -310,16 +322,16 @@
         <input type="hidden" id="db-edit-id">
         
         <div id="db-edit-schedule-fields">
-            <label style="font-weight:900; font-size:0.95rem; color: var(--text-color);">📝 タイトル / イベント名</label>
-            <input type="text" id="db-edit-title" class="form-input" placeholder="タイトルを入力">
-            
-            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
                 <label style="font-weight:900; font-size:0.95rem; color: var(--text-color); margin: 0; white-space: nowrap;">📂 種類</label>
                 <select id="db-edit-type" class="form-input" style="margin: 0; padding:10px; font-weight:bold; flex: 1;">
                     <option value="daily">📓 日常・メモ</option>
                     <option value="event">📚 イベント</option>
                 </select>
             </div>
+
+            <label style="font-weight:900; font-size:0.95rem; color: var(--text-color);">📝 タイトル / イベント名</label>
+            <input type="text" id="db-edit-title" class="form-input" placeholder="タイトルを入力">
 
             <label style="font-weight:900; font-size:0.95rem; color: var(--text-color);">📅 日付 (自由に書けます)</label>
             <input type="text" id="db-edit-date" class="form-input" style="margin-bottom:8px;" placeholder="例: 2026年3月21日(土)〜22日(日)">
@@ -341,7 +353,9 @@
         </div>
         
         <label id="db-edit-memo-label" style="font-weight:900; font-size:0.95rem; color: var(--text-color);">✏️ メモ</label>
-        <textarea id="db-edit-memo" class="form-input" placeholder="メモを入力" style="flex-grow: 1; min-height: 150px; overflow-y: hidden; resize: none;" oninput="autoResizeTextarea(this)"></textarea>
+        <div style="flex-grow: 1; overflow-y: auto; background: rgba(255,255,255,0.9); border-radius: 16px; border: 1px solid rgba(128,128,128,0.2); box-shadow: inset 0 2px 5px rgba(0,0,0,0.02); padding: 5px;">
+            <textarea id="db-edit-memo" class="form-input" placeholder="メモを入力" style="width: 100%; min-height: 120px; border: none; background: transparent; box-shadow: none; padding: 10px; resize: none; overflow-y: hidden;" oninput="autoResizeTextarea(this)"></textarea>
+        </div>
         
         <div style="display: flex; gap: 8px; margin-top: 15px; flex-shrink: 0;">
             <button class="secondary-btn" id="db-edit-delete-btn" style="flex: 0.8; margin: 0; background: rgba(244,67,54,0.1); color: #f44336;" onclick="deleteItemFromEdit()">🗑️ 削除</button>
@@ -383,6 +397,9 @@
 </div>
 
 <script>
+    // ==========================================
+    // 🚀 IndexedDB ＆ データ構造
+    // ==========================================
     const AI_MODEL_ID = "gpt-5.2";
     const DB_NAME = 'HazukiNotoDB';
     const DB_VERSION = 16; 
@@ -480,6 +497,15 @@
     // ==========================================
     // UI制御 & ロジック
     // ==========================================
+    // モーダル時の背面スクロール防止
+    function toggleBodyScroll(disable) { document.body.style.overflow = disable ? 'hidden' : ''; }
+
+    // テキストエリア自動拡張
+    function autoResizeTextarea(el) {
+        el.style.height = 'auto';
+        el.style.height = (el.scrollHeight) + 'px';
+    }
+
     function saveUserLocation(val) { noteData.userLocation = val; saveData(); }
     function saveApiKey(val) { noteData.apiKey = val; saveData(); }
     function getListKeysForMode() { return { top: 'daily_shopping', bottom: 'daily_todo' }; }
@@ -498,12 +524,6 @@
 
     function changeTheme(name) { noteData.theme = name; document.body.setAttribute('data-theme', name); saveData(); }
     function changeCatalogColumns(val) { document.documentElement.style.setProperty('--catalog-cols', val); noteData.catalogColumns = parseInt(val); saveData(); }
-
-    /* ✨ 変更点：テキストエリアのオートリサイズ関数 */
-    function autoResizeTextarea(el) {
-        el.style.height = 'auto';
-        el.style.height = (el.scrollHeight) + 'px';
-    }
 
     /* --- チェックリスト機能 --- */
     let isDeleteMode = false; let bulkDeleteSelection = new Set();
@@ -562,20 +582,20 @@
     function deleteCustomCategory(category) { if(confirm(`カテゴリー「${category}」を、中身の商品ごとすべてカタログから削除しますか？`)) { delete noteData.shoppingCatalog[category]; saveData(); buildShoppingCatalog(); } }
     function addCustomItemToCatalog(category) { const text = prompt(`「${category}」に追加するアイテム名:`); if(text && text.trim()) { if(!noteData.shoppingCatalog[category].includes(text.trim())) { noteData.shoppingCatalog[category].push(text.trim()); saveData(); buildShoppingCatalog(); } else { alert('既に登録されています！'); } } }
     function deleteSelectedFromCatalog() { if(catalogDeleteSelection.size === 0) return; if(confirm(`選択した ${catalogDeleteSelection.size}個の項目 をカタログから完全に消去しますか？`)) { for(const category in noteData.shoppingCatalog) { noteData.shoppingCatalog[category] = noteData.shoppingCatalog[category].filter(item => !catalogDeleteSelection.has(item)); } saveData(); catalogDeleteSelection.clear(); buildShoppingCatalog(); } }
-    function openShoppingModal() { selectedShoppingItems.clear(); const currentList = noteData.checklists['daily_shopping'] || []; currentList.forEach(item => { const match = item.text.match(/^(.+?)(?:\s*\((.+?)\))?$/); if(match) { const name = match[1].trim(); const unit = match[2] ? match[2].trim() : 'なし'; selectedShoppingItems.set(name, unit); } }); isCatalogEditMode = false; document.getElementById('catalog-normal-footer').style.display = 'flex'; document.getElementById('catalog-edit-footer').style.display = 'none'; document.getElementById('catalog-edit-btn').innerText = "✏️ 編集"; document.getElementById('catalog-desc').innerText = "ポンポン押して複数選べます！"; document.getElementById('catalog-desc').style.color = "inherit"; buildShoppingCatalog(); document.getElementById('shopping-modal').style.display = 'flex'; document.body.classList.add('modal-open');}
-    function closeShoppingModal() { document.getElementById('shopping-modal').style.display = 'none'; document.body.classList.remove('modal-open');}
+    function openShoppingModal() { selectedShoppingItems.clear(); const currentList = noteData.checklists['daily_shopping'] || []; currentList.forEach(item => { const match = item.text.match(/^(.+?)(?:\s*\((.+?)\))?$/); if(match) { const name = match[1].trim(); const unit = match[2] ? match[2].trim() : 'なし'; selectedShoppingItems.set(name, unit); } }); isCatalogEditMode = false; document.getElementById('catalog-normal-footer').style.display = 'flex'; document.getElementById('catalog-edit-footer').style.display = 'none'; document.getElementById('catalog-edit-btn').innerText = "✏️ 編集"; document.getElementById('catalog-desc').innerText = "ポンポン押して複数選べます！"; document.getElementById('catalog-desc').style.color = "inherit"; buildShoppingCatalog(); document.getElementById('shopping-modal').style.display = 'flex'; toggleBodyScroll(true); }
+    function closeShoppingModal() { document.getElementById('shopping-modal').style.display = 'none'; toggleBodyScroll(false); }
     function commitShoppingModal() { let currentList = noteData.checklists['daily_shopping'] || []; let allCatalogItems = new Set(); if(noteData.shoppingCatalog) { Object.values(noteData.shoppingCatalog).forEach(items => { items.forEach(i => allCatalogItems.add(i)); }); } let newList = []; currentList.forEach(item => { const match = item.text.match(/^(.+?)(?:\s*\((.+?)\))?$/); const name = match ? match[1].trim() : item.text; if (allCatalogItems.has(name)) { if (selectedShoppingItems.has(name)) { const unit = selectedShoppingItems.get(name); const finalString = unit === 'なし' ? name : `${name} (${unit})`; item.text = finalString;  newList.push(item); selectedShoppingItems.delete(name);  } } else { newList.push(item); } }); selectedShoppingItems.forEach((unitStr, text) => { const finalString = unitStr === 'なし' ? text : `${text} (${unitStr})`; newList.push({ id: generateSafeId(), text: finalString, done: false }); }); noteData.checklists['daily_shopping'] = newList; saveData(); renderChecklist(1, 'list-1'); closeShoppingModal(); }
 
     let calcState = { itemText: "", value: "0", prevValue: "0", op: null, unit: "個", isNewInput: true };
     function parseUnitString(str) { if(str === 'なし') return { num: "0", unit: 'なし' }; const m = str.match(/^([0-9.]+)(.*)$/); if(m) return { num: m[1], unit: m[2] }; return { num: "1", unit: str };  }
-    function openCalcModal(itemText) { calcState.itemText = itemText; let currentStr = selectedShoppingItems.has(itemText) ? selectedShoppingItems.get(itemText) : guessDefaultUnit(itemText); let parsed = parseUnitString(currentStr); calcState.value = parsed.num; calcState.unit = parsed.unit; calcState.prevValue = "0"; calcState.op = null; calcState.isNewInput = true;  document.getElementById('calc-item-name').innerText = itemText; updateCalcDisplay(); renderCalcUnits(); document.getElementById('calc-modal').style.display = 'flex'; }
+    function openCalcModal(itemText) { calcState.itemText = itemText; let currentStr = selectedShoppingItems.has(itemText) ? selectedShoppingItems.get(itemText) : guessDefaultUnit(itemText); let parsed = parseUnitString(currentStr); calcState.value = parsed.num; calcState.unit = parsed.unit; calcState.prevValue = "0"; calcState.op = null; calcState.isNewInput = true;  document.getElementById('calc-item-name').innerText = itemText; updateCalcDisplay(); renderCalcUnits(); document.getElementById('calc-modal').style.display = 'flex'; toggleBodyScroll(true); }
     function updateCalcDisplay() { let displayVal = calcState.value; if(displayVal === "0" && calcState.unit === 'なし') displayVal = ''; document.getElementById('calc-display-value').innerText = displayVal; document.getElementById('calc-display-unit').innerText = calcState.unit === 'なし' ? '' : calcState.unit; }
     function renderCalcUnits() { const container = document.getElementById('calc-unit-container'); container.innerHTML = ''; allUnits.forEach(u => { const btn = document.createElement('button'); btn.className = `unit-chip ${calcState.unit === u ? 'active' : ''}`; btn.innerText = u; btn.onclick = () => { calcState.unit = u; if(u === 'なし') calcState.value = "0"; renderCalcUnits(); updateCalcDisplay(); }; container.appendChild(btn); }); }
     function calcInput(charStr) { if(calcState.unit === 'なし') { calcState.unit = '個'; renderCalcUnits(); } if (calcState.isNewInput) { calcState.value = charStr === '.' ? "0." : charStr; calcState.isNewInput = false; } else { if (charStr === '.' && calcState.value.includes('.')) return; calcState.value += charStr; } updateCalcDisplay(); }
     function calcOp(op) { if (calcState.op && !calcState.isNewInput) calcEq(); calcState.prevValue = calcState.value; calcState.op = op; calcState.isNewInput = true; }
     function calcEq() { if (!calcState.op) return; let prev = parseFloat(calcState.prevValue); let curr = parseFloat(calcState.value); if(isNaN(prev)) prev = 0; if(isNaN(curr)) curr = 0; let result = 0; if (calcState.op === '+') result = prev + curr; else if (calcState.op === '-') result = Math.max(0, prev - curr); else if (calcState.op === '×') result = prev * curr; calcState.value = parseFloat(result.toFixed(2)).toString(); calcState.op = null; calcState.isNewInput = true; updateCalcDisplay(); }
     function calcClear() { calcState.value = "0"; calcState.prevValue = "0"; calcState.op = null; calcState.isNewInput = true; updateCalcDisplay(); }
-    function closeCalcModal() { document.getElementById('calc-modal').style.display = 'none'; }
+    function closeCalcModal() { document.getElementById('calc-modal').style.display = 'none'; toggleBodyScroll(false); }
     function commitCalcModal() { calcEq(); let finalStr = calcState.unit === 'なし' ? 'なし' : `${calcState.value}${calcState.unit}`; selectedShoppingItems.set(calcState.itemText, finalStr); const card = document.querySelector(`.catalog-item-card[data-item-name="${calcState.itemText}"]`); if(card) { const unitBtn = card.querySelector('.catalog-unit-btn'); if(unitBtn) unitBtn.innerText = finalStr; if(!card.classList.contains('selected')) { card.classList.add('selected'); } card.style.animation = 'none'; void card.offsetWidth; card.style.animation = 'jellyPop 0.8s cubic-bezier(0.25, 1, 0.5, 1)'; } closeCalcModal(); }
 
     // ==========================================
@@ -902,11 +922,10 @@
         const memoLabel = document.getElementById('db-edit-memo-label');
         const memoTextarea = document.getElementById('db-edit-memo');
 
-        // ✨ 純粋なメモモードの切り替え
         if (isMemoOnly && !id) {
             scheduleFields.style.display = 'none';
             memoLabel.style.display = 'none';
-            memoTextarea.placeholder = "純粋なメモをここに書けます。\n（※1行目が自動的にタイトルになります）";
+            memoTextarea.placeholder = "純粋なメモをここに書けます。長文でも大丈夫です！\n（※1行目が自動的にタイトルになります）";
             memoTextarea.style.minHeight = "300px";
         } else {
             scheduleFields.style.display = 'block';
@@ -929,9 +948,6 @@
         document.getElementById('db-edit-memo').value = item ? item.memo : '';
         document.getElementById('db-edit-type').value = item ? (item.type || 'daily') : 'daily';
 
-        // メモの高さリセット
-        autoResizeTextarea(document.getElementById('db-edit-memo'));
-
         const deleteBtn = document.getElementById('db-edit-delete-btn');
         if (id) { deleteBtn.style.display = 'block'; } else { deleteBtn.style.display = 'none'; }
 
@@ -943,15 +959,15 @@
             if (matches && matches.length >= 2) { const parts = matches[1].split(/[\/\-]/); endPicker.value = `${parts[0]}-${('0'+parts[1]).slice(-2)}-${('0'+parts[2]).slice(-2)}`; }
         }
 
+        toggleBodyScroll(true);
         document.getElementById('db-edit-modal').style.display = 'flex';
-        // ✨ 背景スクロールロック
-        document.body.classList.add('modal-open');
+        
+        setTimeout(() => { autoResizeTextarea(memoTextarea); }, 10);
     }
 
     function closeDbEditModal() { 
         document.getElementById('db-edit-modal').style.display = 'none'; 
-        // ✨ 背景スクロールロック解除
-        document.body.classList.remove('modal-open');
+        toggleBodyScroll(false);
     }
 
     function saveDbItem() {
@@ -963,13 +979,11 @@
         let dateStr = document.getElementById('db-edit-date').value.trim() || '';
         let destination = document.getElementById('db-edit-destination').value.trim();
 
-        // ✨ メモ専用モードの時は、メモの1行目を自動でタイトルにする
         if (isMemoOnly && !id) {
             if (!memo.trim()) { alert('メモを入力してください。'); return; }
             title = memo.split('\n')[0].trim().substring(0, 20);
             if(memo.split('\n')[0].length > 20) title += '...';
-            dateStr = ''; 
-            destination = '';
+            dateStr = ''; destination = '';
         } else {
             if (!title || !title.trim()) { alert('タイトルまたはイベント名を入力してください。'); return; }
         }
@@ -1018,7 +1032,7 @@
 
 
     // ==========================================
-    // 🤖 AI機能連携ロジック
+    // 🤖 AI機能連携ロジック (画像読み取り対応)
     // ==========================================
 
     async function callOpenAI(messages, expectJson = false) {
@@ -1038,6 +1052,27 @@
     }
 
     function handleChatEnter(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendAiChat(); } }
+
+    let currentAiImageBase64 = null;
+    function handleAiImageUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            currentAiImageBase64 = e.target.result;
+            document.getElementById('ai-image-preview').style.display = 'block';
+            document.getElementById('ai-image-preview').src = currentAiImageBase64;
+            document.getElementById('ai-image-clear-btn').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function clearAiImage() {
+        currentAiImageBase64 = null;
+        document.getElementById('ai-image-preview').style.display = 'none';
+        document.getElementById('ai-image-clear-btn').style.display = 'none';
+        document.getElementById('ai-image-upload').value = '';
+    }
 
     function renderAiChatHistory() {
         const box = document.getElementById('ai-chat-box'); if(!box) return;
@@ -1063,16 +1098,47 @@
     }
 
     async function sendAiChat() {
-        const inputEl = document.getElementById('ai-chat-input'); const text = inputEl.value.trim(); if (!text) return;
-        noteData.aiChatHistory.push({ role: 'user', content: text }); saveData(); renderAiChatHistory(); inputEl.value = ''; autoResizeTextarea(inputEl);
+        const inputEl = document.getElementById('ai-chat-input'); const text = inputEl.value.trim(); 
+        if (!text && !currentAiImageBase64) return;
+        
+        let userMessageForApi;
+        if (currentAiImageBase64) {
+            userMessageForApi = { role: 'user', content: [
+                { type: "text", text: text || "画像を読み取り、内容を要約してください。そして、スケジュール、やることリスト、買い物リスト、メモのどれに登録するか提案してください。" },
+                { type: "image_url", image_url: { url: currentAiImageBase64 } }
+            ]};
+        } else {
+            userMessageForApi = { role: 'user', content: text };
+        }
+        
+        const userMessageForHistory = { role: 'user', content: text + (currentAiImageBase64 ? "\n[📷 画像添付]" : "") };
+
+        noteData.aiChatHistory.push(userMessageForHistory); saveData(); renderAiChatHistory(); 
+        inputEl.value = ''; autoResizeTextarea(inputEl);
+        
         const box = document.getElementById('ai-chat-box'); const loadingId = "loading-" + Date.now();
         box.innerHTML += `<div class="chat-msg chat-ai" id="${loadingId}">考え中...</div>`; box.scrollTop = box.scrollHeight;
 
         const dbSummary = `\n【現在のデータ】\n予定: ${JSON.stringify(noteData.calendarItems.map(n=>({id:n.id, title:n.title, type:n.type, date:n.date})))}`;
-        // ✨ やることリストへの提案をプロンプトに追加
-        const systemPrompt = `あなたは優秀なアシスタントです。\n1. Markdown記号使用不可\n2. 予定の会話があれば「スケジュールに記録しますか？」と提案。買い物の場合は買い物リスト、タスクの場合はやることリストへの追加を提案。\n3. 登録指示があれば "action" オブジェクトを含めてください。\n   - スケジュールの場合は "type":"transfer_to_schedule", "data":{"text":"内容"}\n   - 買い物リストの場合は "type":"add_shopping", "data":["にんじん", "玉ねぎ"]\n   - やること(ToDo)の場合は "type":"add_todo", "data":["銀行に行く", "掃除する"]\n出力はJSON: {"reply": "返答", "action": null または actionオブジェクト}`;
+        const systemPrompt = `あなたは優秀なアシスタントです。
+1. Markdown記号使用不可
+2. 予定の会話があれば「スケジュールに記録しますか？」と提案。買い物の場合は買い物リスト、タスクの場合はやることリストへの追加を提案。
+3. 画像が添付された場合、画像内の日本語を含む文章を読み取り、分かりやすく要約してください。その後、その内容が「スケジュール(イベント/日常)」「やることリスト」「買い物リスト」「メモ」のどれに登録するのが最適かを提案してください。
+4. 登録指示があれば "action" オブジェクトを含めてください。
+   - スケジュールの場合は "type":"transfer_to_schedule", "data":{"text":"内容(24時間制に変換)"}
+   - 買い物リストの場合は "type":"add_shopping", "data":["にんじん", "玉ねぎ"]
+   - やること(ToDo)の場合は "type":"add_todo", "data":["銀行に行く", "掃除する"]
+出力はJSON: {"reply": "返答", "action": null または actionオブジェクト}`;
 
-        const messages = [ { role: "system", content: systemPrompt + dbSummary }, ...noteData.aiChatHistory ];
+        const messages = [ { role: "system", content: systemPrompt + dbSummary } ];
+        // 過去の履歴を追加（今回はシンプルに最後のAPI用メッセージだけ送る設計にしても良いが、履歴も送る）
+        for(let i=0; i<noteData.aiChatHistory.length - 1; i++) {
+            messages.push(noteData.aiChatHistory[i]);
+        }
+        messages.push(userMessageForApi);
+        
+        clearAiImage(); // 画像送信後にクリア
+
         const resultJsonStr = await callOpenAI(messages, true);
         const loadingEl = document.getElementById(loadingId);
         
@@ -1099,7 +1165,6 @@
                 action.data.forEach(item => noteData.checklists['daily_shopping'].push({ id: generateSafeId(), text: item, done: false }));
                 saveData(); renderChecklist(1, 'list-1'); 
             } else if (action.type === 'add_todo') {
-                // ✨ やることリストへの追加アクション
                 if(!noteData.checklists['daily_todo']) noteData.checklists['daily_todo'] = [];
                 action.data.forEach(item => noteData.checklists['daily_todo'].push({ id: generateSafeId(), text: item, done: false }));
                 saveData(); renderChecklist(2, 'list-2'); 
@@ -1117,7 +1182,6 @@
         const btn = document.getElementById('btn-ai-schedule'); const originalText = btn.innerText;
         btn.innerText = "⏳ 超要約・賢く整理中..."; btn.disabled = true;
 
-        // ✨ 24時間制指定をプロンプトに追加
         const prompt = `以下のテキストからスケジュール情報を抽出しJSONで出力してください。
 【現在の登録済みデータ】
 ${JSON.stringify(noteData.calendarItems.map(n=>({id:n.id, title:n.title, type:n.type, date:n.date, memo:n.memo})))}
@@ -1163,7 +1227,7 @@ ${JSON.stringify(noteData.calendarItems.map(n=>({id:n.id, title:n.title, type:n.
                         <input type="text" id="preview-date-${idx}" value="${item.date}" class="form-input" style="margin-bottom:0; padding:10px; flex:1;" placeholder="日付 (例: 3/21)">
                         <input type="text" id="preview-dest-${idx}" value="${item.destination || ''}" class="form-input" style="margin-bottom:0; padding:10px; flex:1;" placeholder="場所・施設名">
                     </div>
-                    <textarea id="preview-memo-${idx}" class="form-input" style="margin-bottom:0; padding:10px; font-size:0.95rem; line-height:1.4; resize:vertical; min-height:80px;" oninput="autoResizeTextarea(this)" placeholder="メモ（要約）">${item.memo || ''}</textarea>
+                    <textarea id="preview-memo-${idx}" class="form-input" style="margin-bottom:0; padding:10px; font-size:0.95rem; line-height:1.4;" rows="3" placeholder="メモ（要約）">${item.memo || ''}</textarea>
                 </div>`;
             });
         }
@@ -1176,7 +1240,7 @@ ${JSON.stringify(noteData.calendarItems.map(n=>({id:n.id, title:n.title, type:n.
                 container.innerHTML += `
                 <div style="background:rgba(255,152,0,0.1); padding:12px; border-radius:12px; margin-bottom:10px; border:1px solid rgba(255,152,0,0.3);">
                     <div style="font-weight:bold; margin-bottom:6px;">${title} への追記</div>
-                    <textarea id="preview-update-${up.id}" class="form-input" style="margin-bottom:8px; padding:8px; font-size:0.85rem; color:#d84315; resize:vertical; min-height:60px;" oninput="autoResizeTextarea(this)">${up.added_memo}</textarea>
+                    <textarea id="preview-update-${up.id}" class="form-input" style="margin-bottom:8px; padding:8px; font-size:0.85rem; color:#d84315;" rows="2">${up.added_memo}</textarea>
                     <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; font-weight:bold; cursor:pointer; color:#333;">
                         <input type="checkbox" id="preview-update-new-${up.id}" style="width:18px; height:18px; accent-color:var(--accent-color);">
                         ☑️ 追記せず、独立した新規予定にする
@@ -1195,13 +1259,13 @@ ${JSON.stringify(noteData.calendarItems.map(n=>({id:n.id, title:n.title, type:n.
         }
 
         if (!hasItems) { container.innerHTML = `<p style="font-weight:bold; color:#888;">変更すべき予定は見つかりませんでした。</p>`; }
+        toggleBodyScroll(true);
         document.getElementById('schedule-preview-modal').style.display = 'flex';
-        document.body.classList.add('modal-open');
     }
 
     function closeSchedulePreview() { 
         document.getElementById('schedule-preview-modal').style.display = 'none'; 
-        document.body.classList.remove('modal-open');
+        toggleBodyScroll(false);
         pendingScheduleData = null; 
     }
 

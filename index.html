@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>りぴのおと</title>
+    <title>りぴのおと - スケジュール＆タスク -</title>
     <link href="https://fonts.googleapis.com/css2?family=Kaisei+Decol:wght@400;700&family=Kiwi+Maru:wght@400;700&family=M+PLUS+Rounded+1c:wght@400;700;900&family=Noto+Sans+JP:wght@400;700;900&family=Shippori+Mincho:wght@400;700;800&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
     <style>
+        /* === テーマ設定 === */
         :root { --grid-cols: 2; --catalog-cols: 2; }
         [data-theme="default"], body { --bg-color: #f0f4f8; --tab-bg: rgba(255,255,255,0.5); --accent-color: #007aff; --tab-active-bg: #007aff; --tab-active-color: #fff; --card-bg: rgba(255, 255, 255, 0.5); --text-color: #333; --btn-primary: #007aff; --app-font: 'Zen Maru Gothic', sans-serif; }
         [data-theme="cute"] { --bg-color: #fff0f5; --tab-bg: rgba(255,255,255,0.4); --accent-color: #ff69b4; --tab-active-bg: #ff69b4; --tab-active-color: #fff; --card-bg: rgba(255, 255, 255, 0.5); --text-color: #5d4037; --btn-primary: #ff69b4; --app-font: 'Zen Maru Gothic', sans-serif;  }
@@ -378,6 +379,12 @@
     </div>
 </div>
 
+<div class="modal-overlay" id="image-modal" style="z-index: 5000;" onclick="closeImageModal()">
+    <div style="max-width: 95%; max-height: 95%; display: flex; justify-content: center; align-items: center;">
+        <img id="image-modal-img" src="" style="max-width: 100%; max-height: 100%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+    </div>
+</div>
+
 <div id="bulk-delete-bar">
     <span style="color: white; font-weight: 900; font-size: 1.1rem;" id="bulk-delete-text">0件 選択中</span>
     <div style="display: flex; gap: 8px;">
@@ -400,7 +407,7 @@
     // ==========================================
     // 🚀 IndexedDB ＆ データ構造
     // ==========================================
-    const AI_MODEL_ID = "gpt-5.2";
+    const AI_MODEL_ID = "gpt-4o-mini"; // 画像認識や安定動作のためにモデル指定を更新
     const DB_NAME = 'HazukiNotoDB';
     const DB_VERSION = 16; 
     let db;
@@ -1032,7 +1039,7 @@
 
 
     // ==========================================
-    // 🤖 AI機能連携ロジック (画像読み取り対応)
+    // 🤖 AI機能連携ロジック
     // ==========================================
 
     async function callOpenAI(messages, expectJson = false) {
@@ -1074,14 +1081,34 @@
         document.getElementById('ai-image-upload').value = '';
     }
 
+    function openImageModal(src) {
+        document.getElementById('image-modal-img').src = src;
+        document.getElementById('image-modal').style.display = 'flex';
+        toggleBodyScroll(true);
+    }
+    
+    function closeImageModal() {
+        document.getElementById('image-modal').style.display = 'none';
+        document.getElementById('image-modal-img').src = "";
+        toggleBodyScroll(false);
+    }
+
     function renderAiChatHistory() {
         const box = document.getElementById('ai-chat-box'); if(!box) return;
         box.innerHTML = '<div class="chat-msg chat-ai">こんにちは！何でも相談してくださいね。スケジュールの登録も手伝いますよ！</div>';
         noteData.aiChatHistory.forEach(msg => {
-            const isUser = msg.role === 'user'; const safeText = String(msg.content || "").replace(/</g, "<").replace(/>/g, ">");
-            if (isUser) { box.innerHTML += `<div class="chat-msg chat-user">${safeText}</div>`;
+            const isUser = msg.role === 'user'; 
+            const safeText = String(msg.content || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            
+            let imageHTML = '';
+            if (msg.image) {
+                imageHTML = `<br><img src="${msg.image}" style="height: 40px; border-radius: 4px; cursor: pointer; margin-top: 5px; border: 1px solid rgba(0,0,0,0.1);" onclick="openImageModal(this.src)">`;
+            }
+
+            if (isUser) { 
+                box.innerHTML += `<div class="chat-msg chat-user">${safeText}${imageHTML}</div>`;
             } else {
-                const escapedForArg = String(msg.content || "").replace(/'/g, "\\'").replace(/"/g, '"').replace(/\n/g, "\\n");
+                const escapedForArg = String(msg.content || "").replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, "\\n");
                 box.innerHTML += `<div class="chat-msg chat-ai"><div style="margin-bottom: 8px;">${safeText.replace(/\n/g, '<br>')}</div><div style="text-align: right;"><button onclick="saveChatToMemo('${escapedForArg}')" class="search-btn" style="padding: 4px 8px; font-size: 0.75rem;">📝 メモに残す</button></div></div>`;
             }
         });
@@ -1091,7 +1118,7 @@
     function clearAiChat() { if(confirm("チャットの履歴をすべて消去しますか？")) { noteData.aiChatHistory = []; saveData(); renderAiChatHistory(); } }
 
     function saveChatToMemo(text) {
-        const decodedText = String(text).replace(/"/g, '"');
+        const decodedText = String(text).replace(/&quot;/g, '"');
         const d = new Date(); const todayStr = `${d.getFullYear()}/${('0'+(d.getMonth()+1)).slice(-2)}/${('0'+d.getDate()).slice(-2)}`;
         noteData.calendarItems.unshift({ id: generateSafeId(), title: `💬 AIからのメモ (${todayStr})`, type: 'daily', date: '', destination: '', memo: decodedText });
         saveData(); renderDbItems(); alert("📅 カレンダーの「日付未定メモ」に保存しました！");
@@ -1111,7 +1138,7 @@
             userMessageForApi = { role: 'user', content: text };
         }
         
-        const userMessageForHistory = { role: 'user', content: text + (currentAiImageBase64 ? "\n[📷 画像添付]" : "") };
+        const userMessageForHistory = { role: 'user', content: text, image: currentAiImageBase64 || null };
 
         noteData.aiChatHistory.push(userMessageForHistory); saveData(); renderAiChatHistory(); 
         inputEl.value = ''; autoResizeTextarea(inputEl);
@@ -1123,21 +1150,23 @@
         const systemPrompt = `あなたは優秀なアシスタントです。
 1. Markdown記号使用不可
 2. 予定の会話があれば「スケジュールに記録しますか？」と提案。買い物の場合は買い物リスト、タスクの場合はやることリストへの追加を提案。
-3. 画像が添付された場合、画像内の日本語を含む文章を読み取り、分かりやすく要約してください。その後、その内容が「スケジュール(イベント/日常)」「やることリスト」「買い物リスト」「メモ」のどれに登録するのが最適かを提案してください。
-4. 登録指示があれば "action" オブジェクトを含めてください。
-   - スケジュールの場合は "type":"transfer_to_schedule", "data":{"text":"内容(24時間制に変換)"}
+3. 毎週などの「定期的な予定」を頼まれた場合、すぐに登録せず「いつからいつまでの期間ですか？」とユーザーに質問して期間を特定してください。期間が確定したら、その期間内のすべての日付を具体的に計算して列挙し、転送してください。
+4. 画像が添付された場合、画像内の文章を読み取り要約し、「スケジュール」「やることリスト」「買い物リスト」「メモ」のどれに登録するか提案してください。
+5. 登録指示があれば "action" オブジェクトを含めてください。
+   - スケジュールの場合は "type":"transfer_to_schedule", "data":{"text":"内容(24時間制に変換。定期予定の場合は全ての日付を列挙)"}
    - 買い物リストの場合は "type":"add_shopping", "data":["にんじん", "玉ねぎ"]
    - やること(ToDo)の場合は "type":"add_todo", "data":["銀行に行く", "掃除する"]
 出力はJSON: {"reply": "返答", "action": null または actionオブジェクト}`;
 
         const messages = [ { role: "system", content: systemPrompt + dbSummary } ];
-        // 過去の履歴を追加（今回はシンプルに最後のAPI用メッセージだけ送る設計にしても良いが、履歴も送る）
+        
+        // 過去のテキスト履歴をAPIに送る（画像は重いので直近のみ）
         for(let i=0; i<noteData.aiChatHistory.length - 1; i++) {
-            messages.push(noteData.aiChatHistory[i]);
+            messages.push({ role: noteData.aiChatHistory[i].role, content: noteData.aiChatHistory[i].content });
         }
         messages.push(userMessageForApi);
         
-        clearAiImage(); // 画像送信後にクリア
+        clearAiImage(); 
 
         const resultJsonStr = await callOpenAI(messages, true);
         const loadingEl = document.getElementById(loadingId);
@@ -1193,8 +1222,9 @@ ${JSON.stringify(noteData.calendarItems.map(n=>({id:n.id, title:n.title, type:n.
 5. "destination" (場所) には、住所だけでなく「施設名」もそのまま入力。
 6. 【超重要・要約】 膨大な長文の場合、挨拶や無関係な文章を完全に削ぎ落とし、"memo" は「要点・時間・持ち物・注意事項」を箇条書きで極限まで短く詰める。
 7. 【時間表記】 「午後2時」や「PM2:00」などの表記は、必ず24時間制（例：「14:00」）に変換・統一してください。
+8. 複数の日付がある場合（例：毎週登録など）、それぞれ別々の "new_items" として分けて出力してください。
 【出力フォーマット】
-{ "deleted_ids": [ 1234 ], "updates": [ { "id": 5678, "added_memo": "15時からに変更" } ], "new_items": [ { "target": "event", "title": "予定のタイトル", "date": "2026/03/21 〜 2026/03/22", "destination": "場所や施設名", "memo": "・13:00集合\\n・持ち物: チケット" } ] }
+{ "deleted_ids": [ 1234 ], "updates": [ { "id": 5678, "added_memo": "15時からに変更" } ], "new_items": [ { "target": "event", "title": "予定のタイトル", "date": "2026/03/21", "destination": "場所や施設名", "memo": "・13:00集合\\n・持ち物: チケット" } ] }
 【入力テキスト】\n${text}`;
 
         const messages = [ { role: "system", content: "あなたは情報を極限まで要約し、既存データとのマージを行う優秀なアシスタントです。" }, { role: "user", content: prompt } ];
@@ -1227,7 +1257,7 @@ ${JSON.stringify(noteData.calendarItems.map(n=>({id:n.id, title:n.title, type:n.
                         <input type="text" id="preview-date-${idx}" value="${item.date}" class="form-input" style="margin-bottom:0; padding:10px; flex:1;" placeholder="日付 (例: 3/21)">
                         <input type="text" id="preview-dest-${idx}" value="${item.destination || ''}" class="form-input" style="margin-bottom:0; padding:10px; flex:1;" placeholder="場所・施設名">
                     </div>
-                    <textarea id="preview-memo-${idx}" class="form-input" style="margin-bottom:0; padding:10px; font-size:0.95rem; line-height:1.4;" rows="3" placeholder="メモ（要約）">${item.memo || ''}</textarea>
+                    <textarea id="preview-memo-${idx}" class="form-input" style="margin-bottom:0; padding:10px; font-size:0.95rem; line-height:1.4;" rows="3" placeholder="メモ（要約）" oninput="autoResizeTextarea(this)">${item.memo || ''}</textarea>
                 </div>`;
             });
         }
@@ -1240,7 +1270,7 @@ ${JSON.stringify(noteData.calendarItems.map(n=>({id:n.id, title:n.title, type:n.
                 container.innerHTML += `
                 <div style="background:rgba(255,152,0,0.1); padding:12px; border-radius:12px; margin-bottom:10px; border:1px solid rgba(255,152,0,0.3);">
                     <div style="font-weight:bold; margin-bottom:6px;">${title} への追記</div>
-                    <textarea id="preview-update-${up.id}" class="form-input" style="margin-bottom:8px; padding:8px; font-size:0.85rem; color:#d84315;" rows="2">${up.added_memo}</textarea>
+                    <textarea id="preview-update-${up.id}" class="form-input" style="margin-bottom:8px; padding:8px; font-size:0.85rem; color:#d84315;" rows="2" oninput="autoResizeTextarea(this)">${up.added_memo}</textarea>
                     <label style="display:flex; align-items:center; gap:8px; font-size:0.85rem; font-weight:bold; cursor:pointer; color:#333;">
                         <input type="checkbox" id="preview-update-new-${up.id}" style="width:18px; height:18px; accent-color:var(--accent-color);">
                         ☑️ 追記せず、独立した新規予定にする
@@ -1261,13 +1291,15 @@ ${JSON.stringify(noteData.calendarItems.map(n=>({id:n.id, title:n.title, type:n.
         if (!hasItems) { container.innerHTML = `<p style="font-weight:bold; color:#888;">変更すべき予定は見つかりませんでした。</p>`; }
         toggleBodyScroll(true);
         document.getElementById('schedule-preview-modal').style.display = 'flex';
+        
+        // 描画後にテキストエリアの高さを自動調整
+        setTimeout(() => {
+            const textareas = document.querySelectorAll('#schedule-preview-container textarea');
+            textareas.forEach(ta => autoResizeTextarea(ta));
+        }, 100);
     }
 
-    function closeSchedulePreview() { 
-        document.getElementById('schedule-preview-modal').style.display = 'none'; 
-        toggleBodyScroll(false);
-        pendingScheduleData = null; 
-    }
+    function closeSchedulePreview() { document.getElementById('schedule-preview-modal').style.display = 'none'; toggleBodyScroll(false); pendingScheduleData = null; }
 
     async function reSummarizeSchedule() {
         if (!pendingScheduleData || !pendingScheduleData.new_items || pendingScheduleData.new_items.length === 0) { alert("再要約できる新規予定がありません。"); return; }

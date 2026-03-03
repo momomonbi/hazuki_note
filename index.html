@@ -93,10 +93,13 @@
         
         .cal-date { font-size: 0.75rem; font-weight: 900; text-align: center; margin-bottom: 2px; color: var(--text-color); width: 20px; height: 20px; line-height: 20px; border-radius: 50%; align-self: center; flex-shrink: 0;}
         .cal-date.today { background: var(--accent-color); color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .holiday-text { color: #f44336 !important; font-weight: 900 !important; }
+        .sat-text { color: #2196f3 !important; }
         
         .cal-event { font-size: 0.65rem; padding: 2px 4px; border-radius: 4px; color: #fff; line-height: 1.2; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); word-break: break-all; pointer-events: none;}
         .cal-event.daily { background: #4CAF50; } 
         .cal-event.event { background: var(--accent-color); } 
+        .cal-event.holiday-event { background: rgba(244,67,54,0.8); }
 
         /* 詳細・リスト表示時 */
         .event-card { padding: 18px; margin-bottom: 15px; position: relative; transition: transform 0.2s, box-shadow 0.2s; border-left: 6px solid #ccc; }
@@ -185,9 +188,10 @@
 </div>
 
 <div id="tab-database" class="tab-content">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <button class="primary-btn" style="margin: 0; flex: 1; font-size: 1.1rem;" onclick="openDbEditModal()">✏️ 予定を新規作成</button>
-        <button onclick="toggleDbDeleteMode()" id="db-delete-mode-btn" style="background: rgba(128,128,128,0.15); font-weight: 900; padding: 15px 12px; margin-left: 10px; font-size: 0.85rem; border-radius: 16px; color: var(--text-color); white-space: nowrap;">🧹 一括削除</button>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 8px; flex-wrap: wrap;">
+        <button class="primary-btn" style="margin: 0; flex: 1; min-width: 140px; font-size: 1.05rem;" onclick="openDbEditModal()">✏️ 新規作成</button>
+        <button class="secondary-btn" style="margin: 0; flex: 1; min-width: 140px; font-size: 0.95rem; background: rgba(0,122,255,0.1); color: #007aff; border: 1px solid rgba(0,122,255,0.2);" onclick="exportToICS()">🗓 iOS連携出力</button>
+        <button onclick="toggleDbDeleteMode()" id="db-delete-mode-btn" style="background: rgba(128,128,128,0.15); font-weight: 900; padding: 14px 12px; font-size: 0.85rem; border-radius: 14px; color: var(--text-color); white-space: nowrap;">🧹 一括削除</button>
     </div>
     <div id="calendar-render-area"></div>
     <div id="calendar-detail-area"></div>
@@ -407,6 +411,18 @@
     const DB_VERSION = 16; 
     let db;
     
+    // === 追加: 祝日データの取得 ===
+    let japaneseHolidays = {};
+    async function fetchHolidays() {
+        try {
+            const res = await fetch('https://holidays-jp.github.io/api/v1/date.json');
+            japaneseHolidays = await res.json();
+            if (document.getElementById('tab-database').classList.contains('active')) {
+                renderDbItems(); // 取得完了後にカレンダー再描画
+            }
+        } catch(e) { console.error("Holiday fetch failed", e); }
+    }
+
     const defaultCatalog={"🍅 野菜・果物":["キャベツ","レタス","トマト","ミニトマト","きゅうり","玉ねぎ","じゃがいも","にんじん","大根","白菜","ネギ","きのこ類","もやし","ほうれん草","小松菜","ニラ","ピーマン","ブロッコリー","セロリ","アボカド","にんにく","しょうが","りんご","バナナ","みかん","季節のフルーツ"],"🥩 肉・お魚":["豚こま切れ","豚バラ","豚ロース","牛バラ","牛肉（その他）","鶏もも肉","鶏むね肉","手羽元・手羽先","レバー","合い挽き肉","豚ひき肉","鶏ひき肉","鮭（切り身）","サバ","ブリ","タラ","旬の魚","お刺身","しらす","ウインナー","ベーコン","ハム"],"🥚 乳製品・日配品":["牛乳","ヨーグルト","卵","バター","マーガリン","チーズ","豆腐","油揚げ","納豆","こんにゃく","ちくわ","かまぼこ","カニカマ","食パン","菓子パン"],"🧂 調味料・ルー":["カレー（甘口）","カレー（中辛）","カレー（辛口）","シチュールー","ハヤシライスのルー","醤油","味噌","塩","砂糖","マヨネーズ","ケチャップ","料理酒","みりん","お酢","だしの素","コンソメ","鶏ガラスープの素","味覇","めんつゆ","白だし","ごま油","オリーブオイル","サラダ油","豆板醤","甜面醤","オイスターソース","ラー油","ポン酢","焼肉のたれ","ソース","ドレッシング","チューブにんにく","チューブしょうが","チューブわさび","小麦粉","片栗粉","パン粉"],"🍜 乾物・麺・レトルト":["お米","パスタ","うどん（ゆで）","うどん（乾麺）","ラーメン","そば","焼きそば","春雨","海苔","わかめ","ごま","ツナ缶","コーン缶","トマト缶","ふりかけ","レトルトカレー","カップ麺"],"☕ 飲料・おやつ":["お茶","水","コーヒー","紅茶","豆乳","ジュース","お酒・ビール","ポテトチップス","チョコレート","クッキー","おせんべい","アイス"],"🧻 日用品・消耗品":["トイレットペーパー","ティッシュ","キッチンペーパー","洗剤（衣類用）","柔軟剤","漂白剤","食器用洗剤","スポンジ","お風呂用洗剤","トイレ用洗剤","シャンプー","コンディショナー","ボディソープ","洗顔料","歯磨き粉","歯ブラシ","ゴミ袋（大）","ゴミ袋（小）","ラップ","アルミホイル","クッキングシート","フリーザーバッグ","電池"]};
     const allUnits = ["個", "パック", "g", "ml", "ℓ", "本", "玉", "袋", "箱", "枚", "束", "なし"];
 
@@ -485,7 +501,10 @@
         if(activeTab) { switchTab(activeTab.getAttribute('onclick').match(/'([^']+)'/)[1], activeTab); }
     }
 
-    window.onload = () => { initDB(); };
+    window.onload = () => { 
+        fetchHolidays(); // 起動時に祝日データを裏で読み込む
+        initDB(); 
+    };
 
     // ==========================================
     // UI制御 & ロジック
@@ -615,6 +634,61 @@
         return dates;
     }
 
+    // === 追加: iOS連携用のICSエクスポート関数 ===
+    function exportToICS() {
+        let items = getDbArray();
+        let exportableItems = items.filter(item => parseDatesFromText(item.date).length > 0);
+        
+        if (exportableItems.length === 0) {
+            alert("エクスポート可能な（日付が設定された）予定がありません。");
+            return;
+        }
+
+        let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//RipiNote//JP\nCALSCALE:GREGORIAN\n";
+
+        const formatDate = (dateObj) => {
+            const y = dateObj.getFullYear();
+            const m = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+            const d = ('0' + dateObj.getDate()).slice(-2);
+            return `${y}${m}${d}`;
+        };
+
+        const escapeIcsText = (str) => {
+            if(!str) return "";
+            return String(str).replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;');
+        };
+
+        exportableItems.forEach(item => {
+            let parsedDates = parseDatesFromText(item.date);
+            parsedDates.sort((a,b) => a - b);
+            
+            let start = parsedDates[0];
+            let end = new Date(parsedDates[parsedDates.length - 1]);
+            // iCalendar形式では終了日は「含まない（Exclusive）」ため、1日足す
+            end.setDate(end.getDate() + 1); 
+
+            icsContent += "BEGIN:VEVENT\n";
+            icsContent += `DTSTART;VALUE=DATE:${formatDate(start)}\n`;
+            icsContent += `DTEND;VALUE=DATE:${formatDate(end)}\n`;
+            icsContent += `SUMMARY:${escapeIcsText(item.title)}\n`;
+            if(item.memo) icsContent += `DESCRIPTION:${escapeIcsText(item.memo)}\n`;
+            if(item.destination) icsContent += `LOCATION:${escapeIcsText(item.destination)}\n`;
+            icsContent += "END:VEVENT\n";
+        });
+
+        icsContent += "END:VCALENDAR";
+
+        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'ripinote_schedule.ics';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
     function changeMonth(offset) {
         currentCalMonth += offset;
         if (currentCalMonth > 11) { currentCalMonth = 0; currentCalYear++; } 
@@ -671,12 +745,36 @@
 
         for (let d = 1; d <= daysInMonth; d++) {
             let dStr = `${currentCalYear}-${currentCalMonth+1}-${d}`;
+            
+            // --- 祝日判定処理 ---
+            let paddedM = ('0'+(currentCalMonth+1)).slice(-2);
+            let paddedD = ('0'+d).slice(-2);
+            let apiDateStr = `${currentCalYear}-${paddedM}-${paddedD}`;
+            let holidayName = japaneseHolidays[apiDateStr];
+            let isHoliday = !!holidayName;
+            
+            let dayOfWeek = new Date(currentCalYear, currentCalMonth, d).getDay();
+
             let isToday = (dStr === todayStr);
             let isSelected = (dStr === selectedDateForDetail);
             let dateClass = isToday ? 'cal-date today' : 'cal-date';
+            
+            // 色付け (祝日 または 日曜日 なら赤、土曜なら青)
+            if(isHoliday || dayOfWeek === 0) {
+                if(!isToday) dateClass += ' holiday-text';
+            } else if (dayOfWeek === 6) {
+                if(!isToday) dateClass += ' sat-text';
+            }
+
             let dayClass = `cal-day ${isSelected ? 'selected' : ''}`;
             
             let eventsHTML = '';
+
+            // 祝日イベント追加
+            if(isHoliday) {
+                eventsHTML += `<div class="cal-event holiday-event">🎌 ${holidayName}</div>`;
+            }
+
             if (calData[dStr]) {
                 calData[dStr].forEach(ev => {
                     eventsHTML += `
@@ -766,10 +864,16 @@
 
         let [y, m, d] = selectedDateForDetail.split('-');
         let presetDate = `${y}/${('0'+m).slice(-2)}/${('0'+d).slice(-2)}`;
+        
+        // 祝日ならタイトルに表示
+        let paddedM = ('0'+m).slice(-2);
+        let paddedD = ('0'+d).slice(-2);
+        let holidayName = japaneseHolidays[`${y}-${paddedM}-${paddedD}`];
+        let holidayLabel = holidayName ? `<span style="color:#f44336; font-size:1rem; margin-left:10px;">🎌 ${holidayName}</span>` : '';
 
         let html = `
         <div class="section-title" style="color:var(--accent-color); font-size:1.3rem;">
-            📅 ${y}年${m}月${d}日の予定
+            📅 ${y}年${m}月${d}日の予定 ${holidayLabel}
             <button class="secondary-btn" style="width:auto; margin:0; padding:8px 12px; font-size:0.85rem;" onclick="selectedDateForDetail=null; renderDbItems();">❌ 閉じる</button>
         </div>`;
 
@@ -1083,7 +1187,7 @@
         box.innerHTML = '<div class="chat-msg chat-ai">こんにちは！何でも相談してくださいね。スケジュールの登録も手伝いますよ！</div>';
         noteData.aiChatHistory.forEach(msg => {
             const isUser = msg.role === 'user'; 
-            const safeText = String(msg.content || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            const safeText = String(msg.content || "").replace(/</g, "<").replace(/>/g, ">");
             if (isUser) { 
                 let imgHTML = '';
                 if(msg.image) {
@@ -1091,7 +1195,7 @@
                 }
                 box.innerHTML += `<div class="chat-msg chat-user">${safeText}${imgHTML}</div>`;
             } else {
-                const escapedForArg = String(msg.content || "").replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, "\\n");
+                const escapedForArg = String(msg.content || "").replace(/'/g, "\\'").replace(/"/g, '"').replace(/\n/g, "\\n");
                 box.innerHTML += `<div class="chat-msg chat-ai"><div style="margin-bottom: 8px;">${safeText.replace(/\n/g, '<br>')}</div><div style="text-align: right;"><button onclick="saveChatToMemo('${escapedForArg}')" class="search-btn" style="padding: 4px 8px; font-size: 0.75rem;">📝 メモに残す</button></div></div>`;
             }
         });
@@ -1101,7 +1205,7 @@
     function clearAiChat() { if(confirm("チャットの履歴をすべて消去しますか？")) { noteData.aiChatHistory = []; saveData(); renderAiChatHistory(); } }
 
     function saveChatToMemo(text) {
-        const decodedText = String(text).replace(/&quot;/g, '"');
+        const decodedText = String(text).replace(/"/g, '"');
         const d = new Date(); const todayStr = `${d.getFullYear()}/${('0'+(d.getMonth()+1)).slice(-2)}/${('0'+d.getDate()).slice(-2)}`;
         noteData.calendarItems.unshift({ id: generateSafeId(), title: `💬 AIからのメモ (${todayStr})`, type: 'daily', date: '', destination: '', memo: decodedText });
         saveData(); renderDbItems(); alert("📅 カレンダーの「日付未定メモ」に保存しました！");
@@ -1202,7 +1306,7 @@ ${JSON.stringify(noteData.calendarItems.map(n=>({id:n.id, title:n.title, type:n.
 【指示】
 1. 予定が「日常(通院,買物等)」か「イベント」かを判断し、"target" を "daily" か "event" にする。
 2. 完全に重複している予定があれば、"deleted_ids" にIDを入れて消去指示。
-3. 既存データへの追加情報は "updates" 配列に入れ、対象のIDと追加すべきメモテキストを指示。
+3. 既存データへの追加情報は "updates" arraysに入れ、対象のIDと追加すべきメモテキストを指示。
 4. 全く新しい予定は "new_items" に入れる。
 5. "destination" (場所) には、住所だけでなく「施設名」もそのまま入力。
 6. 【超重要・要約】 膨大な長文の場合、挨拶や無関係な文章を完全に削ぎ落とし、"memo" は「要点・時間・持ち物・注意事項」を箇条書きで極限まで短く詰める。

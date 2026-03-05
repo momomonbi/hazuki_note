@@ -1584,7 +1584,7 @@ ${JSON.stringify(noteData.calendarItems.map(n=>({id:n.id, title:n.title, type:n.
         isFetchingAdvice = true;
         contentEl.innerText = "💡 AIがアドバイスを考えています...";
 
-        const prompt = `以下の今月の予定リストから、スケジュール管理上注意すべき点や重要なアドバイスを、50文字以内の1〜2文で極めて簡潔に教えてください。\n\n【今月の予定】\n${thisMonthItems.map(i => `- ${i.date}: ${i.title}`).join('\n')}`;
+        const prompt = `以下の今月の予定リストから、スケジュール管理上注意すべき点や、準備しておくと良いことなどのアドバイスを、3〜4文程度で具体的に教えてください。必要に応じて箇条書きを使っても構いません。\n\n【今月の予定】\n${thisMonthItems.map(i => `- ${i.date}: ${i.title}`).join('\n')}`;
         const messages = [ { role: "system", content: "あなたは優秀なスケジュールアシスタントです。フレンドリーにアドバイスしてください。" }, { role: "user", content: prompt } ];
         
         const adviceText = await callOpenAI(messages, false);

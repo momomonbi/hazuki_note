@@ -108,6 +108,63 @@
         .event-card-title { font-size: 1.3rem; font-weight: 900; margin-bottom: 6px; padding-right: 80px; word-break: break-all;}
         .event-card-date { font-size: 0.9rem; color: #666; font-weight: 900; margin-bottom: 12px; display: flex; align-items: center; gap: 5px;}
 
+        /* ✨ AIワンポイントアドバイスUI (ドラッグ可能) ✨ */
+        #monthly-advice-widget {
+            position: fixed;
+            top: 80px;
+            right: 15px;
+            width: 220px;
+            background: rgba(255, 255, 255, 0.4); /* グラスモーフィズムを回避し、ほぼ透明に */
+            border: 1px solid rgba(128, 128, 128, 0.3);
+            border-radius: 12px;
+            z-index: 950;
+            color: var(--text-color);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: height 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        /* ダークテーマ用調整 */
+        [data-theme="gothic"] #monthly-advice-widget,
+        [data-theme="scifi"] #monthly-advice-widget,
+        [data-theme="vivid"] #monthly-advice-widget,
+        [data-theme="alluring"] #monthly-advice-widget {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        .advice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 10px;
+            background: rgba(128, 128, 128, 0.1);
+            cursor: move;
+            font-weight: 900;
+            font-size: 0.8rem;
+        }
+        .advice-toggle-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            padding: 0 5px;
+            cursor: pointer;
+            color: var(--accent-color);
+            line-height: 1;
+            transition: transform 0.3s;
+        }
+        .advice-content {
+            padding: 8px 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+        .advice-collapsed .advice-content {
+            display: none;
+        }
+        .advice-collapsed .advice-toggle-btn {
+            transform: rotate(-90deg);
+        }
+
         /* モーダル関連 */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: flex-end; animation: fadeIn 0.4s;}
         .modal-content { background: var(--bg-color); width: 100%; max-width: 600px; height: 100%; max-height: 100dvh; border-top-left-radius: 30px; border-top-right-radius: 30px; padding: 0; box-sizing: border-box; overflow: hidden; animation: slideUpModal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 -10px 40px rgba(0,0,0,0.2); position: relative; display: flex; flex-direction: column;}
@@ -148,50 +205,11 @@
         /* 固定アクションバー */
         #bulk-delete-bar, #db-bulk-delete-bar { position: fixed; bottom: -150px; left: 0; width: 100%; background: rgba(244,67,54,0.95); backdrop-filter: blur(10px); padding: 20px; padding-bottom: 40px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; transition: bottom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1005; box-shadow: 0 -5px 20px rgba(244,67,54,0.3);}
         #bulk-delete-bar.active, #db-bulk-delete-bar.active { bottom: 0; }
-
-        /* ✨ AI月間アドバイス ウィジェット ✨ */
-        #ai-monthly-advice-widget {
-            position: fixed;
-            right: 15px;
-            top: 120px;
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: 12px;
-            padding: 12px 6px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            z-index: 1500;
-            display: none; /* 初期は非表示 */
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            font-size: 0.75rem;
-            font-weight: 900;
-            color: var(--text-color);
-            text-shadow: 0 0 5px var(--bg-color), 0 0 10px var(--bg-color); /* 背景色に応じて読みやすく */
-            max-height: 250px;
-            cursor: grab;
-            touch-action: none; /* スクロール防止 */
-            user-select: none;
-        }
-        #ai-monthly-advice-widget:active { cursor: grabbing; }
-        .advice-icon {
-            margin-bottom: 8px;
-            color: var(--accent-color);
-            font-size: 0.9rem;
-            text-shadow: none;
-            text-align: center;
-        }
     </style>
 </head>
 <body data-theme="cute">
 
 <div id="bg-color-layer"></div>
-
-<div id="ai-monthly-advice-widget">
-    <div class="advice-icon">✨AI</div>
-    <div id="ai-monthly-advice-content" style="letter-spacing: 1px; line-height: 1.5;">分析中...</div>
-</div>
 
 <div class="tabs" id="main-tabs">
     <div class="tab-highlight" id="tab-highlight"></div>
@@ -300,6 +318,16 @@
     <div class="glass-card" style="padding: 20px; border: 3px dashed rgba(244,67,54,0.4);">
         <h2 style="margin-top:0; font-size: 1.2rem; color:#f44336; font-weight: 900;">⚠️ 危険領域</h2>
         <button onclick="hardResetApp()" style="background:rgba(244,67,54,0.1); color:#f44336; padding:15px; width:100%; font-weight:900; border-radius:16px; font-size:1.1rem;">データを完全にリセットする</button>
+    </div>
+</div>
+
+<div id="monthly-advice-widget">
+    <div class="advice-header" id="monthly-advice-header">
+        <span>✨ 今月のアドバイス</span>
+        <button class="advice-toggle-btn" id="advice-toggle-btn" onclick="toggleMonthlyAdvice()">▽</button>
+    </div>
+    <div class="advice-content" id="ai-monthly-advice-content">
+        アドバイスを取得中...
     </div>
 </div>
 
@@ -445,19 +473,19 @@
 </div>
 
 <script>
-    const AI_MODEL_ID = "gpt-5.2";
+    const AI_MODEL_ID = "gpt-4o-mini"; // 最新の高速モデルを想定（元の指定があれば合わせてください）
     const DB_NAME = 'HazukiNotoDB';
-    const DB_VERSION = 16; 
+    const DB_VERSION = 17; 
     let db;
     
-    // === 祝日データの取得 ===
+    // === 追加: 祝日データの取得 ===
     let japaneseHolidays = {};
     async function fetchHolidays() {
         try {
             const res = await fetch('https://holidays-jp.github.io/api/v1/date.json');
             japaneseHolidays = await res.json();
             if (document.getElementById('tab-database').classList.contains('active')) {
-                renderDbItems(); 
+                renderDbItems(); // 取得完了後にカレンダー再描画
             }
         } catch(e) { console.error("Holiday fetch failed", e); }
     }
@@ -468,7 +496,7 @@
     let noteData = { 
         theme: 'cute', userLocation: '', apiKey: '', catalogColumns: 2, shoppingCatalog: null,
         checklists: { daily_shopping: [], daily_todo: [] },
-        calendarItems: [], aiChatHistory: [], monthlyAdviceCache: {}
+        calendarItems: [], aiChatHistory: [], aiMonthlyAdvice: {}
     };
 
     function initDB() {
@@ -523,7 +551,7 @@
         if(!noteData.catalogColumns) noteData.catalogColumns = 2;
         if(!noteData.shoppingCatalog) noteData.shoppingCatalog = JSON.parse(JSON.stringify(defaultCatalog));
         if(!noteData.aiChatHistory) noteData.aiChatHistory = [];
-        if(!noteData.monthlyAdviceCache) noteData.monthlyAdviceCache = {};
+        if(!noteData.aiMonthlyAdvice) noteData.aiMonthlyAdvice = {};
         
         document.body.setAttribute('data-theme', noteData.theme || 'cute');
         document.getElementById('theme-selector').value = noteData.theme || 'cute';
@@ -536,79 +564,17 @@
         renderChecklist(1, 'list-1');
         renderChecklist(2, 'list-2');
         renderAiChatHistory();
-        initAdviceWidgetDrag(); // ドラッグ処理の初期化
         
         const activeTab = document.querySelector('.tab.active');
         if(activeTab) { switchTab(activeTab.getAttribute('onclick').match(/'([^']+)'/)[1], activeTab); }
+        
+        makeWidgetDraggable('monthly-advice-widget', 'monthly-advice-header');
     }
 
     window.onload = () => { 
         fetchHolidays(); 
         initDB(); 
     };
-
-    // ==========================================
-    // ✨ ウィジェットのドラッグ移動処理 ✨
-    // ==========================================
-    let adviceWidgetDrag = {
-        isDragging: false, startX: 0, startY: 0, el: null
-    };
-
-    function initAdviceWidgetDrag() {
-        const el = document.getElementById('ai-monthly-advice-widget');
-        adviceWidgetDrag.el = el;
-
-        el.addEventListener('mousedown', dragStart);
-        el.addEventListener('touchstart', dragStart, {passive: false});
-
-        document.addEventListener('mousemove', dragMove);
-        document.addEventListener('touchmove', dragMove, {passive: false});
-
-        document.addEventListener('mouseup', dragEnd);
-        document.addEventListener('touchend', dragEnd);
-    }
-
-    function dragStart(e) {
-        if (e.target !== adviceWidgetDrag.el && !adviceWidgetDrag.el.contains(e.target)) return;
-        adviceWidgetDrag.isDragging = true;
-        
-        let clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-        let clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-        
-        const rect = adviceWidgetDrag.el.getBoundingClientRect();
-        adviceWidgetDrag.el.style.left = rect.left + 'px';
-        adviceWidgetDrag.el.style.top = rect.top + 'px';
-        adviceWidgetDrag.el.style.right = 'auto'; // CSSのright指定を解除
-        
-        adviceWidgetDrag.startX = clientX - rect.left;
-        adviceWidgetDrag.startY = clientY - rect.top;
-        
-        if(e.type === 'touchstart') e.preventDefault();
-    }
-
-    function dragMove(e) {
-        if (!adviceWidgetDrag.isDragging) return;
-        if(e.type === 'touchmove') e.preventDefault(); 
-        
-        let clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-        let clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-        
-        let newX = clientX - adviceWidgetDrag.startX;
-        let newY = clientY - adviceWidgetDrag.startY;
-
-        const maxX = window.innerWidth - adviceWidgetDrag.el.offsetWidth;
-        const maxY = window.innerHeight - adviceWidgetDrag.el.offsetHeight;
-        
-        newX = Math.max(0, Math.min(newX, maxX));
-        newY = Math.max(0, Math.min(newY, maxY));
-
-        adviceWidgetDrag.el.style.left = newX + 'px';
-        adviceWidgetDrag.el.style.top = newY + 'px';
-    }
-
-    function dragEnd(e) {
-        adviceWidgetDrag.isDragging = false;
-    }
 
     // ==========================================
     // UI制御 & ロジック
@@ -633,15 +599,13 @@
         highlight.style.transform = `translateX(${tabElement.offsetLeft - 6}px)`;
         document.getElementById(id).classList.add('active');
         
-        // カレンダータブの時だけウィジェットを表示
-        const adviceWidget = document.getElementById('ai-monthly-advice-widget');
-        if (id === 'tab-database') {
-            adviceWidget.style.display = 'block';
+        const adviceWidget = document.getElementById('monthly-advice-widget');
+        if (id === 'tab-database') { 
+            adviceWidget.style.display = 'flex';
             renderDbItems(); 
         } else {
             adviceWidget.style.display = 'none';
         }
-        
         window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
@@ -816,7 +780,11 @@
         } else {
             renderDbCalendarView(renderArea); 
             renderCalendarDetails(); 
-            fetchMonthlyAdvice(currentCalYear, currentCalMonth); // AIアドバイス取得
+        }
+        
+        // カレンダー再描画時にAIアドバイスを更新
+        if (document.getElementById('tab-database').classList.contains('active')) {
+            fetchMonthlyAdvice();
         }
     }
 
@@ -1230,11 +1198,11 @@
 
 
     // ==========================================
-    // 🤖 AI機能連携ロジック (画像・タイムアウト対応)
+    // 🤖 AI機能連携ロジック
     // ==========================================
 
     async function callOpenAI(messages, expectJson = false) {
-        if (!noteData.apiKey) { return null; }
+        if (!noteData.apiKey) { alert("⚙️設定タブからOpenAI APIキーを登録してください！"); return null; }
         const body = { model: AI_MODEL_ID, messages: messages, temperature: 0.7 };
         if (expectJson) body.response_format = { type: "json_object" };
 
@@ -1254,6 +1222,7 @@
             return data.choices[0].message.content;
         } catch (error) { 
             clearTimeout(timeoutId);
+            let errorMsg = error.name === 'AbortError' ? "通信がタイムアウトしました。通信環境を確認してください。" : error.message;
             console.error(error); 
             return null; 
         }
@@ -1316,7 +1285,6 @@
     }
 
     async function sendAiChat() {
-        if (!noteData.apiKey) return alert("⚙️設定タブからOpenAI APIキーを登録してください！");
         const inputEl = document.getElementById('ai-chat-input'); const text = inputEl.value.trim(); 
         if (!text && !currentAiImageBase64) return;
         
@@ -1400,7 +1368,6 @@
     let pendingScheduleData = null;
 
     async function aiParseSchedule() {
-        if (!noteData.apiKey) return alert("⚙️設定タブからOpenAI APIキーを登録してください！");
         const inputEl = document.getElementById('ai-schedule-input'); const text = inputEl.value.trim();
         if (!text) return alert("テキストを入力してください。");
         const btn = document.getElementById('btn-ai-schedule'); const originalText = btn.innerText;
@@ -1549,7 +1516,6 @@ ${JSON.stringify(noteData.calendarItems.map(n=>({id:n.id, title:n.title, type:n.
     }
 
     async function aiMakeRecipe() {
-        if (!noteData.apiKey) return alert("⚙️設定タブからOpenAI APIキーを登録してください！");
         const inputEl = document.getElementById('ai-recipe-input'); const text = inputEl.value.trim();
         if (!text) return alert("食べたいものや要望を入力してください。");
         const btn = document.getElementById('btn-ai-recipe'); const originalText = btn.innerText; btn.innerText = "⏳ レシピ考案中..."; btn.disabled = true;
@@ -1575,54 +1541,128 @@ ${JSON.stringify(noteData.calendarItems.map(n=>({id:n.id, title:n.title, type:n.
         btn.innerText = originalText; btn.disabled = false;
     }
 
-    // --- ✨ 月間AIアドバイス取得 ✨ ---
-    async function fetchMonthlyAdvice(year, month) {
-        const contentEl = document.getElementById('ai-monthly-advice-content');
-        if (!noteData.apiKey) { contentEl.innerHTML = 'AIｷｰ<br>未設定'; return; }
+    // --- ✨ AIマンスリーアドバイスロジック ✨ ---
+    let isFetchingAdvice = false;
 
+    function generateMonthHash(items) {
+        return items.map(i => `${i.id}-${i.title}-${i.date}-${i.memo}`).join('|');
+    }
+
+    async function fetchMonthlyAdvice() {
+        if (!noteData.apiKey) {
+            document.getElementById('ai-monthly-advice-content').innerText = "AIアドバイスを利用するには設定からAPIキーを登録してください。";
+            return;
+        }
+
+        if (isFetchingAdvice) return;
+
+        const currentMonthStr = `${currentCalYear}-${currentCalMonth + 1}`;
         let items = getDbArray();
-        let monthItems = items.filter(i => {
+        
+        let thisMonthItems = items.filter(i => {
             let dates = parseDatesFromText(i.date || '');
-            return dates.some(d => d.getFullYear() === year && d.getMonth() === month);
+            return dates.some(d => d.getFullYear() === currentCalYear && d.getMonth() === currentCalMonth);
         });
 
-        if (monthItems.length === 0) {
-            contentEl.innerHTML = '予定が<br>ありません';
+        const contentEl = document.getElementById('ai-monthly-advice-content');
+
+        if (thisMonthItems.length === 0) {
+            contentEl.innerText = "今月の予定はまだありません。";
             return;
         }
 
-        const cacheKey = `${year}-${month}`;
-        let itemsHash = monthItems.map(i => `${i.date}:${i.title}`).join('|');
+        const dataHash = generateMonthHash(thisMonthItems);
+
+        // キャッシュ判定
+        if (noteData.aiMonthlyAdvice && 
+            noteData.aiMonthlyAdvice[currentMonthStr] && 
+            noteData.aiMonthlyAdvice[currentMonthStr].hash === dataHash) {
+            contentEl.innerText = noteData.aiMonthlyAdvice[currentMonthStr].advice;
+            return;
+        }
+
+        isFetchingAdvice = true;
+        contentEl.innerText = "💡 AIがアドバイスを考えています...";
+
+        const prompt = `以下の今月の予定リストから、スケジュール管理上注意すべき点や重要なアドバイスを、50文字以内の1〜2文で極めて簡潔に教えてください。\n\n【今月の予定】\n${thisMonthItems.map(i => `- ${i.date}: ${i.title}`).join('\n')}`;
+        const messages = [ { role: "system", content: "あなたは優秀なスケジュールアシスタントです。フレンドリーにアドバイスしてください。" }, { role: "user", content: prompt } ];
         
-        if (noteData.monthlyAdviceCache[cacheKey] && noteData.monthlyAdviceCache[cacheKey].hash === itemsHash) {
-            contentEl.innerHTML = noteData.monthlyAdviceCache[cacheKey].advice;
-            return;
+        const adviceText = await callOpenAI(messages, false);
+
+        if (adviceText) {
+            if (!noteData.aiMonthlyAdvice) noteData.aiMonthlyAdvice = {};
+            noteData.aiMonthlyAdvice[currentMonthStr] = { hash: dataHash, advice: adviceText.trim() };
+            saveData();
+            contentEl.innerText = noteData.aiMonthlyAdvice[currentMonthStr].advice;
+        } else {
+            contentEl.innerText = "アドバイスの取得に失敗しました。";
         }
+        
+        isFetchingAdvice = false;
+    }
 
-        contentEl.innerHTML = '考え中..';
+    function toggleMonthlyAdvice() {
+        const widget = document.getElementById('monthly-advice-widget');
+        const btn = document.getElementById('advice-toggle-btn');
+        if (widget.classList.contains('advice-collapsed')) {
+            widget.classList.remove('advice-collapsed');
+            btn.innerText = '▽';
+        } else {
+            widget.classList.add('advice-collapsed');
+            btn.innerText = '△';
+        }
+    }
 
-        const prompt = `あなたは優秀なスケジュールアシスタントです。
-以下の${year}年${month+1}月の予定リストを分析し、ユーザーに対する「注意点」や「心構え」「重要なアドバイス」を【超簡潔に、縦書きで読みやすいように、最大30文字以内】で教えてください。
-出力はJSON形式で {"advice": "アドバイスのテキスト"} のみ。
+    // --- ✨ ウィジェットのドラッグ移動機能 ✨ ---
+    function makeWidgetDraggable(widgetId, headerId) {
+        const widget = document.getElementById(widgetId);
+        const header = document.getElementById(headerId);
+        let isDragging = false, startX, startY, initialX, initialY;
 
-予定リスト:
-${monthItems.map(i => `- ${i.date}: ${i.title}`).join('\n')}`;
+        const dragStart = (e) => {
+            if (e.target.tagName.toLowerCase() === 'button') return;
+            isDragging = true;
+            if (e.type === 'touchstart') {
+                startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+            } else {
+                startX = e.clientX; startY = e.clientY;
+            }
+            const rect = widget.getBoundingClientRect();
+            initialX = rect.left; initialY = rect.top;
+        };
 
-        const messages = [
-            { role: "system", content: "あなたは簡潔なアドバイザーです。" },
-            { role: "user", content: prompt }
-        ];
+        const dragAction = (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            let currentX, currentY;
+            if (e.type === 'touchmove') {
+                currentX = e.touches[0].clientX; currentY = e.touches[0].clientY;
+            } else {
+                currentX = e.clientX; currentY = e.clientY;
+            }
+            const dx = currentX - startX; const dy = currentY - startY;
+            
+            let newX = initialX + dx;
+            let newY = initialY + dy;
+            
+            // 画面外に出ないように調整
+            newX = Math.max(0, Math.min(newX, window.innerWidth - widget.offsetWidth));
+            newY = Math.max(0, Math.min(newY, window.innerHeight - widget.offsetHeight));
 
-        const resultJsonStr = await callOpenAI(messages, true);
-        if (resultJsonStr) {
-            const result = safeParseJSON(resultJsonStr);
-            if (result && result.advice) {
-                let safeAdvice = String(result.advice).replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>");
-                contentEl.innerHTML = safeAdvice;
-                noteData.monthlyAdviceCache[cacheKey] = { hash: itemsHash, advice: safeAdvice };
-                saveData();
-            } else { contentEl.innerHTML = '取得失敗'; }
-        } else { contentEl.innerHTML = '通信<br>ｴﾗｰ'; }
+            widget.style.left = `${newX}px`;
+            widget.style.top = `${newY}px`;
+            widget.style.right = 'auto'; 
+            widget.style.bottom = 'auto';
+        };
+
+        const dragEnd = () => { isDragging = false; };
+
+        header.addEventListener('mousedown', dragStart);
+        header.addEventListener('touchstart', dragStart, {passive: false});
+        document.addEventListener('mousemove', dragAction);
+        document.addEventListener('touchmove', dragAction, {passive: false});
+        document.addEventListener('mouseup', dragEnd);
+        document.addEventListener('touchend', dragEnd);
     }
 
 </script>

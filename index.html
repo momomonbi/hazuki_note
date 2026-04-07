@@ -205,6 +205,20 @@
         /* 固定アクションバー */
         #bulk-delete-bar, #db-bulk-delete-bar { position: fixed; bottom: -150px; left: 0; width: 100%; background: rgba(244,67,54,0.95); backdrop-filter: blur(10px); padding: 20px; padding-bottom: 40px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; transition: bottom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1005; box-shadow: 0 -5px 20px rgba(244,67,54,0.3);}
         #bulk-delete-bar.active, #db-bulk-delete-bar.active { bottom: 0; }
+
+        /* URLインポート確認モーダル */
+        .import-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:2000; display:flex; align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(4px); animation:popIn 0.4s ease; }
+        .import-modal { background:var(--card-bg); backdrop-filter:blur(28px) saturate(160%); border-radius:20px; padding:24px 20px; width:min(420px,100%); max-height:80vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.2); }
+        .import-modal h3 { margin:0 0 4px; font-size:1.15rem; color:var(--accent-color); }
+        .import-modal .import-sub { font-size:0.8rem; color:#888; margin-bottom:14px; }
+        .import-item { background:rgba(255,255,255,0.7); border:1px solid rgba(128,128,128,0.15); border-radius:12px; padding:12px 14px; margin-bottom:8px; }
+        .import-item-date { font-size:0.75rem; color:var(--accent-color); font-weight:900; margin-bottom:2px; }
+        .import-item-title { font-size:0.95rem; font-weight:900; }
+        .import-item-memo { font-size:0.8rem; color:#666; margin-top:4px; line-height:1.4; }
+        .import-actions { display:flex; gap:10px; margin-top:16px; }
+        .import-actions button { flex:1; padding:14px; font-size:1rem; font-weight:900; border-radius:14px; }
+        .import-btn-ok { background:var(--btn-primary); color:#fff; box-shadow:0 4px 12px rgba(0,0,0,0.15); }
+        .import-btn-cancel { background:rgba(128,128,128,0.1); color:var(--text-color); }
     </style>
 </head>
 <body data-theme="cute">
@@ -571,9 +585,9 @@
         makeWidgetDraggable('monthly-advice-widget', 'monthly-advice-header');
     }
 
-    window.onload = () => { 
-        fetchHolidays(); 
-        initDB(); 
+    window.onload = () => {
+        fetchHolidays();
+        initDB().then(() => { checkUrlImport(); });
     };
 
     // ==========================================
@@ -1663,6 +1677,110 @@ ${JSON.stringify(noteData.calendarItems.map(n=>({id:n.id, title:n.title, type:n.
         document.addEventListener('touchmove', dragAction, {passive: false});
         document.addEventListener('mouseup', dragEnd);
         document.addEventListener('touchend', dragEnd);
+    }
+
+    // ==========================================
+    // URLパラメータ経由のスケジュール一括登録
+    // ==========================================
+    // 使い方: ?add=<encodeURIComponent(JSON配列)>
+    // JSON形式: [{"title":"持ち物","date":"2026-04-15","memo":"体操着"}]
+    // 各要素: title(必須), date(任意 YYYY-MM-DD), memo(任意), type(任意 daily|event)
+    function checkUrlImport() {
+        const params = new URLSearchParams(window.location.search);
+        const addParam = params.get('add');
+        if (!addParam) return;
+
+        let items;
+        try { items = JSON.parse(decodeURIComponent(addParam)); }
+        catch { try { items = JSON.parse(addParam); } catch { alert('データの読み取りに失敗しました。'); cleanUrl(); return; } }
+
+        if (!Array.isArray(items) || items.length === 0) { cleanUrl(); return; }
+
+        // バリデーション＆正規化
+        const valid = items.filter(i => i && i.title && typeof i.title === 'string').map(i => ({
+            title: String(i.title).substring(0, 100),
+            date: String(i.date || '').substring(0, 20),
+            memo: String(i.memo || '').substring(0, 500),
+            type: (i.type === 'event') ? 'event' : 'daily',
+            destination: String(i.destination || '').substring(0, 100)
+        }));
+        if (valid.length === 0) { cleanUrl(); return; }
+
+        showImportConfirm(valid);
+    }
+
+    function showImportConfirm(items) {
+        const overlay = document.createElement('div');
+        overlay.className = 'import-overlay';
+        overlay.id = 'import-overlay';
+
+        const itemsHtml = items.map(i =>
+            `<div class="import-item">` +
+            (i.date ? `<div class="import-item-date">📅 ${i.date}</div>` : '') +
+            `<div class="import-item-title">${escapeHtml(i.title)}</div>` +
+            (i.memo ? `<div class="import-item-memo">${escapeHtml(i.memo).replace(/\n/g,'<br>')}</div>` : '') +
+            `</div>`
+        ).join('');
+
+        overlay.innerHTML = `
+            <div class="import-modal">
+                <h3>📥 スケジュールの追加</h3>
+                <div class="import-sub">もも（ツール）から ${items.length}件 のデータが届きました</div>
+                ${itemsHtml}
+                <div class="import-actions">
+                    <button class="import-btn-cancel" onclick="cancelImport()">キャンセル</button>
+                    <button class="import-btn-ok" onclick="confirmImport()">登録する</button>
+                </div>
+            </div>`;
+
+        // データを一時保持
+        window._pendingImport = items;
+        document.body.appendChild(overlay);
+    }
+
+    function confirmImport() {
+        const items = window._pendingImport || [];
+        items.forEach(i => {
+            noteData.calendarItems.unshift({
+                id: generateSafeId(),
+                title: i.title,
+                type: i.type || 'daily',
+                date: i.date || '',
+                destination: i.destination || '',
+                memo: i.memo || ''
+            });
+        });
+        saveData();
+        renderDbItems();
+        closeImportModal();
+        cleanUrl();
+
+        // スケジュールタブに切り替え
+        const dbTab = document.getElementById('tab-btn-database');
+        if (dbTab) switchTab('tab-database', dbTab);
+
+        alert(`✅ ${items.length}件 のスケジュールを登録しました！`);
+    }
+
+    function cancelImport() {
+        closeImportModal();
+        cleanUrl();
+    }
+
+    function closeImportModal() {
+        const el = document.getElementById('import-overlay');
+        if (el) el.remove();
+        window._pendingImport = null;
+    }
+
+    function cleanUrl() {
+        const url = new URL(window.location);
+        url.searchParams.delete('add');
+        window.history.replaceState({}, '', url.pathname + url.search);
+    }
+
+    function escapeHtml(str) {
+        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
 </script>
